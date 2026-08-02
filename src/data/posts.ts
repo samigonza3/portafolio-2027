@@ -49,22 +49,24 @@ export const posts: Post[] = [
     type: 'articulo',
     relatedPosts: ['ecommerce-en-5-pasos-con-dropi', 'beta-cpa-meta-ads-escalar-presupuesto'],
     content: `
-    <p>Escribes la descripción de un producto que amas de verdad, lo conoces al derecho y al revés, y aun así lo que termina en la página se lee como si lo hubieras copiado de un catálogo mayorista y solo hubieras cambiado el nombre del color. Le pasa a casi todo el que escribe su propio copy sin presupuesto para contratar a alguien — y la buena noticia es que el problema no es falta de talento, es un hábito de escritura que se corrige con un par de preguntas antes de sentarte a redactar.</p>
+    <p>Escribes la descripción de un producto que amas de verdad, lo conoces al derecho y al revés, y aun así lo que termina en la página se lee como si lo hubieras sacado de un catálogo mayorista y solo le hubieras cambiado el nombre del color. Le pasa a casi todo el que escribe su propio copy sin presupuesto para contratar a alguien. La buena noticia: no es falta de talento. Es un hábito de escritura, y se corrige con un par de preguntas antes de sentarte a redactar.</p>
     <br />
     <div class="section">
       <h2>El test que revela si tu copy es una ficha técnica</h2>
       <br />
-      <p>Hay una prueba simple para detectar el "olor a catálogo" antes de publicar: borra el nombre del producto de tu descripción y léela en voz alta. Si esa misma descripción podría aplicarle a cualquier producto de la competencia, no escribiste copy — escribiste una ficha técnica con adjetivos.</p>
+      <p>Hay una prueba simple para detectar el "olor a catálogo" antes de publicar: borra el nombre del producto de tu descripción y léela en voz alta. Si esa misma descripción podría aplicarle a cualquier producto de la competencia, no escribiste copy. Escribiste una ficha técnica con adjetivos.</p>
       <br />
-      <p>La segunda prueba es contar frases. ¿Cuántas hablan del producto (materiales, medidas, características) y cuántas hablan del comprador — el momento exacto en que lo va a usar, la molestia que le quita, lo que cambia en su día? Una página se siente viva cuando cada párrafo tiene al menos una frase sobre el comprador, no sobre el objeto.</p>
+      <p>La segunda prueba es contar frases. ¿Cuántas hablan del producto (materiales, medidas, características) y cuántas hablan del comprador: el momento exacto en que lo va a usar, la molestia que le quita, lo que cambia en su día? Una página se siente viva cuando cada párrafo tiene al menos una frase sobre el comprador, no sobre el objeto.</p>
       <br />
-      <p>Las marcas grandes se pueden dar el lujo de escribir copy vago porque la marca ya habla por ellas — el reconocimiento hace el trabajo pesado. Una tienda pequeña no tiene ese lujo: gana con un detalle concreto y específico, no con tres adjetivos genéricos. Una línea sobre qué pasa después de que alguien usa el producto casi siempre le gana a otra línea sobre qué contiene el producto.</p>
+      <p>La primera vez que hice este ejercicio en mi propia tienda tenía una descripción que decía "termo de acero inoxidable de 750ml con doble pared". La cambié por algo cercano a "te aguanta el café caliente toda la reunión de las 9am sin que tengas que recalentarlo a las 11". Misma información, técnicamente. Pero ahora habla de tu mañana, no del acero.</p>
+      <br />
+      <p>Las marcas grandes se pueden dar el lujo de escribir copy vago porque la marca ya habla por ellas. El reconocimiento hace el trabajo pesado. Una tienda pequeña no tiene ese lujo: gana con un detalle concreto, no con tres adjetivos genéricos. Una línea sobre qué pasa después de que alguien usa el producto casi siempre le gana a otra línea sobre qué contiene el producto.</p>
     </div>
     <br />
     <div class="section">
       <h2>Encuentra el ángulo que te diferencia antes de escribir una sola línea</h2>
       <br />
-      <p>Si vendes en un mercado con competencia (y casi todos la tienen), tu verdadero reto no es "escribir mejor", es diferenciar el producto. Antes de abrir el editor, responde esta secuencia:</p>
+      <p>Si vendes en un mercado con competencia (y casi todos la tienen), tu verdadero reto no es "escribir mejor". Es diferenciar el producto. Antes de abrir el editor, responde esta secuencia:</p>
       <br />
       <ul>
         <li><strong>1.</strong> ¿Qué hace el resto de tu mercado ahora mismo?</li>
@@ -74,7 +76,7 @@ export const posts: Post[] = [
         <li><strong>5.</strong> ¿Cómo se ve y se siente resolverlo?</li>
       </ul>
       <br />
-      <p>Esta secuencia te arma con ángulos reales de diferenciación en lugar de adjetivos sueltos como "premium" o "de alta calidad" que no dicen nada porque los usa todo el mundo.</p>
+      <p>Esta secuencia te arma con ángulos reales de diferenciación en lugar de adjetivos sueltos como "premium" o "de alta calidad", que no dicen nada porque los usa todo el mundo. Si tu competencia también dice "de alta calidad" en su página, esa frase ya no es tuya, es de todos.</p>
     </div>
     <br />
     <div class="section">
@@ -91,15 +93,15 @@ export const posts: Post[] = [
         <li><strong>Contexto de uso:</strong> ¿dónde lo va a usar?</li>
       </ul>
       <br />
-      <p>Súmale a esto una decisión consciente sobre el tono de tu marca: informativo, directo, con humor, cercano. Sin ese tono definido, cada descripción que escribes suena a una persona distinta — y eso también se siente genérico, aunque el contenido sea bueno.</p>
+      <p>Súmale a esto una decisión consciente sobre el tono de tu marca: informativo, directo, con humor, cercano. Sin ese tono definido, cada descripción que escribes suena a una persona distinta, y eso también se siente genérico, aunque el contenido sea bueno.</p>
     </div>
     <br />
     <div class="section">
       <h2>Cómo encontrar tu voz cuando todo lo que escribes suena igual</h2>
       <br />
-      <p>Una técnica que funciona sorprendentemente bien: imagina que eres un personaje que conoces bien y escribe la descripción en su voz. ¿Cómo vendería este producto un personaje directo y sin filtro? ¿Cómo se lo describirías a tu hermano en lugar de a un cliente anónimo? El punto no es publicar esa versión — es soltar el modo "copy corporativo" el tiempo suficiente para que salga algo con personalidad. Después te quedas con lo que funciona y borras lo que no.</p>
+      <p>Una técnica que funciona sorprendentemente bien: imagina que eres un personaje que conoces bien y escribe la descripción en su voz. ¿Cómo vendería este producto un personaje directo y sin filtro? ¿Cómo se lo describirías a tu hermano en lugar de a un cliente anónimo? No se trata de publicar esa versión tal cual. Se trata de soltar el modo "copy corporativo" el tiempo suficiente para que salga algo con personalidad. Después te quedas con lo que funciona y borras lo que no.</p>
       <br />
-      <p>Otra variante de esto: cuéntale a alguien de confianza, en voz alta, por qué te gusta tanto el producto — y grábalo. Casi siempre ahí aparecen las frases reales, las que sí suenan a alguien que conoce y le importa el producto, no a un generador de descripciones. Esas frases grabadas suelen ser mejor punto de partida que la página en blanco.</p>
+      <p>Otra variante: cuéntale a alguien de confianza, en voz alta, por qué te gusta tanto el producto. Grábalo mientras lo haces. Casi siempre ahí aparecen las frases reales, las que sí suenan a alguien que conoce y le importa el producto, no a un generador de descripciones. A mí me ha pasado más de una vez que la mejor línea de una página de producto salió de un audio de WhatsApp que le mandé a un amigo, no de sentarme frente al editor de Shopify.</p>
     </div>
     <br />
     <div class="cta">
