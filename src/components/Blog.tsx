@@ -40,7 +40,7 @@ export default function Blog() {
       <main className="flex-1 min-w-0">
         <header className="border-b border-star-light/15 px-6 lg:px-10 py-10">
           <span className="eyebrow">
-            {activeCategory ? activeCategory : 'Blog · Noticias curadas'}
+            {activeCategory ? activeCategory : 'Blog'}
           </span>
           <h1 className="text-3xl md:text-4xl font-extrabold mt-4 mb-2 leading-tight">
             {activeCategory ? (
@@ -49,12 +49,12 @@ export default function Blog() {
               </>
             ) : (
               <>
-                Señal, no <span className="glow">ruido</span>.
+                Blog<span className="glow">.</span>
               </>
             )}
           </h1>
           <p className="text-ice max-w-2xl text-sm">
-            Noticias curadas, resúmenes y análisis sobre paid media, IA, data y desarrollo web.
+            Algunas ideas, noticias y recursos para compartir.
           </p>
         </header>
 
