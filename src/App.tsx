@@ -224,8 +224,11 @@ function PhotoBlock({
 }
 
 // Parallax sutil: la imagen se desplaza a menor velocidad que el scroll
-// (efecto de profundidad clásico). Respeta prefers-reduced-motion.
-function useParallax(speed: number) {
+// (efecto de profundidad clásico). Respeta prefers-reduced-motion. El
+// "zoom" es el margen extra de escala que evita que se vean bordes vacíos
+// al desplazar — fotos con poco margen alrededor del sujeto (ej. la luna)
+// necesitan un zoom menor para no recortar el sujeto.
+function useParallax(speed: number, zoom: number) {
   const ref = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
@@ -238,8 +241,13 @@ function useParallax(speed: number) {
     const apply = () => {
       const rect = el.parentElement?.getBoundingClientRect();
       if (rect) {
-        const offset = (window.innerHeight / 2 - rect.top) * speed;
-        el.style.transform = `translateY(${offset}px) scale(1.15)`;
+        const raw = (window.innerHeight / 2 - rect.top) * speed;
+        // El zoom solo da un margen extra de imagen (el "overscan"). El
+        // desplazamiento nunca puede superar ese margen o se revela un
+        // hueco/recorte en el borde — por eso se limita (clamp) aquí.
+        const maxOffset = (rect.height * (zoom - 1)) / 2;
+        const offset = Math.max(-maxOffset, Math.min(maxOffset, raw));
+        el.style.transform = `translateY(${offset}px) scale(${zoom})`;
       }
       ticking = false;
     };
@@ -257,7 +265,7 @@ function useParallax(speed: number) {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
-  }, [speed]);
+  }, [speed, zoom]);
 
   return ref;
 }
@@ -270,13 +278,15 @@ function HeroPhoto({
   alt,
   className = '',
   parallaxSpeed = 0.1,
+  zoom = 1.15,
 }: {
   src: string;
   alt: string;
   className?: string;
   parallaxSpeed?: number;
+  zoom?: number;
 }) {
-  const imgRef = useParallax(parallaxSpeed);
+  const imgRef = useParallax(parallaxSpeed, zoom);
 
   return (
     <div className={`relative overflow-hidden rounded-card border border-star-light/15 ${className}`}>
@@ -479,7 +489,8 @@ function HomePage() {
               src="/hero-moon.jpg"
               alt="Luna en cuarto creciente fotografiada en Perú"
               className="h-24 md:h-32"
-              parallaxSpeed={0.14}
+              parallaxSpeed={0.06}
+              zoom={1.1}
             />
             <h2 className="display-xl text-3xl sm:text-4xl md:text-6xl">
               Servicio de marcas
