@@ -35,6 +35,82 @@ export const CATEGORIES = [
 ] as const;
 export const posts: Post[] = [
   {
+    slug: 'descripciones-de-producto-que-no-suenan-genericas',
+    title: 'Cómo Escribir Descripciones de Producto que No Suenen a Todas las Demás Tiendas',
+    date: '2026-08-02',
+    category: 'Ecommerce',
+    tags: ['Copywriting', 'Ecommerce', 'Product Pages', 'Conversión'],
+    excerpt:
+      'Por qué tus descripciones de producto se leen como ficha técnica en vez de copy, y el sistema de preguntas y pruebas que las saca de ese modo antes de publicar.',
+    readTime: '5 min',
+    author: 'Samuel González',
+    metaDescription:
+      'Por qué tus descripciones de producto se leen como ficha técnica en vez de copy, y el sistema de preguntas y pruebas para escribir páginas de producto que sí convierten.',
+    type: 'articulo',
+    relatedPosts: ['ecommerce-en-5-pasos-con-dropi', 'beta-cpa-meta-ads-escalar-presupuesto'],
+    content: `
+    <p>Escribes la descripción de un producto que amas de verdad, lo conoces al derecho y al revés, y aun así lo que termina en la página se lee como si lo hubieras copiado de un catálogo mayorista y solo hubieras cambiado el nombre del color. Le pasa a casi todo el que escribe su propio copy sin presupuesto para contratar a alguien — y la buena noticia es que el problema no es falta de talento, es un hábito de escritura que se corrige con un par de preguntas antes de sentarte a redactar.</p>
+    <br />
+    <div class="section">
+      <h2>El test que revela si tu copy es una ficha técnica</h2>
+      <br />
+      <p>Hay una prueba simple para detectar el "olor a catálogo" antes de publicar: borra el nombre del producto de tu descripción y léela en voz alta. Si esa misma descripción podría aplicarle a cualquier producto de la competencia, no escribiste copy — escribiste una ficha técnica con adjetivos.</p>
+      <br />
+      <p>La segunda prueba es contar frases. ¿Cuántas hablan del producto (materiales, medidas, características) y cuántas hablan del comprador — el momento exacto en que lo va a usar, la molestia que le quita, lo que cambia en su día? Una página se siente viva cuando cada párrafo tiene al menos una frase sobre el comprador, no sobre el objeto.</p>
+      <br />
+      <p>Las marcas grandes se pueden dar el lujo de escribir copy vago porque la marca ya habla por ellas — el reconocimiento hace el trabajo pesado. Una tienda pequeña no tiene ese lujo: gana con un detalle concreto y específico, no con tres adjetivos genéricos. Una línea sobre qué pasa después de que alguien usa el producto casi siempre le gana a otra línea sobre qué contiene el producto.</p>
+    </div>
+    <br />
+    <div class="section">
+      <h2>Encuentra el ángulo que te diferencia antes de escribir una sola línea</h2>
+      <br />
+      <p>Si vendes en un mercado con competencia (y casi todos la tienen), tu verdadero reto no es "escribir mejor", es diferenciar el producto. Antes de abrir el editor, responde esta secuencia:</p>
+      <br />
+      <ul>
+        <li><strong>1.</strong> ¿Qué hace el resto de tu mercado ahora mismo?</li>
+        <li><strong>2.</strong> ¿Por qué eso es malo para el comprador?</li>
+        <li><strong>3.</strong> ¿Cómo se ve (impacto práctico) y cómo se siente (emoción) ese problema?</li>
+        <li><strong>4.</strong> ¿Cómo lo resuelve tu producto específicamente?</li>
+        <li><strong>5.</strong> ¿Cómo se ve y se siente resolverlo?</li>
+      </ul>
+      <br />
+      <p>Esta secuencia te arma con ángulos reales de diferenciación en lugar de adjetivos sueltos como "premium" o "de alta calidad" que no dicen nada porque los usa todo el mundo.</p>
+    </div>
+    <br />
+    <div class="section">
+      <h2>Las preguntas que sacan tu copy del modo ficha técnica</h2>
+      <br />
+      <p>Antes de describir una característica, respóndete estas preguntas sobre el producto y vas a notar que la copy deja de sonar a lista de specs:</p>
+      <br />
+      <ul>
+        <li><strong>Punto de venta único:</strong> ¿qué tiene este producto que no tienen los demás?</li>
+        <li><strong>Comprador:</strong> ¿para quién es exactamente, no en general sino en específico?</li>
+        <li><strong>Valor:</strong> ¿qué gana el comprador más allá de la característica misma?</li>
+        <li><strong>Competencia:</strong> ¿cómo se compara frente a las otras opciones que ya está considerando?</li>
+        <li><strong>Momento de uso:</strong> ¿cuándo lo va a usar?</li>
+        <li><strong>Contexto de uso:</strong> ¿dónde lo va a usar?</li>
+      </ul>
+      <br />
+      <p>Súmale a esto una decisión consciente sobre el tono de tu marca: informativo, directo, con humor, cercano. Sin ese tono definido, cada descripción que escribes suena a una persona distinta — y eso también se siente genérico, aunque el contenido sea bueno.</p>
+    </div>
+    <br />
+    <div class="section">
+      <h2>Cómo encontrar tu voz cuando todo lo que escribes suena igual</h2>
+      <br />
+      <p>Una técnica que funciona sorprendentemente bien: imagina que eres un personaje que conoces bien y escribe la descripción en su voz. ¿Cómo vendería este producto un personaje directo y sin filtro? ¿Cómo se lo describirías a tu hermano en lugar de a un cliente anónimo? El punto no es publicar esa versión — es soltar el modo "copy corporativo" el tiempo suficiente para que salga algo con personalidad. Después te quedas con lo que funciona y borras lo que no.</p>
+      <br />
+      <p>Otra variante de esto: cuéntale a alguien de confianza, en voz alta, por qué te gusta tanto el producto — y grábalo. Casi siempre ahí aparecen las frases reales, las que sí suenan a alguien que conoce y le importa el producto, no a un generador de descripciones. Esas frases grabadas suelen ser mejor punto de partida que la página en blanco.</p>
+    </div>
+    <br />
+    <div class="cta">
+      <h2>¿Tu copy también huele a catálogo?</h2>
+      <p>Si escribes tu propio copy y sientes que cada descripción se parece a la anterior, te ayudo a encontrar el ángulo de diferenciación real de tu marca y a construir páginas de producto que suenen a alguien que sí conoce lo que vende.</p>
+    </div>
+    <br />
+    <a target="_blank" href="https://samuelgonzalez.org/?utm_source=blog-descripciones-producto&utm_medium=blog" class="text-cyan-400 hover:underline">¿Quieres que revisemos el copy de tu tienda? Haz clic aquí.</a>
+    `,
+  },
+  {
     slug: 'beta-cpa-meta-ads-escalar-presupuesto',
     title: 'El Número que Nadie te Explica Antes de Subir tu Presupuesto en Meta Ads: β (Beta)',
     date: '2026-08-02',
