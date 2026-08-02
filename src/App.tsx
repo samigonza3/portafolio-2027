@@ -638,19 +638,20 @@ function HomePage() {
             ))}
           </div>
 
-          {/* Promo de la herramienta gratuita, enlazada al blog y a la herramienta */}
-          <div className="mt-10 pt-10 border-t border-star-light/15 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          {/* Promo de la herramienta gratuita: único bloque del sitio con acento
+              ámbar en vez de azul, a propósito, para que rompa el scroll. */}
+          <div className="card-amber mt-10 p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div>
-              <span className="label-mono !text-signal-teal mb-3 block">Herramienta gratuita</span>
+              <span className="label-mono !text-signal-amber mb-3 block">Herramienta gratuita</span>
               <h3 className="text-2xl md:text-3xl font-extrabold mb-2">
-                Crea tus <span className="glow">Documentos Fundacionales</span> con IA
+                Crea tus <span className="glow-amber">Documentos Fundacionales</span> con IA
               </h3>
-              <p className="text-muted text-sm max-w-xl">
+              <p className="text-ice text-sm max-w-xl">
                 Responde un cuestionario corto y recibe un prompt listo para generar tus 4
                 documentos de marca en un Proyecto de Claude.
               </p>
             </div>
-            <Link to="/herramientas/foundational-docs" className="btn-star shrink-0">
+            <Link to="/herramientas/foundational-docs" className="btn-amber shrink-0">
               Probar la herramienta <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

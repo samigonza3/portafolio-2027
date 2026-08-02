@@ -77,6 +77,33 @@
     transform: translateY(-2px);
   }
 
+  /* Botón de acento cálido — para el único punto del sitio que debe
+     romper con el azul dominante y "detener el scroll". */
+  .btn-amber {
+    @apply inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-extrabold text-space-950 transition-all duration-300;
+    background: linear-gradient(135deg, #ffcb85, #ffb25e);
+    box-shadow: 0 12px 32px -6px rgba(255, 178, 94, 0.55);
+  }
+
+  .btn-amber:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 38px -4px rgba(255, 178, 94, 0.7);
+  }
+
+  .glow-amber {
+    color: #ffb25e;
+    text-shadow: 0 0 28px rgba(255, 178, 94, 0.55);
+  }
+
+  /* Panel de contraste cálido — único bloque del sitio con acento ámbar
+     en vez de azul, para que destaque frente al resto de secciones. */
+  .card-amber {
+    @apply relative overflow-hidden rounded-card border;
+    border-color: rgba(255, 178, 94, 0.4);
+    background: linear-gradient(135deg, rgba(255, 178, 94, 0.14), rgba(11, 21, 51, 0.4));
+    box-shadow: 0 0 60px -20px rgba(255, 178, 94, 0.35);
+  }
+
   .card-galaxy {
     @apply bg-space-800 border border-star-light/15 rounded-card transition-all duration-300;
   }

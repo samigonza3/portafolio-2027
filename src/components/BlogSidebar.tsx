@@ -49,7 +49,7 @@ export default function BlogSidebar() {
           <span className="text-2xl font-extrabold">
             Blog<span className="text-star-light">.</span>
           </span>
-          <p className="text-xs text-muted mt-1">Señal, no ruido.</p>
+          <p className="text-xs text-muted mt-1">Algunas ideas, noticias y recursos para compartir.</p>
         </Link>
 
         <nav className="mb-8 pt-2 lg:pt-0">
