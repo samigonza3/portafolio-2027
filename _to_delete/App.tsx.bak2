@@ -252,7 +252,7 @@ function NavBar() {
   return (
     <header className="sticky top-0 z-30 backdrop-blur-md bg-space-950/80 border-b border-star-light/15">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link to="/" className="font-sans font-extrabold text-lg tracking-tight text-frost">
+        <Link to="/" className="font-display font-bold text-lg tracking-tight text-frost">
           Samuel González
         </Link>
         <nav className="flex items-center gap-7">
@@ -424,12 +424,12 @@ function HomePage() {
             />
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 mt-4 md:mt-5 items-center">
-            <HeroPhoto src="/hero-moon.jpg" alt="Luna en cuarto creciente fotografiada en Perú" className="h-24 md:h-32" />
+            <HeroPhoto src="/hero-sunset.jpg" alt="Atardecer sobre el lago Titicaca, entre Perú y Bolivia" className="h-24 md:h-32" />
             <h2 className="display-xl text-3xl sm:text-4xl md:text-6xl">
               Servicio de marcas
             </h2>
+            <HeroPhoto src="/hero-moon.jpg" alt="Luna en cuarto creciente fotografiada en Perú" className="h-24 md:h-32" />
             <h2 className="display-xl text-3xl sm:text-4xl md:text-6xl">que crecen</h2>
-            <HeroPhoto src="/hero-sunset.jpg" alt="Atardecer sobre el lago Titicaca, entre Perú y Bolivia" className="h-24 md:h-32" />
           </div>
           <p className="label-mono !text-muted !tracking-[0.15em] mt-5 md:mt-6">
             Fotografías propias, tomadas entre Perú y Bolivia en 2018.
