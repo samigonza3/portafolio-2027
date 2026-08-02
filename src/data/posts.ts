@@ -35,6 +35,74 @@ export const CATEGORIES = [
 ] as const;
 export const posts: Post[] = [
   {
+    slug: 'beta-cpa-meta-ads-escalar-presupuesto',
+    title: 'El Número que Nadie te Explica Antes de Subir tu Presupuesto en Meta Ads: β (Beta)',
+    date: '2026-08-02',
+    category: 'Paid Media',
+    tags: ['Meta Ads', 'Performance Marketing', 'Escalado', 'Paid Media'],
+    excerpt:
+      'Qué es el β (beta) de tu cuenta de Meta Ads, por qué tu CPA sube cuando aumentas presupuesto, y cómo encontrar el punto exacto donde escalar deja de ser rentable.',
+    readTime: '5 min',
+    author: 'Samuel González',
+    metaDescription:
+      'Qué es el β (beta) de tu cuenta de Meta Ads, por qué tu CPA sube cuando aumentas presupuesto, y cómo encontrar el punto exacto donde escalar deja de ser rentable.',
+    type: 'articulo',
+    relatedPosts: ['ecommerce-en-5-pasos-con-dropi', 'futuro-marketing-digital-ia'],
+    content: `
+    <p>Duplicaste el presupuesto de tu campaña esperando duplicar las ventas. Al final del mes las ventas subieron, sí, pero no al doble — y tu CPA (costo por adquisición) también subió. Si esto te suena familiar, no es mala suerte ni un problema del algoritmo: es <strong>β</strong>, y es el número más importante que casi nadie revisa antes de escalar.</p>
+    <br />
+    <div class="section">
+      <h2>Por qué tu CPA sube cuando metes más presupuesto</h2>
+      <br />
+      <p>Meta no tiene un inventario infinito de la audiencia perfecta para tu producto. Cuando subes presupuesto, la plataforma sigue mostrando tu anuncio a la gente más propensa a comprar primero, pero para gastar el dinero adicional tiene que ir bajando en la lista: personas un poco menos interesadas, más lejos del punto de decisión, más caras de convertir.</p>
+      <br />
+      <p>Eso es rendimientos decrecientes en acción, y <strong>β mide exactamente qué tan rápido decrecen</strong>. La relación se ve así:</p>
+      <br />
+      <p><code>CPA(presupuesto) = CPA_base × (presupuesto / presupuesto_base)^β</code></p>
+      <br />
+      <p>Un β de 0 sería el sueño de cualquier media buyer: tu CPA no se mueve sin importar cuánto gastes, escalabilidad perfecta. Un β de 1 es la pesadilla: tu CPA sube exactamente al mismo ritmo que tu presupuesto, así que ganas cero conversiones adicionales netas por invertir más. En la práctica, tu cuenta vive en algún punto entre esos dos extremos — y ese punto cambia por nicho, por creatividad y por qué tan saturada está tu audiencia.</p>
+    </div>
+    <br />
+    <div class="section">
+      <h2>Lo que esto significa en plata</h2>
+      <br />
+      <p>Con un β de 0.55, por ejemplo, cada vez que duplicas tu presupuesto tu CPA no sube 100%, sube cerca de 46%. Suena manejable hasta que lo conectas con tu margen: si tu ganancia por venta es de $30 y tu CPA marginal (lo que cuesta la <em>siguiente</em> conversión, no el promedio) ya está en $35, cada peso adicional que metes a esa campaña te está costando dinero, aunque el ROAS general de la cuenta todavía se vea positivo.</p>
+      <br />
+      <p>Ese es el error más común al escalar: mirar el CPA promedio y no el <strong>CPA marginal</strong>. El promedio te puede mentir durante semanas mientras el margen real ya se comió tu ganancia.</p>
+    </div>
+    <br />
+    <div class="section">
+      <h2>El punto de máxima utilidad</h2>
+      <br />
+      <p>Existe un presupuesto exacto donde la diferencia entre lo que ganas por conversiones y lo que gastas en ads es máxima — antes de ese punto todavía puedes ganar más escalando, después cada dólar adicional te resta utilidad total. Matemáticamente ocurre justo donde tu CPA marginal se iguala a tu ganancia por conversión (ticket promedio × margen de contribución).</p>
+      <br />
+      <p>No es un número fijo ni una regla general de la industria: depende de tu β, de tu CPA base y de tu margen. Por eso escalar "porque el ROAS todavía aguanta" sin haber hecho este cálculo es apostar, no optimizar.</p>
+    </div>
+    <br />
+    <div class="section">
+      <h2>Cómo saber cuál es tu β</h2>
+      <br />
+      <p>No lo adivinas, lo calculas con tus propios datos históricos:</p>
+      <br />
+      <ul>
+        <li><strong>1.</strong> Exporta de Meta Ads Manager al menos 30 semanas con desglose semanal, incluyendo gasto y costo por resultado.</li>
+        <li><strong>2.</strong> Corre una regresión log-log: <code>ln(CPA) = α + β × ln(presupuesto)</code>. La pendiente de esa regresión es tu β.</li>
+        <li><strong>3.</strong> Verifica que el resultado no esté inflado por la tendencia temporal (si tu presupuesto y las semanas están muy correlacionados, controla por tiempo antes de confiar en el número).</li>
+        <li><strong>4.</strong> Cruza ese β con tu ticket promedio y margen para encontrar tu punto de máxima utilidad.</li>
+      </ul>
+      <br />
+      <p>Es exactamente el tipo de análisis que uso con clientes antes de aprobar cualquier escalado agresivo: sin este número, "vamos a subirle presupuesto" es una corazonada con nombre elegante.</p>
+    </div>
+    <br />
+    <div class="cta">
+      <h2>¿Quieres saber tu β?</h2>
+      <p>Si manejas presupuesto en Meta Ads y quieres dejar de escalar a ciegas, te ayudo a calcular tu β y a definir el presupuesto donde tu cuenta realmente maximiza utilidad, no solo volumen.</p>
+    </div>
+    <br />
+    <a target="_blank" href="https://samuelgonzalez.org/?utm_source=blog-beta-cpa-meta-ads&utm_medium=blog" class="text-cyan-400 hover:underline">¿Quieres que analicemos tu cuenta de Meta Ads? Haz clic aquí.</a>
+    `,
+  },
+  {
     slug: 'ecommerce-en-5-pasos-con-dropi',
     title: 'Cómo Lanzar tu Ecommerce en 5 Pasos: El Sistema que Uso con Dropi + Shopify',
     date: '2026-07-29',
