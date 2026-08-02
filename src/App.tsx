@@ -52,7 +52,7 @@ const experiences = [
     period: '2026 — Actualidad',
     description:
       'Lidero la ejecución de TikTok Ads para tres cuentas del sector automotriz financiero en Estados Unidos y apoyo campañas de Meta y Microsoft Advertising, combinando optimización de campañas con analítica de datos para maximizar el retorno por lead.',
-    logo: null as string | null,
+    logo: '/ifmg-logo.png',
   },
   {
     company: 'Smartmuscle Lab',
@@ -692,7 +692,7 @@ function HomePage() {
       <section id="servicios" className="border-t border-star-light/15">
         <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
           <h2 className="display-xl text-4xl sm:text-5xl md:text-6xl mb-12 md:mb-16">
-            Tres disciplinas, <span className="glow">un solo sistema</span>
+            Cómo puedo <span className="glow">aportar</span> a tu proyecto
           </h2>
           <div className="grid md:grid-cols-3">
             {services.map((service, index) => (
