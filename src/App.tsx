@@ -15,6 +15,7 @@ import BlogPost from './components/BlogPost';
 import Blog from './components/Blog';
 import GoogleAdsChecklist from './components/GoogleAdsChecklist';
 import FoundationalDocsTool from './components/FoundationalDocsTool';
+import DropshippingMentoria from './components/DropshippingMentoria';
 import { posts } from './data/posts';
 
 const services = [
@@ -332,6 +333,12 @@ function NavBar() {
             Blog
           </Link>
           <Link
+            to="/mentoria-dropshipping"
+            className="label-mono !text-muted hover:!text-frost transition-colors hidden sm:block"
+          >
+            Mentoría
+          </Link>
+          <Link
             to="/herramientas/foundational-docs"
             className="label-mono !text-muted hover:!text-frost transition-colors hidden md:block"
           >
@@ -375,6 +382,12 @@ function Footer() {
                 className="text-ice hover:text-star-light transition-colors"
               >
                 Documentos Fundacionales
+              </Link>
+              <Link
+                to="/mentoria-dropshipping"
+                className="text-ice hover:text-star-light transition-colors"
+              >
+                Mentoría Dropshipping
               </Link>
             </div>
           </div>
@@ -826,6 +839,7 @@ export default function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/herramientas/foundational-docs" element={<FoundationalDocsTool />} />
+        <Route path="/mentoria-dropshipping" element={<DropshippingMentoria />} />
         <Route path="/google-ads-checklist" element={<GoogleAdsChecklist />} />
         <Route path="/recursos/google-ads-checklist" element={<GoogleAdsChecklist />} />
       </Routes>
