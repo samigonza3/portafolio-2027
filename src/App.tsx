@@ -146,6 +146,70 @@ const companies = [
 
 // Campo de estrellas animado (firma visual del sistema azul galaxia).
 // Se reutiliza como el "bloque de foto" del hero, en vez de fotografía real.
+const ROLES = [
+  'Paid Media Strategist',
+  'Media Buyer',
+  'Google',
+  'Meta',
+  'TikTok',
+  'SEM',
+  'Data-Driven Growth',
+  'eCommerce & Lead Gen',
+];
+
+// Barra de roles con scroll infinito, estilo nik.co, entre el hero y el
+// tratamiento de nombre. Se duplica el contenido una vez para que el loop
+// sea perfectamente continuo.
+function RolesMarquee() {
+  return (
+    <div className="marquee border-y border-star-light/15 bg-space-900/60 py-4">
+      <div className="marquee-track">
+        {[0, 1].map((rep) => (
+          <div key={rep} className="flex items-center shrink-0">
+            {ROLES.map((role, i) => (
+              <span
+                key={`${rep}-${i}`}
+                className="label-mono !text-ice px-6 whitespace-nowrap flex items-center gap-6"
+              >
+                {role}
+                <span className="text-star-light">·</span>
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Barra de logos de marcas con scroll infinito, mismo patrón que RolesMarquee.
+function LogosMarquee() {
+  return (
+    <div className="marquee">
+      <div className="marquee-track marquee-track--slow">
+        {[0, 1].map((rep) => (
+          <div key={rep} className="flex items-center gap-4 shrink-0 pr-4">
+            {companies.map((company, index) => (
+              <div
+                key={`${rep}-${index}`}
+                className="flex items-center justify-center p-6 bg-frost/95 border border-star-light/15 rounded-card h-24 w-40 shrink-0"
+                title={company.name}
+              >
+                <img
+                  src={company.logo}
+                  alt={company.name}
+                  className="max-h-12 max-w-full object-contain"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Starfield() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -582,6 +646,8 @@ function HomePage() {
         </div>
       </section>
 
+      <RolesMarquee />
+
       {/* ===== Tratamiento de nombre: ticker + nombre gigante ===== */}
       <section className="relative py-20 md:py-28 text-center border-t border-star-light/15 overflow-hidden">
         <Starfield />
@@ -734,22 +800,7 @@ function HomePage() {
           <h2 className="display-xl text-3xl sm:text-4xl md:text-5xl mb-10 text-center">
             Marcas que <span className="glow">confiaron</span>
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-            {companies.map((company, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-center p-6 bg-frost/95 border border-star-light/15 rounded-card h-24"
-                title={company.name}
-              >
-                <img
-                  src={company.logo}
-                  alt={company.name}
-                  className="max-h-12 max-w-full object-contain"
-                  loading="lazy"
-                />
-              </div>
-            ))}
-          </div>
+          <LogosMarquee />
         </div>
       </section>
 

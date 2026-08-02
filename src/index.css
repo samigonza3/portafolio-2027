@@ -115,6 +115,23 @@
 
   /* Placeholder de "foto" — bloques con textura diagonal, estilo wireframe nik.co,
      para las secciones que en nik.co usan fotografía y aquí usan visuales generados. */
+  /* Barra de scroll infinito estilo nik.co (roles, logos de marcas). */
+  .marquee {
+    @apply overflow-hidden relative w-full;
+    mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee-scroll 26s linear infinite;
+  }
+
+  .marquee-track--slow {
+    animation-duration: 38s;
+  }
+
   .photo-block {
     @apply relative flex items-center justify-center overflow-hidden rounded-card border border-star-light/15;
     background: repeating-linear-gradient(
@@ -186,6 +203,15 @@
   padding: 0.85rem 1.75rem;
   cursor: pointer;
   box-shadow: 0 12px 30px -8px rgba(62, 123, 255, 0.55);
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
