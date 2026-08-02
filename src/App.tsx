@@ -10,6 +10,8 @@ import {
   Mail,
   GraduationCap,
   Sparkles,
+  Menu,
+  X,
 } from 'lucide-react';
 import BlogPost from './components/BlogPost';
 import Blog from './components/Blog';
@@ -310,23 +312,26 @@ function HeroPhoto({
 }
 
 function NavBar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const closeMobile = () => setMobileOpen(false);
+
   return (
     <header className="sticky top-0 z-30 backdrop-blur-md bg-space-950/80 border-b border-star-light/15">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link to="/" className="font-sans font-extrabold text-lg tracking-tight text-frost">
+        <Link
+          to="/"
+          onClick={closeMobile}
+          className="font-sans font-extrabold text-lg tracking-tight text-frost"
+        >
           Samuel González
         </Link>
-        <nav className="flex items-center gap-7">
-          <a
-            href="/#servicios"
-            className="label-mono !text-muted hover:!text-frost transition-colors hidden sm:block"
-          >
+
+        {/* Nav de escritorio */}
+        <nav className="hidden md:flex items-center gap-7">
+          <a href="/#servicios" className="label-mono !text-muted hover:!text-frost transition-colors">
             Servicios
           </a>
-          <a
-            href="/#experiencia"
-            className="label-mono !text-muted hover:!text-frost transition-colors hidden sm:block"
-          >
+          <a href="/#experiencia" className="label-mono !text-muted hover:!text-frost transition-colors">
             Experiencia
           </a>
           <Link to="/blog" className="label-mono !text-muted hover:!text-frost transition-colors">
@@ -334,13 +339,13 @@ function NavBar() {
           </Link>
           <Link
             to="/mentoria-dropshipping"
-            className="label-mono !text-muted hover:!text-frost transition-colors hidden sm:block"
+            className="label-mono !text-muted hover:!text-frost transition-colors"
           >
             Mentoría
           </Link>
           <Link
             to="/herramientas/foundational-docs"
-            className="label-mono !text-muted hover:!text-frost transition-colors hidden md:block"
+            className="label-mono !text-muted hover:!text-frost transition-colors"
           >
             Herramientas
           </Link>
@@ -348,7 +353,62 @@ function NavBar() {
             Hablemos <ArrowRight className="w-3.5 h-3.5" />
           </a>
         </nav>
+
+        {/* Botón hamburguesa (solo mobile) */}
+        <button
+          type="button"
+          onClick={() => setMobileOpen((v) => !v)}
+          aria-label={mobileOpen ? 'Cerrar menú' : 'Abrir menú'}
+          aria-expanded={mobileOpen}
+          className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-full border border-star-light/15 text-frost transition-colors hover:border-star-light/45"
+        >
+          {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
       </div>
+
+      {/* Panel de nav mobile */}
+      {mobileOpen && (
+        <nav className="md:hidden border-t border-star-light/15 bg-space-950/95 backdrop-blur-md px-6 py-6 flex flex-col gap-5">
+          <a
+            href="/#servicios"
+            onClick={closeMobile}
+            className="label-mono !text-muted hover:!text-frost transition-colors"
+          >
+            Servicios
+          </a>
+          <a
+            href="/#experiencia"
+            onClick={closeMobile}
+            className="label-mono !text-muted hover:!text-frost transition-colors"
+          >
+            Experiencia
+          </a>
+          <Link
+            to="/blog"
+            onClick={closeMobile}
+            className="label-mono !text-muted hover:!text-frost transition-colors"
+          >
+            Blog
+          </Link>
+          <Link
+            to="/mentoria-dropshipping"
+            onClick={closeMobile}
+            className="label-mono !text-muted hover:!text-frost transition-colors"
+          >
+            Mentoría
+          </Link>
+          <Link
+            to="/herramientas/foundational-docs"
+            onClick={closeMobile}
+            className="label-mono !text-muted hover:!text-frost transition-colors"
+          >
+            Herramientas
+          </Link>
+          <a href="/#contacto" onClick={closeMobile} className="btn-pill-light w-fit">
+            Hablemos <ArrowRight className="w-3.5 h-3.5" />
+          </a>
+        </nav>
+      )}
     </header>
   );
 }
