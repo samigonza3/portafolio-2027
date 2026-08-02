@@ -223,20 +223,70 @@ function PhotoBlock({
   );
 }
 
+// Parallax sutil: la imagen se desplaza a menor velocidad que el scroll
+// (efecto de profundidad clásico). Respeta prefers-reduced-motion.
+function useParallax(speed: number) {
+  const ref = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+
+    let ticking = false;
+    const apply = () => {
+      const rect = el.parentElement?.getBoundingClientRect();
+      if (rect) {
+        const offset = (window.innerHeight / 2 - rect.top) * speed;
+        el.style.transform = `translateY(${offset}px) scale(1.15)`;
+      }
+      ticking = false;
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(apply);
+      }
+    };
+
+    apply();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [speed]);
+
+  return ref;
+}
+
 // Bloque de foto real (fotografías propias de Samuel), con un degradado
-// azul encima para que armonicen con la paleta del sitio.
+// azul encima para que armonicen con la paleta del sitio y un efecto
+// parallax al hacer scroll.
 function HeroPhoto({
   src,
   alt,
   className = '',
+  parallaxSpeed = 0.1,
 }: {
   src: string;
   alt: string;
   className?: string;
+  parallaxSpeed?: number;
 }) {
+  const imgRef = useParallax(parallaxSpeed);
+
   return (
     <div className={`relative overflow-hidden rounded-card border border-star-light/15 ${className}`}>
-      <img src={src} alt={alt} className="absolute inset-0 w-full h-full object-cover" loading="eager" />
+      <img
+        ref={imgRef}
+        src={src}
+        alt={alt}
+        className="absolute inset-0 w-full h-full object-cover will-change-transform"
+        loading="eager"
+      />
       <div
         className="absolute inset-0"
         style={{
@@ -421,15 +471,26 @@ function HomePage() {
               src="/hero-waterfall.jpg"
               alt="Pareja en una banca frente a una cascada iluminada, Cataratas del Niágara"
               className="h-56 md:h-72"
+              parallaxSpeed={0.08}
             />
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 mt-4 md:mt-5 items-center">
-            <HeroPhoto src="/hero-moon.jpg" alt="Luna en cuarto creciente fotografiada en Perú" className="h-24 md:h-32" />
+            <HeroPhoto
+              src="/hero-moon.jpg"
+              alt="Luna en cuarto creciente fotografiada en Perú"
+              className="h-24 md:h-32"
+              parallaxSpeed={0.14}
+            />
             <h2 className="display-xl text-3xl sm:text-4xl md:text-6xl">
               Servicio de marcas
             </h2>
             <h2 className="display-xl text-3xl sm:text-4xl md:text-6xl">que crecen</h2>
-            <HeroPhoto src="/hero-sunset.jpg" alt="Atardecer sobre el lago Titicaca, entre Perú y Bolivia" className="h-24 md:h-32" />
+            <HeroPhoto
+              src="/hero-sunset.jpg"
+              alt="Atardecer sobre el lago Titicaca, entre Perú y Bolivia"
+              className="h-24 md:h-32"
+              parallaxSpeed={0.11}
+            />
           </div>
           <p className="label-mono !text-muted !tracking-[0.15em] mt-5 md:mt-6">
             Fotografías propias, tomadas entre Perú y Bolivia en 2018.
