@@ -1,0 +1,169 @@
+/* Sistema tipográfico: SOLO 2 familias en todo el sitio.
+   - Montserrat: texto, UI, labels, navegación, párrafos.
+   - Space Grotesk: titulares grandes / tratamiento editorial (estilo nik.co). */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Montserrat', sans-serif;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #040817;
+    color: #f4f7ff;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+  }
+
+  :focus-visible {
+    outline: 2px solid #7fa8ff;
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[11px] font-bold uppercase text-star-light rounded-full border border-star-light/15 bg-star/5 px-4 py-2;
+    letter-spacing: 0.22em;
+  }
+
+  /* Reemplaza los usos anteriores de font-mono para "tickers"/etiquetas
+     técnicas — mismo look, sin segunda familia tipográfica. */
+  .label-mono {
+    @apply font-sans text-[11px] sm:text-xs font-bold uppercase tracking-[0.28em] text-star-light;
+  }
+
+  /* Tratamiento tipográfico grande (hero, nombre, títulos de sección estilo nik.co) */
+  .display-xl {
+    @apply font-display uppercase leading-[0.92] tracking-tight;
+  }
+
+  .glow {
+    color: #3e7bff;
+    text-shadow: 0 0 28px rgba(62, 123, 255, 0.55);
+  }
+
+  .btn-star {
+    @apply inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-bold text-frost shadow-star transition-all duration-300;
+    background: linear-gradient(135deg, #3e7bff, #2e5fe0);
+  }
+
+  .btn-star:hover {
+    transform: translateY(-2px);
+    @apply shadow-star-lg;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-bold text-ice border border-star-light/15 transition-colors duration-300;
+  }
+
+  .btn-ghost:hover {
+    @apply border-star-light/45;
+  }
+
+  .btn-pill-light {
+    @apply inline-flex items-center gap-2 rounded-full px-6 py-3 text-xs font-extrabold uppercase tracking-widest text-space-950 bg-frost transition-transform duration-300;
+  }
+
+  .btn-pill-light:hover {
+    transform: translateY(-2px);
+  }
+
+  .card-galaxy {
+    @apply bg-space-800 border border-star-light/15 rounded-card transition-all duration-300;
+  }
+
+  .card-galaxy:hover {
+    transform: translateY(-4px);
+    @apply border-star-light/45;
+  }
+
+  /* Placeholder de "foto" — bloques con textura diagonal, estilo wireframe nik.co,
+     para las secciones que en nik.co usan fotografía y aquí usan visuales generados. */
+  .photo-block {
+    @apply relative flex items-center justify-center overflow-hidden rounded-card border border-star-light/15;
+    background: repeating-linear-gradient(
+      45deg,
+      rgba(62, 123, 255, 0.08),
+      rgba(62, 123, 255, 0.08) 12px,
+      rgba(11, 21, 51, 0.6) 12px,
+      rgba(11, 21, 51, 0.6) 24px
+    );
+  }
+}
+
+/* Artículos del blog (contenido HTML legado) */
+.prose-galaxy {
+  color: #c9d9ff;
+  line-height: 1.75;
+}
+.prose-galaxy h2 {
+  color: #f4f7ff;
+  font-size: 1.45rem;
+  margin: 0 0 0.5rem;
+}
+.prose-galaxy h3 {
+  color: #f4f7ff;
+  font-size: 1.15rem;
+  margin: 0 0 0.5rem;
+}
+.prose-galaxy strong {
+  color: #f4f7ff;
+}
+.prose-galaxy em {
+  color: #7fa8ff;
+  font-style: italic;
+}
+.prose-galaxy a {
+  color: #3e7bff;
+  text-decoration: underline;
+}
+.prose-galaxy ul, .prose-galaxy ol {
+  padding-left: 1.4rem;
+  margin: 0.75rem 0;
+}
+.prose-galaxy li {
+  margin-bottom: 0.5rem;
+}
+.prose-galaxy blockquote {
+  border-left: 3px solid #3e7bff;
+  padding: 0.75rem 1.25rem;
+  margin: 1rem 0;
+  background: rgba(62, 123, 255, 0.07);
+  border-radius: 0 12px 12px 0;
+  color: #f4f7ff;
+}
+.prose-galaxy .cta, .prose-galaxy .conclusion {
+  border: 1px solid rgba(127, 168, 255, 0.45);
+  background: linear-gradient(135deg, rgba(62, 123, 255, 0.12), rgba(27, 46, 102, 0.3));
+  border-radius: 18px;
+  padding: 1.5rem 1.75rem;
+  margin-top: 1.5rem;
+}
+.prose-galaxy .cta button {
+  margin-top: 1rem;
+  background: linear-gradient(135deg, #3e7bff, #2e5fe0);
+  color: #f4f7ff;
+  font-weight: 700;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: 999px;
+  padding: 0.85rem 1.75rem;
+  cursor: pointer;
+  box-shadow: 0 12px 30px -8px rgba(62, 123, 255, 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

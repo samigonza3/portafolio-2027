@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3T9MQBQJKD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3T9MQBQJKD');
+</script>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#040817" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Samuel González. Paid Media & Data Analyst. Data Science, Marketing Digital y Desarrollo Full Stack. Más de 10 años impulsando resultados con datos." />
+    <title>Samuel González | Data. Marketing. Code.</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+
+    <!--
+      Formulario estático oculto SOLO para que el bot de build de Netlify
+      lo detecte y habilite Netlify Forms (necesario porque el formulario
+      real vive dentro de la SPA de React y no existe en el HTML en build
+      time). No se muestra ni se usa en tiempo de ejecución: el envío real
+      lo hace el componente de React vía fetch a "/".
+    -->
+    <form name="contacto" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="text" name="user_name" />
+      <input type="email" name="user_email" />
+      <textarea name="message"></textarea>
+      <input type="text" name="bot-field" />
+    </form>
+  </body>
+</html>

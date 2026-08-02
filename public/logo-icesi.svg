@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 90" width="320" height="90">
+  <rect width="320" height="90" fill="none"/>
+  <rect x="14" y="17" width="56" height="56" rx="10" fill="#00448D"/>
+  <text x="42" y="57" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="34" fill="#FFFFFF">i</text>
+  <text x="86" y="49" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="30" fill="#00448D">Universidad</text>
+  <text x="86" y="76" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="30" fill="#E8B10D">Icesi</text>
+</svg>
