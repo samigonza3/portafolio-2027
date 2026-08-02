@@ -48,7 +48,7 @@ export const posts: Post[] = [
       'El sistema paso a paso que uso con Dropi y Shopify para llevar una idea de ecommerce a ventas consistentes: nicho, marca, proveedores, product page y campañas.',
     type: 'articulo',
     relatedPosts: ['futuro-marketing-digital-ia', 'machine-learning-prediccion-mercado'],
-    content: `
+    content: 
     <p>Todos quieren un ecommerce que venda solo. Muy pocos están dispuestos a construir el sistema detrás de eso. Después de años montando tiendas, campañas y stacks de <strong>Data + Marketing + Code</strong>, llegué a una secuencia de 5 pasos que uso cada vez que llevo una idea desde cero hasta ventas consistentes con <strong>Dropi</strong> y <strong>Shopify</strong>. Aquí está, sin relleno.</p>
     <br />
     <div class="section">
@@ -97,7 +97,7 @@ export const posts: Post[] = [
     </div>
     <br />
     <a target="_blank" href="https://samuelgonzalez.org/?utm_source=blog-ecommerce-5-pasos-dropi&utm_medium=blog" class="text-cyan-400 hover:underline">¿Quieres que te ayude a lanzar tu ecommerce? Haz clic aquí.</a>
-    `,
+    ,
   },  
 {
     slug: 'documentos-fundacionales-con-ia',

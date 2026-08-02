@@ -223,6 +223,31 @@ function PhotoBlock({
   );
 }
 
+// Bloque de foto real (fotografías propias de Samuel), con un degradado
+// azul encima para que armonicen con la paleta del sitio.
+function HeroPhoto({
+  src,
+  alt,
+  className = '',
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+}) {
+  return (
+    <div className={`relative overflow-hidden rounded-card border border-star-light/15 ${className}`}>
+      <img src={src} alt={alt} className="absolute inset-0 w-full h-full object-cover" loading="eager" />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(4,8,23,.15) 0%, rgba(4,8,23,.05) 45%, rgba(4,8,23,.65) 100%), linear-gradient(120deg, rgba(62,123,255,.28), rgba(4,8,23,.1))',
+        }}
+      />
+    </div>
+  );
+}
+
 function NavBar() {
   return (
     <header className="sticky top-0 z-30 backdrop-blur-md bg-space-950/80 border-b border-star-light/15">
@@ -392,27 +417,36 @@ function HomePage() {
               <br />
               y Code al
             </h1>
-            <div className="relative h-56 md:h-72">
-              <PhotoBlock className="absolute inset-0" label="LIVE · CANVAS" />
-              <div className="absolute inset-0 rounded-card overflow-hidden">
-                <Starfield />
-              </div>
-            </div>
+            <HeroPhoto
+              src="/hero-waterfall.jpg"
+              alt="Pareja en una banca frente a una cascada iluminada, Cataratas del Niágara"
+              className="h-56 md:h-72"
+            />
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 mt-4 md:mt-5 items-center">
-            <PhotoBlock className="h-24 md:h-32" icon={<Megaphone className="w-8 h-8 text-star-light" />} />
+            <HeroPhoto src="/hero-sunset.jpg" alt="Atardecer sobre el lago Titicaca, entre Perú y Bolivia" className="h-24 md:h-32" />
             <h2 className="display-xl text-3xl sm:text-4xl md:text-6xl">
               Servicio de marcas
             </h2>
-            <PhotoBlock className="h-24 md:h-32" icon={<Database className="w-8 h-8 text-star-light" />} />
+            <HeroPhoto src="/hero-moon.jpg" alt="Luna en cuarto creciente fotografiada en Perú" className="h-24 md:h-32" />
             <h2 className="display-xl text-3xl sm:text-4xl md:text-6xl">que crecen</h2>
           </div>
+          <p className="label-mono !text-muted !tracking-[0.15em] mt-5 md:mt-6">
+            Fotografías propias, tomadas entre Perú y Bolivia en 2018.
+          </p>
         </div>
       </section>
 
       {/* ===== Tratamiento de nombre: ticker + nombre gigante ===== */}
-      <section className="py-20 md:py-28 text-center border-t border-star-light/15">
-        <div className="max-w-5xl mx-auto px-6">
+      <section className="relative py-20 md:py-28 text-center border-t border-star-light/15 overflow-hidden">
+        <Starfield />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse 60% 60% at 50% 0%, #1B2E66, transparent 70%)',
+          }}
+        />
+        <div className="relative max-w-5xl mx-auto px-6">
           <p className="label-mono mb-6">Paid Media · Data Science · Growth · Full Stack</p>
           <div className="flex items-center justify-center gap-5 md:gap-8">
             <div className="hidden sm:flex w-16 h-16 md:w-24 md:h-24 rounded-full items-center justify-center shrink-0 photo-block !rounded-full">
