@@ -383,17 +383,19 @@ export default function DropshippingMentoria() {
       <section className="max-w-5xl mx-auto px-6 pt-20 pb-16">
         <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
           <div className="text-center lg:text-left">
-            <span className="eyebrow">Caso de estudio · $2.000 USD de utilidad en el mes 2</span>
+            <span className="eyebrow">Caso de estudio · $10.000 USD de facturación en el mes 2</span>
             <h1 className="display-xl text-4xl sm:text-5xl md:text-6xl mt-6 mb-6">
-              Te enseño cómo vender por internet
+              Te enseño cómo vender <span className="glow">cualquier cosa</span>
               <br />
-              generando <span className="glow">utilidad real</span> desde el mes 2.
+              por internet.
             </h1>
-            <p className="text-ice text-lg mb-8">
-              En este caso de estudio te cuento cómo llegamos a $2.000 USD de utilidad en el mes 2
-              de una tienda armada desde cero, con el mismo proceso que uso hoy con mis propios
-              proyectos y con marcas como Telefónica, UNICEF y Banco de Occidente. Lo detallo
-              también en la guía{' '}
+            <p className="text-ice text-lg mb-4">
+              Ingresa tus datos y aprende con este caso de estudio cómo llegamos a $10.000 USD de
+              facturación en el mes 2, en una tienda armada desde cero, con el mismo proceso que
+              uso hoy con mis propios proyectos y con grandes marcas nacionales e internacionales.
+            </p>
+            <p className="text-muted text-sm mb-8">
+              Parte de ese proceso también está en la guía{' '}
               <Link
                 to="/blog/ecommerce-en-5-pasos-con-dropi"
                 className="text-star-light underline hover:text-frost"
