@@ -155,7 +155,10 @@ function LeadCaptureForm() {
         throw new Error(`Netlify Forms respondió con estado ${response.status}`);
       }
 
-      setStatus({ message: 'Listo. Mira las 3 formas de empezar aquí abajo.', type: 'success' });
+      setStatus({
+        message: 'Listo. Aquí abajo tienes el caso de estudio completo y las 3 formas de empezar.',
+        type: 'success',
+      });
       form.reset();
       setCountry(COUNTRIES[0]);
       document.getElementById('opciones')?.scrollIntoView({ behavior: 'smooth' });
@@ -221,7 +224,7 @@ function LeadCaptureForm() {
       />
 
       <button type="submit" disabled={sending} className="btn-star w-full justify-center disabled:opacity-60">
-        {sending ? 'Enviando...' : 'Accede aquí a las 3 formas de empezar'}
+        {sending ? 'Enviando...' : 'Accede aquí al caso de estudio'}
         <ArrowRight className="w-4 h-4" />
       </button>
 
@@ -380,27 +383,29 @@ export default function DropshippingMentoria() {
       <section className="max-w-5xl mx-auto px-6 pt-20 pb-16">
         <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
           <div className="text-center lg:text-left">
-            <span className="eyebrow">Mentoría · Dropshipping & Ecommerce</span>
+            <span className="eyebrow">Caso de estudio · $2.000 USD de utilidad en el mes 2</span>
             <h1 className="display-xl text-4xl sm:text-5xl md:text-6xl mt-6 mb-6">
               Te enseño cómo vender por internet
               <br />
-              sin adivinar, con <span className="glow">datos reales</span>.
+              generando <span className="glow">utilidad real</span> desde el mes 2.
             </h1>
             <p className="text-ice text-lg mb-8">
-              Llevo más de 10 años diseñando campañas y sistemas de medición para marcas como
-              Telefónica, UNICEF y Banco de Occidente. En la guía{' '}
+              En este caso de estudio te cuento cómo llegamos a $2.000 USD de utilidad en el mes 2
+              de una tienda armada desde cero, con el mismo proceso que uso hoy con mis propios
+              proyectos y con marcas como Telefónica, UNICEF y Banco de Occidente. Lo detallo
+              también en la guía{' '}
               <Link
                 to="/blog/ecommerce-en-5-pasos-con-dropi"
                 className="text-star-light underline hover:text-frost"
               >
                 "Cómo lanzar un ecommerce en 5 pasos con Dropi"
-              </Link>{' '}
-              cuento el mismo proceso que uso hoy con mis propios proyectos, sin fórmulas mágicas.
+              </Link>
+              .
             </p>
           </div>
           <div className="card-galaxy p-6 sm:p-8">
             <p className="label-mono !text-star-light mb-4 text-center lg:text-left">
-              Déjame tus datos y te muestro cómo empezar
+              Déjame tus datos y accede al caso de estudio
             </p>
             <LeadCaptureForm />
           </div>
