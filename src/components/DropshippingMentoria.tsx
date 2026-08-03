@@ -382,20 +382,20 @@ export default function DropshippingMentoria() {
           <div className="text-center lg:text-left">
             <span className="eyebrow">Mentoría · Dropshipping & Ecommerce</span>
             <h1 className="display-xl text-4xl sm:text-5xl md:text-6xl mt-6 mb-6">
-              Te enseño a vender productos físicos por internet
+              Te enseño cómo vender por internet
               <br />
-              con <span className="glow">datos</span>, no con adivinanzas.
+              sin adivinar, con <span className="glow">datos reales</span>.
             </h1>
             <p className="text-ice text-lg mb-8">
-              Más de 10 años diseñando campañas y sistemas de medición para marcas como Telefónica,
-              UNICEF y Banco de Occidente. En la guía{' '}
+              Llevo más de 10 años diseñando campañas y sistemas de medición para marcas como
+              Telefónica, UNICEF y Banco de Occidente. En la guía{' '}
               <Link
                 to="/blog/ecommerce-en-5-pasos-con-dropi"
                 className="text-star-light underline hover:text-frost"
               >
                 "Cómo lanzar un ecommerce en 5 pasos con Dropi"
               </Link>{' '}
-              te cuento el mismo proceso que uso para llevar una idea a ventas consistentes.
+              cuento el mismo proceso que uso hoy con mis propios proyectos, sin fórmulas mágicas.
             </p>
           </div>
           <div className="card-galaxy p-6 sm:p-8">
