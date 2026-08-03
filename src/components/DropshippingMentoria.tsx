@@ -15,6 +15,9 @@ import {
   TrendingUp,
   Linkedin,
   ImageOff,
+  PlayCircle,
+  Volume2,
+  VolumeX,
 } from 'lucide-react';
 
 // ============================================================
@@ -42,28 +45,38 @@ const AVAILABLE_SLOTS = [
   'Viernes 3:00 p.m. (hora Colombia)',
 ];
 
-const COUNTRIES = [
-  'Colombia',
-  'Ecuador',
-  'México',
-  'Perú',
-  'Uruguay',
-  'Paraguay',
-  'Argentina',
-  'Chile',
-  'Brasil',
-  'Costa Rica',
-  'Puerto Rico',
-  'República Dominicana',
-  'Guatemala',
-  'Honduras',
-  'El Salvador',
-  'Nicaragua',
-  'Panamá',
-  'España',
-  'Estados Unidos',
-  'Venezuela',
+// Países con bandera + indicativo telefónico, para el selector de WhatsApp
+// con prefijo de país (mismo patrón visual que la referencia de Master
+// Escala: bandera + código pegados al campo de número).
+const COUNTRY_CODES = [
+  { name: 'Colombia', flag: '🇨🇴', dial: '+57' },
+  { name: 'Ecuador', flag: '🇪🇨', dial: '+593' },
+  { name: 'México', flag: '🇲🇽', dial: '+52' },
+  { name: 'Perú', flag: '🇵🇪', dial: '+51' },
+  { name: 'Uruguay', flag: '🇺🇾', dial: '+598' },
+  { name: 'Paraguay', flag: '🇵🇾', dial: '+595' },
+  { name: 'Argentina', flag: '🇦🇷', dial: '+54' },
+  { name: 'Chile', flag: '🇨🇱', dial: '+56' },
+  { name: 'Brasil', flag: '🇧🇷', dial: '+55' },
+  { name: 'Costa Rica', flag: '🇨🇷', dial: '+506' },
+  { name: 'Puerto Rico', flag: '🇵🇷', dial: '+1' },
+  { name: 'República Dominicana', flag: '🇩🇴', dial: '+1' },
+  { name: 'Guatemala', flag: '🇬🇹', dial: '+502' },
+  { name: 'Honduras', flag: '🇭🇳', dial: '+504' },
+  { name: 'El Salvador', flag: '🇸🇻', dial: '+503' },
+  { name: 'Nicaragua', flag: '🇳🇮', dial: '+505' },
+  { name: 'Panamá', flag: '🇵🇦', dial: '+507' },
+  { name: 'España', flag: '🇪🇸', dial: '+34' },
+  { name: 'Estados Unidos', flag: '🇺🇸', dial: '+1' },
+  { name: 'Venezuela', flag: '🇻🇪', dial: '+58' },
 ];
+
+const COUNTRIES = COUNTRY_CODES.map((c) => c.name);
+
+// TODO: reemplazar por el video real (ej: '/mentoria-hero.mp4'). Mientras
+// esté vacío, se muestra un placeholder en el mismo espacio para no
+// inventar contenido que todavía no existe.
+const HERO_VIDEO_SRC = '';
 
 // Tarjetas de calificación: ícono + título corto + descripción,
 // mismo formato que "Esto es para ti solo si..." de la referencia.
@@ -110,6 +123,54 @@ const RESULT_IMAGES: string[] = [];
 // no se muestra en la página.
 const TESTIMONIALS: { name: string; quote: string }[] = [];
 
+// Video del hero con botón de silencio/sonido superpuesto, igual que la
+// referencia. Si todavía no hay archivo cargado (HERO_VIDEO_SRC vacío), se
+// muestra un placeholder marcado en vez de inventar contenido.
+function HeroVideo() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [muted, setMuted] = useState(true);
+
+  if (!HERO_VIDEO_SRC) {
+    return (
+      <div className="relative aspect-[9/16] sm:aspect-video w-full rounded-2xl border border-cyan-400/25 bg-space-900 flex flex-col items-center justify-center gap-3 text-center px-6">
+        <PlayCircle className="w-10 h-10 text-cyan-400" />
+        <p className="text-sm text-muted">
+          Espacio reservado para el video del caso de estudio. Se agrega en{' '}
+          <code className="text-cyan-400">HERO_VIDEO_SRC</code> dentro de este componente.
+        </p>
+      </div>
+    );
+  }
+
+  const toggleMute = () => {
+    if (!videoRef.current) return;
+    videoRef.current.muted = !videoRef.current.muted;
+    setMuted(videoRef.current.muted);
+  };
+
+  return (
+    <div className="relative aspect-[9/16] sm:aspect-video w-full rounded-2xl overflow-hidden border border-cyan-400/25 bg-black">
+      <video
+        ref={videoRef}
+        src={HERO_VIDEO_SRC}
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="w-full h-full object-cover"
+      />
+      <button
+        type="button"
+        onClick={toggleMute}
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 rounded-full bg-black/70 border border-white/20 px-4 py-2 text-xs font-semibold text-white backdrop-blur-sm hover:bg-black/85 transition-colors"
+      >
+        {muted ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+        {muted ? 'Activar sonido' : 'Silenciar'}
+      </button>
+    </div>
+  );
+}
+
 function encodeFormData(data: Record<string, string>) {
   return Object.keys(data)
     .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
@@ -121,12 +182,15 @@ function encodeFormData(data: Record<string, string>) {
 // vía Netlify Forms y lleva al visitante a las 3 formas de empezar.
 function LeadCaptureForm() {
   const formRef = useRef<HTMLFormElement>(null);
-  const [country, setCountry] = useState(COUNTRIES[0]);
+  const [countryIndex, setCountryIndex] = useState(0);
+  const [whatsappNumber, setWhatsappNumber] = useState('');
   const [sending, setSending] = useState(false);
   const [status, setStatus] = useState<{ message: string; type: 'success' | 'error' | null }>({
     message: '',
     type: null,
   });
+
+  const selectedCountry = COUNTRY_CODES[countryIndex];
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -160,7 +224,8 @@ function LeadCaptureForm() {
         type: 'success',
       });
       form.reset();
-      setCountry(COUNTRIES[0]);
+      setCountryIndex(0);
+      setWhatsappNumber('');
       document.getElementById('opciones')?.scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
       console.error('Error al enviar el lead a Netlify:', error);
@@ -194,42 +259,56 @@ function LeadCaptureForm() {
         name="lead_name"
         required
         placeholder="Nombre completo"
-        className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-sm text-frost placeholder:text-muted focus:border-star-light/45 outline-none"
+        className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-sm text-frost placeholder:text-muted focus:border-cyan-400/60 outline-none"
       />
       <input
         type="email"
         name="lead_email"
         required
         placeholder="Correo electrónico"
-        className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-sm text-frost placeholder:text-muted focus:border-star-light/45 outline-none"
+        className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-sm text-frost placeholder:text-muted focus:border-cyan-400/60 outline-none"
       />
-      <select
-        name="lead_country"
-        value={country}
-        onChange={(e) => setCountry(e.target.value)}
-        className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-sm text-frost focus:border-star-light/45 outline-none"
-      >
-        {COUNTRIES.map((c) => (
-          <option key={c} value={c}>
-            {c}
-          </option>
-        ))}
-      </select>
-      <input
-        type="text"
-        name="lead_whatsapp"
-        required
-        placeholder="WhatsApp (con indicativo del país)"
-        className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-sm text-frost placeholder:text-muted focus:border-star-light/45 outline-none"
-      />
+      {/* Campo oculto con el nombre del país, para mantener el mismo dato
+          que antes viajaba en lead_country (ahora se elige junto al
+          indicativo de WhatsApp, como en la referencia) */}
+      <input type="hidden" name="lead_country" value={selectedCountry.name} />
+      {/* WhatsApp con selector de bandera + indicativo pegado al campo,
+          igual que la referencia */}
+      <div className="flex gap-2">
+        <select
+          value={countryIndex}
+          onChange={(e) => setCountryIndex(Number(e.target.value))}
+          aria-label="Indicativo de país"
+          className="shrink-0 w-[6.5rem] rounded-xl bg-space-900 border border-star-light/15 px-2 py-3 text-sm text-frost focus:border-cyan-400/60 outline-none"
+        >
+          {COUNTRY_CODES.map((c, i) => (
+            <option key={c.name} value={i}>
+              {c.flag} {c.dial}
+            </option>
+          ))}
+        </select>
+        <input
+          type="tel"
+          value={whatsappNumber}
+          onChange={(e) => setWhatsappNumber(e.target.value)}
+          required
+          placeholder="Número de WhatsApp"
+          className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-sm text-frost placeholder:text-muted focus:border-cyan-400/60 outline-none"
+        />
+      </div>
+      <input type="hidden" name="lead_whatsapp" value={`${selectedCountry.dial} ${whatsappNumber}`} />
 
-      <button type="submit" disabled={sending} className="btn-star w-full justify-center disabled:opacity-60">
-        {sending ? 'Enviando...' : 'Accede aquí al caso de estudio'}
-        <ArrowRight className="w-4 h-4" />
+      <button
+        type="submit"
+        disabled={sending}
+        className="w-full justify-center inline-flex items-center gap-2 rounded-full bg-[#FF2D55] hover:bg-[#e6234c] text-white font-bold text-sm sm:text-base px-6 py-4 transition-colors disabled:opacity-60"
+      >
+        <PlayCircle className="w-5 h-5" />
+        {sending ? 'Enviando...' : 'ACCEDE AQUÍ al caso de estudio'}
       </button>
 
       {status.type && (
-        <p className={`text-sm ${status.type === 'success' ? 'text-signal-teal' : 'text-red-400'}`}>
+        <p className={`text-sm ${status.type === 'success' ? 'text-cyan-400' : 'text-red-400'}`}>
           {status.message}
         </p>
       )}
@@ -377,36 +456,42 @@ function BookingForm() {
 
 export default function DropshippingMentoria() {
   return (
-    <div className="min-h-screen bg-space-950 text-frost">
-      {/* Hero: mismo formato que la referencia — headline + subheadline tipo
-          "caso de estudio" + formulario de captura de lead arriba del scroll */}
-      <section className="max-w-5xl mx-auto px-6 pt-20 pb-16">
-        <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
-          <div className="text-center lg:text-left">
-            <span className="eyebrow">Caso de estudio · $10.000 USD de facturación en el mes 2</span>
-            <h1 className="display-xl text-4xl sm:text-5xl md:text-6xl mt-6 mb-6">
-              Te enseño cómo vender <span className="glow">cualquier cosa</span>
-              <br />
-              por internet.
-            </h1>
-            <p className="text-ice text-lg mb-4">
-              Ingresa tus datos y aprende con este caso de estudio cómo llegamos a $10.000 USD de
-              facturación en el mes 2, en una tienda armada desde cero, con el mismo proceso que
-              uso hoy con mis propios proyectos y con grandes marcas nacionales e internacionales.
-            </p>
-            <p className="text-muted text-sm mb-8">
-              Parte de ese proceso también está en la guía{' '}
-              <Link
-                to="/blog/ecommerce-en-5-pasos-con-dropi"
-                className="text-star-light underline hover:text-frost"
-              >
-                "Cómo lanzar un ecommerce en 5 pasos con Dropi"
-              </Link>
-              .
-            </p>
-          </div>
-          <div className="card-galaxy p-6 sm:p-8">
-            <p className="label-mono !text-star-light mb-4 text-center lg:text-left">
+    <div className="min-h-screen bg-black text-frost">
+      {/* Hero: alto contraste negro + titular en cian, video con toggle de
+          sonido y formulario de captura de lead arriba del scroll, siguiendo
+          de cerca la referencia de Master Escala */}
+      <section className="max-w-5xl mx-auto px-6 pt-16 pb-16">
+        <div className="text-center max-w-3xl mx-auto mb-10">
+          <span className="eyebrow">Caso de estudio · $10.000 USD de facturación en el mes 2</span>
+          <h1 className="display-xl text-4xl sm:text-5xl md:text-6xl mt-6 mb-6">
+            Te enseño cómo vender{' '}
+            <span className="text-cyan-400 drop-shadow-[0_0_18px_rgba(34,211,238,0.45)]">
+              CUALQUIER COSA
+            </span>
+            <br />
+            por internet.
+          </h1>
+          <p className="text-ice text-lg mb-4">
+            Ingresa tus datos y aprende con este caso de estudio cómo llegamos a $10.000 USD de
+            facturación en el mes 2, en una tienda armada desde cero, con el mismo proceso que
+            uso hoy con mis propios proyectos y con grandes marcas nacionales e internacionales.
+          </p>
+          <p className="text-muted text-sm">
+            Parte de ese proceso también está en la guía{' '}
+            <Link
+              to="/blog/ecommerce-en-5-pasos-con-dropi"
+              className="text-cyan-400 underline hover:text-frost"
+            >
+              "Cómo lanzar un ecommerce en 5 pasos con Dropi"
+            </Link>
+            .
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-[0.95fr_1.05fr] gap-8 items-start max-w-4xl mx-auto">
+          <HeroVideo />
+          <div className="rounded-2xl border border-cyan-400/20 bg-space-900 p-6 sm:p-8">
+            <p className="label-mono !text-cyan-400 mb-4 text-center lg:text-left">
               Déjame tus datos y accede al caso de estudio
             </p>
             <LeadCaptureForm />

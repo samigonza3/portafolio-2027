@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import {
   Megaphone,
   Code2,
@@ -942,9 +942,16 @@ function HomePage() {
 }
 
 export default function App() {
+  const location = useLocation();
+  // La página de Mentoría es un landing page de venta directa: el menú y el
+  // footer son "fugas" que sacan al visitante antes de que convierta, así
+  // que no se muestran en esa ruta (misma lógica que funnels de referencia
+  // como masterescala.co).
+  const isLandingPage = location.pathname.startsWith('/mentoria-dropshipping');
+
   return (
     <>
-      <NavBar />
+      {!isLandingPage && <NavBar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/blog" element={<Blog />} />
@@ -954,7 +961,7 @@ export default function App() {
         <Route path="/google-ads-checklist" element={<GoogleAdsChecklist />} />
         <Route path="/recursos/google-ads-checklist" element={<GoogleAdsChecklist />} />
       </Routes>
-      <Footer />
+      {!isLandingPage && <Footer />}
     </>
   );
 }
