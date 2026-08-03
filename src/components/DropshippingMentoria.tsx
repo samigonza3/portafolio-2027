@@ -456,12 +456,20 @@ function BookingForm() {
 
 export default function DropshippingMentoria() {
   return (
-    <div className="min-h-screen bg-black text-frost">
-      {/* Hero: alto contraste negro + titular en cian, video con toggle de
-          sonido y formulario de captura de lead arriba del scroll, siguiendo
-          de cerca la referencia de Master Escala */}
-      <section className="max-w-5xl mx-auto px-6 pt-16 pb-16">
-        <div className="text-center max-w-3xl mx-auto mb-10">
+    <div className="min-h-screen bg-gradient-to-b from-black via-space-950 to-nebula text-frost">
+      {/* Barra superior de contexto, full-bleed y en color de contraste,
+          primer elemento que se ve mobile-first */}
+      <div className="bg-cyan-400 text-black text-center py-2.5 px-3">
+        <p className="label-mono !text-black !tracking-wide text-[11px] sm:text-xs font-bold">
+          Programa de mentoría para emprendedores y emprendedoras
+        </p>
+      </div>
+
+      {/* Hero: orden mobile-first — copy principal, subcopy, formulario y
+          por último el video, siguiendo de cerca la referencia de Master
+          Escala pero con márgenes reducidos para que se vea completo */}
+      <section className="max-w-3xl mx-auto px-3 sm:px-6 pt-10 pb-16">
+        <div className="text-center mb-8">
           <span className="eyebrow">Caso de estudio · $10.000 USD de facturación en el mes 2</span>
           <h1 className="display-xl text-4xl sm:text-5xl md:text-6xl mt-6 mb-6">
             Te enseño cómo vender{' '}
@@ -488,19 +496,18 @@ export default function DropshippingMentoria() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-[0.95fr_1.05fr] gap-8 items-start max-w-4xl mx-auto">
-          <HeroVideo />
-          <div className="rounded-2xl border border-cyan-400/20 bg-space-900 p-6 sm:p-8">
-            <p className="label-mono !text-cyan-400 mb-4 text-center lg:text-left">
-              Déjame tus datos y accede al caso de estudio
-            </p>
-            <LeadCaptureForm />
-          </div>
+        <div className="rounded-2xl border border-cyan-400/20 bg-space-900 p-5 sm:p-8 mb-6">
+          <p className="label-mono !text-cyan-400 mb-4 text-center">
+            Déjame tus datos y accede al caso de estudio
+          </p>
+          <LeadCaptureForm />
         </div>
+
+        <HeroVideo />
       </section>
 
       {/* Calificación / para quién es, en tarjetas con ícono como la referencia */}
-      <section className="max-w-5xl mx-auto px-6 py-14 border-t border-star-light/15">
+      <section className="max-w-5xl mx-auto px-3 sm:px-6 py-14 border-t border-star-light/15">
         <h2 className="text-2xl md:text-3xl font-extrabold mb-8 text-center">
           Esto es para ti solo si...
         </h2>
@@ -520,7 +527,7 @@ export default function DropshippingMentoria() {
       {/* Prueba social: solo se muestra cuando haya testimonios reales cargados
           en TESTIMONIALS, igual que la referencia pero sin inventar nada. */}
       {TESTIMONIALS.length > 0 && (
-        <section className="max-w-5xl mx-auto px-6 py-14 border-t border-star-light/15">
+        <section className="max-w-5xl mx-auto px-3 sm:px-6 py-14 border-t border-star-light/15">
           <h2 className="text-2xl md:text-3xl font-extrabold mb-8 text-center">
             Lo que dicen quienes ya pasaron por la mentoría
           </h2>
@@ -537,7 +544,7 @@ export default function DropshippingMentoria() {
 
       {/* Autoridad del mentor, mismo formato que la ficha de perfil de la
           referencia: foto, nombre, redes y bio */}
-      <section className="max-w-4xl mx-auto px-6 py-14 border-t border-star-light/15">
+      <section className="max-w-4xl mx-auto px-3 sm:px-6 py-14 border-t border-star-light/15">
         <h2 className="text-2xl md:text-3xl font-extrabold mb-6 text-center">
           Por qué te conviene escucharme
         </h2>
@@ -575,7 +582,7 @@ export default function DropshippingMentoria() {
 
       {/* Resultados: solo se muestra cuando haya capturas reales cargadas en
           RESULT_IMAGES. Mientras tanto, se deja el espacio listo y marcado. */}
-      <section className="max-w-5xl mx-auto px-6 py-14 border-t border-star-light/15">
+      <section className="max-w-5xl mx-auto px-3 sm:px-6 py-14 border-t border-star-light/15">
         <h2 className="text-2xl md:text-3xl font-extrabold mb-8 text-center">Algunos resultados</h2>
         {RESULT_IMAGES.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -595,7 +602,7 @@ export default function DropshippingMentoria() {
       </section>
 
       {/* Las 3 formas de empezar: la oferta real de Samuel */}
-      <section id="opciones" className="max-w-5xl mx-auto px-6 py-14 border-t border-star-light/15">
+      <section id="opciones" className="max-w-5xl mx-auto px-3 sm:px-6 py-14 border-t border-star-light/15">
         <div className="text-center mb-10">
           <span className="eyebrow">Elige cómo empezar</span>
           <h2 className="text-2xl md:text-3xl font-extrabold mt-4">3 formas de dar el paso</h2>
@@ -660,7 +667,7 @@ export default function DropshippingMentoria() {
       </section>
 
       {/* Reserva de llamada */}
-      <section id="reservar" className="max-w-2xl mx-auto px-6 py-14 border-t border-star-light/15">
+      <section id="reservar" className="max-w-2xl mx-auto px-3 sm:px-6 py-14 border-t border-star-light/15">
         <div className="text-center mb-8">
           <Sparkles className="w-6 h-6 text-star-light mx-auto mb-3" />
           <h2 className="text-2xl md:text-3xl font-extrabold mb-2">Agenda tu llamada de discovery</h2>
@@ -675,7 +682,7 @@ export default function DropshippingMentoria() {
       </section>
 
       {/* FAQ corto */}
-      <section className="max-w-3xl mx-auto px-6 py-14 border-t border-star-light/15">
+      <section className="max-w-3xl mx-auto px-3 sm:px-6 py-14 border-t border-star-light/15">
         <h2 className="text-2xl md:text-3xl font-extrabold mb-8 text-center">Preguntas frecuentes</h2>
         <div className="space-y-6">
           <div>
@@ -711,7 +718,7 @@ export default function DropshippingMentoria() {
       </section>
 
       {/* CTA final */}
-      <section className="max-w-3xl mx-auto px-6 py-16 text-center border-t border-star-light/15">
+      <section className="max-w-3xl mx-auto px-3 sm:px-6 py-16 text-center border-t border-star-light/15">
         <h2 className="text-2xl md:text-3xl font-extrabold mb-4">¿Listo para dar el paso?</h2>
         <p className="text-ice mb-8">Elige la opción con la que quieras empezar.</p>
         <a href="#opciones" className="btn-star">
@@ -721,7 +728,7 @@ export default function DropshippingMentoria() {
 
       {/* Disclaimers: igual función que en la referencia — transparencia legal
           y aviso de que este sitio no depende de Meta/Facebook/Instagram. */}
-      <section className="max-w-3xl mx-auto px-6 py-14 border-t border-star-light/15">
+      <section className="max-w-3xl mx-auto px-3 sm:px-6 py-14 border-t border-star-light/15">
         <div className="text-muted text-xs leading-relaxed space-y-3">
           <p>
             Este sitio no es parte del sitio web de Facebook, Meta o Instagram, ni está respaldado
