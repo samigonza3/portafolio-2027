@@ -8,13 +8,22 @@ import {
   Video,
   Sparkles,
   Clock,
+  Briefcase,
+  Rocket,
+  GraduationCap,
+  Store,
+  TrendingUp,
+  Linkedin,
+  ImageOff,
 } from 'lucide-react';
 
 // ============================================================
 // Página de venta: Mentoría de Dropshipping / Ecommerce
-// Estructura de "venta en frío" clásica (hero → calificación →
-// por qué escucharme → 3 formas de empezar → reserva → FAQ),
-// adaptada a la oferta real de Samuel: comunidad de WhatsApp
+// Estructura inspirada en el funnel de referencia de Master Escala
+// (masterescala.co/soyivancaicedo): hero con captura de lead →
+// calificación en tarjetas con ícono → prueba social → autoridad
+// del mentor → resultados → oferta real → reserva → FAQ → disclaimers.
+// Adaptada a la oferta real de Samuel: comunidad de WhatsApp
 // gratuita, Blueprint de pago único ($5) y mentoría 1:1 ($250).
 // ============================================================
 
@@ -33,18 +42,200 @@ const AVAILABLE_SLOTS = [
   'Viernes 3:00 p.m. (hora Colombia)',
 ];
 
-const QUALIFY_ITEMS = [
-  'Quieres lanzar o ya tienes un ecommerce, pero sientes que vas a ciegas con los números.',
-  'Has visto cursos o contenido gratuito sobre dropshipping, pero te falta un paso a paso claro y aplicado a tu caso.',
-  'Te importa más entender qué funciona con datos reales que "creer" en una fórmula mágica.',
-  'Estás dispuesto a invertir tiempo (y algo de dinero) en aprender bien, no solo en probar suerte.',
-  'Prefieres avanzar acompañado, con alguien que ya ha trabajado pauta y datos para marcas reales.',
+const COUNTRIES = [
+  'Colombia',
+  'Ecuador',
+  'México',
+  'Perú',
+  'Uruguay',
+  'Paraguay',
+  'Argentina',
+  'Chile',
+  'Brasil',
+  'Costa Rica',
+  'Puerto Rico',
+  'República Dominicana',
+  'Guatemala',
+  'Honduras',
+  'El Salvador',
+  'Nicaragua',
+  'Panamá',
+  'España',
+  'Estados Unidos',
+  'Venezuela',
 ];
+
+// Tarjetas de calificación: ícono + título corto + descripción,
+// mismo formato que "Esto es para ti solo si..." de la referencia.
+const QUALIFY_ITEMS = [
+  {
+    icon: Briefcase,
+    title: 'Eres empleado',
+    description:
+      'y aunque no estás satisfecho del todo, te da miedo soltar la seguridad de un sueldo fijo sin tener algo propio construido primero.',
+  },
+  {
+    icon: Rocket,
+    title: 'Eres emprendedor',
+    description:
+      'y quieres un negocio digital que puedas manejar desde cualquier parte, sin depender de un local físico ni de un horario fijo.',
+  },
+  {
+    icon: GraduationCap,
+    title: 'Ya compraste cursos grabados',
+    description:
+      'pero sin acompañamiento personalizado te perdiste en el camino y todavía no has visto resultados reales.',
+  },
+  {
+    icon: Store,
+    title: 'Tienes una tienda que no despega',
+    description:
+      'haces dropshipping o ecommerce, pero no logras resultados estables que te permitan dedicarte de lleno a esto.',
+  },
+  {
+    icon: TrendingUp,
+    title: 'Estás dispuesto a invertir en ti',
+    description:
+      'en tiempo y en dinero, para llevar tus resultados a otro nivel en vez de seguir probando solo por tu cuenta.',
+  },
+];
+
+// TODO: cuando tengas capturas de resultados de clientes o de tus propias
+// tiendas, agrégalas aquí como rutas de imagen (ej: '/resultados/venta-1.png')
+// y la sección de resultados las muestra automáticamente en grid.
+const RESULT_IMAGES: string[] = [];
+
+// TODO: cuando tengas testimonios de estudiantes o clientes de la mentoría,
+// agrégalos aquí. Mientras el array esté vacío, la sección de prueba social
+// no se muestra en la página.
+const TESTIMONIALS: { name: string; quote: string }[] = [];
 
 function encodeFormData(data: Record<string, string>) {
   return Object.keys(data)
     .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
     .join('&');
+}
+
+// Formulario de captura de lead en el hero, mismo set de campos que la
+// referencia: nombre, correo, país y WhatsApp. Al enviarlo, guarda el lead
+// vía Netlify Forms y lleva al visitante a las 3 formas de empezar.
+function LeadCaptureForm() {
+  const formRef = useRef<HTMLFormElement>(null);
+  const [country, setCountry] = useState(COUNTRIES[0]);
+  const [sending, setSending] = useState(false);
+  const [status, setStatus] = useState<{ message: string; type: 'success' | 'error' | null }>({
+    message: '',
+    type: null,
+  });
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSending(true);
+
+    const form = formRef.current;
+    if (!form) {
+      setSending(false);
+      return;
+    }
+
+    const formData = new FormData(form);
+    const data: Record<string, string> = {};
+    formData.forEach((value, key) => {
+      data[key] = String(value);
+    });
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encodeFormData(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Netlify Forms respondió con estado ${response.status}`);
+      }
+
+      setStatus({ message: 'Listo. Mira las 3 formas de empezar aquí abajo.', type: 'success' });
+      form.reset();
+      setCountry(COUNTRIES[0]);
+      document.getElementById('opciones')?.scrollIntoView({ behavior: 'smooth' });
+    } catch (error) {
+      console.error('Error al enviar el lead a Netlify:', error);
+      setStatus({
+        message: 'Hubo un error al enviar tus datos. Intenta de nuevo o escríbeme directo.',
+        type: 'error',
+      });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit}
+      name="lead-mentoria"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      className="space-y-3 text-left"
+    >
+      <input type="hidden" name="form-name" value="lead-mentoria" />
+      <p className="hidden">
+        <label>
+          No llenar: <input name="bot-field" />
+        </label>
+      </p>
+
+      <input
+        type="text"
+        name="lead_name"
+        required
+        placeholder="Nombre completo"
+        className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-sm text-frost placeholder:text-muted focus:border-star-light/45 outline-none"
+      />
+      <input
+        type="email"
+        name="lead_email"
+        required
+        placeholder="Correo electrónico"
+        className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-sm text-frost placeholder:text-muted focus:border-star-light/45 outline-none"
+      />
+      <select
+        name="lead_country"
+        value={country}
+        onChange={(e) => setCountry(e.target.value)}
+        className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-sm text-frost focus:border-star-light/45 outline-none"
+      >
+        {COUNTRIES.map((c) => (
+          <option key={c} value={c}>
+            {c}
+          </option>
+        ))}
+      </select>
+      <input
+        type="text"
+        name="lead_whatsapp"
+        required
+        placeholder="WhatsApp (con indicativo del país)"
+        className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-sm text-frost placeholder:text-muted focus:border-star-light/45 outline-none"
+      />
+
+      <button type="submit" disabled={sending} className="btn-star w-full justify-center disabled:opacity-60">
+        {sending ? 'Enviando...' : 'Accede aquí a las 3 formas de empezar'}
+        <ArrowRight className="w-4 h-4" />
+      </button>
+
+      {status.type && (
+        <p className={`text-sm ${status.type === 'success' ? 'text-signal-teal' : 'text-red-400'}`}>
+          {status.message}
+        </p>
+      )}
+
+      <p className="text-xs text-muted leading-relaxed">
+        Al dar clic aceptas que te contacte por WhatsApp o correo para darte seguimiento.
+      </p>
+    </form>
+  );
 }
 
 function BookingForm() {
@@ -184,59 +375,104 @@ function BookingForm() {
 export default function DropshippingMentoria() {
   return (
     <div className="min-h-screen bg-space-950 text-frost">
-      {/* Hero */}
-      <section className="max-w-4xl mx-auto px-6 pt-20 pb-16 text-center">
-        <span className="eyebrow">Mentoría · Dropshipping & Ecommerce</span>
-        <h1 className="display-xl text-4xl sm:text-5xl md:text-6xl mt-6 mb-6">
-          Construye tu ecommerce
-          <br />
-          con <span className="glow">datos</span>, no con adivinanzas.
-        </h1>
-        <p className="text-ice text-lg max-w-2xl mx-auto mb-10">
-          Más de 10 años trabajando pauta digital y analítica de datos para marcas como Telefónica,
-          UNICEF, Banco de Occidente e IFMG. Ahora aplico lo mismo a ayudarte a lanzar y escalar tu
-          propio dropshipping, paso a paso y sin humo.
-        </p>
-        <a href="#opciones" className="btn-star">
-          Ver las 3 formas de empezar <ArrowRight className="w-4 h-4" />
-        </a>
+      {/* Hero: mismo formato que la referencia — headline + subheadline tipo
+          "caso de estudio" + formulario de captura de lead arriba del scroll */}
+      <section className="max-w-5xl mx-auto px-6 pt-20 pb-16">
+        <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
+          <div className="text-center lg:text-left">
+            <span className="eyebrow">Mentoría · Dropshipping & Ecommerce</span>
+            <h1 className="display-xl text-4xl sm:text-5xl md:text-6xl mt-6 mb-6">
+              Te enseño a vender productos físicos por internet
+              <br />
+              con <span className="glow">datos</span>, no con adivinanzas.
+            </h1>
+            <p className="text-ice text-lg mb-8">
+              Más de 10 años diseñando campañas y sistemas de medición para marcas como Telefónica,
+              UNICEF y Banco de Occidente. En la guía{' '}
+              <Link
+                to="/blog/ecommerce-en-5-pasos-con-dropi"
+                className="text-star-light underline hover:text-frost"
+              >
+                "Cómo lanzar un ecommerce en 5 pasos con Dropi"
+              </Link>{' '}
+              te cuento el mismo proceso que uso para llevar una idea a ventas consistentes.
+            </p>
+          </div>
+          <div className="card-galaxy p-6 sm:p-8">
+            <p className="label-mono !text-star-light mb-4 text-center lg:text-left">
+              Déjame tus datos y te muestro cómo empezar
+            </p>
+            <LeadCaptureForm />
+          </div>
+        </div>
       </section>
 
-      {/* Calificación / para quién es */}
-      <section className="max-w-4xl mx-auto px-6 py-14 border-t border-star-light/15">
+      {/* Calificación / para quién es, en tarjetas con ícono como la referencia */}
+      <section className="max-w-5xl mx-auto px-6 py-14 border-t border-star-light/15">
         <h2 className="text-2xl md:text-3xl font-extrabold mb-8 text-center">
-          Esto es para ti si...
+          Esto es para ti solo si...
         </h2>
-        <div className="space-y-4">
-          {QUALIFY_ITEMS.map((item) => (
-            <div key={item} className="flex items-start gap-3 card-galaxy p-5">
-              <Check className="w-5 h-5 text-star-light shrink-0 mt-0.5" />
-              <p className="text-ice text-sm md:text-base">{item}</p>
+        <div className="grid sm:grid-cols-2 gap-4">
+          {QUALIFY_ITEMS.map(({ icon: Icon, title, description }) => (
+            <div key={title} className="card-galaxy p-6 flex items-start gap-4">
+              <Icon className="w-6 h-6 text-star-light shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-extrabold text-frost mb-1">{title}</h3>
+                <p className="text-ice text-sm leading-relaxed">{description}</p>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Por qué escucharme */}
+      {/* Prueba social: solo se muestra cuando haya testimonios reales cargados
+          en TESTIMONIALS, igual que la referencia pero sin inventar nada. */}
+      {TESTIMONIALS.length > 0 && (
+        <section className="max-w-5xl mx-auto px-6 py-14 border-t border-star-light/15">
+          <h2 className="text-2xl md:text-3xl font-extrabold mb-8 text-center">
+            Lo que dicen quienes ya pasaron por la mentoría
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {TESTIMONIALS.map((t) => (
+              <div key={t.name} className="card-galaxy p-6">
+                <p className="text-ice text-sm leading-relaxed mb-3">"{t.quote}"</p>
+                <p className="label-mono !text-muted">{t.name}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Autoridad del mentor, mismo formato que la ficha de perfil de la
+          referencia: foto, nombre, redes y bio */}
       <section className="max-w-4xl mx-auto px-6 py-14 border-t border-star-light/15">
         <h2 className="text-2xl md:text-3xl font-extrabold mb-6 text-center">
           Por qué te conviene escucharme
         </h2>
         <div className="card-galaxy p-8 md:p-10">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-6">
+            <img
+              src="/samuel-perfil.6836711e.jpg"
+              alt="Samuel González"
+              className="w-24 h-24 rounded-full object-cover border border-star-light/30"
+            />
+            <div className="text-center sm:text-left">
+              <p className="font-extrabold text-lg text-frost">Samuel González</p>
+              <p className="label-mono !text-muted mb-2">Data · Marketing · Code</p>
+              <a
+                href="https://www.linkedin.com/in/samuelgonzalez/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-star-light hover:text-frost inline-flex items-center gap-2 text-sm"
+              >
+                <Linkedin className="w-4 h-4" /> LinkedIn
+              </a>
+            </div>
+          </div>
           <p className="text-ice leading-relaxed mb-4">
-            Soy <strong className="text-frost">Samuel González</strong>, especialista en Paid Media
-            y análisis de datos. Llevo más de una década diseñando campañas y sistemas de medición
-            para marcas grandes y negocios que están empezando — desde equipos corporativos como
-            Telefónica, UNICEF, Banco de Occidente e IFMG, hasta emprendedores que arrancan su
-            primer ecommerce.
-          </p>
-          <p className="text-ice leading-relaxed mb-4">
-            Escribí la guía{' '}
-            <Link to="/blog/ecommerce-en-5-pasos-con-dropi" className="text-star-light underline hover:text-frost">
-              "Cómo lanzar un ecommerce en 5 pasos con Dropi"
-            </Link>{' '}
-            para compartir gratis parte de ese proceso. Esta mentoría es para quien quiere ir más
-            allá del artículo: aplicarlo a su caso concreto, con acompañamiento directo.
+            Llevo más de una década diseñando campañas y sistemas de medición para marcas grandes y
+            para negocios que están empezando: desde equipos corporativos como Telefónica, UNICEF y
+            Banco de Occidente, hasta emprendedores que arrancan su primer ecommerce.
           </p>
           <p className="text-ice leading-relaxed">
             No prometo cifras de ingresos ni fórmulas mágicas. Te ofrezco un método claro, basado en
@@ -245,7 +481,28 @@ export default function DropshippingMentoria() {
         </div>
       </section>
 
-      {/* Las 3 formas de empezar */}
+      {/* Resultados: solo se muestra cuando haya capturas reales cargadas en
+          RESULT_IMAGES. Mientras tanto, se deja el espacio listo y marcado. */}
+      <section className="max-w-5xl mx-auto px-6 py-14 border-t border-star-light/15">
+        <h2 className="text-2xl md:text-3xl font-extrabold mb-8 text-center">Algunos resultados</h2>
+        {RESULT_IMAGES.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            {RESULT_IMAGES.map((src) => (
+              <img key={src} src={src} alt="Resultado" className="rounded-xl border border-star-light/15" />
+            ))}
+          </div>
+        ) : (
+          <div className="card-galaxy p-8 text-center text-muted flex flex-col items-center gap-3">
+            <ImageOff className="w-6 h-6" />
+            <p className="text-sm">
+              Espacio reservado para capturas de resultados reales. Se agregan en{' '}
+              <code className="text-star-light">RESULT_IMAGES</code> dentro de este componente.
+            </p>
+          </div>
+        )}
+      </section>
+
+      {/* Las 3 formas de empezar: la oferta real de Samuel */}
       <section id="opciones" className="max-w-5xl mx-auto px-6 py-14 border-t border-star-light/15">
         <div className="text-center mb-10">
           <span className="eyebrow">Elige cómo empezar</span>
@@ -350,6 +607,14 @@ export default function DropshippingMentoria() {
               llamada. En la sesión revisamos tu caso concreto y salimos con un plan claro.
             </p>
           </div>
+          <div>
+            <h3 className="font-bold text-frost mb-1.5">¿Me garantizas resultados o ingresos específicos?</h3>
+            <p className="text-ice text-sm">
+              No. Te doy un método basado en datos y acompañamiento directo, pero tus resultados
+              dependen de tu producto, tu mercado, tu ejecución y tu constancia. Cualquiera que te
+              prometa una cifra fija de ingresos te está vendiendo humo.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -360,6 +625,27 @@ export default function DropshippingMentoria() {
         <a href="#opciones" className="btn-star">
           Ver las 3 formas de empezar <ArrowRight className="w-4 h-4" />
         </a>
+      </section>
+
+      {/* Disclaimers: igual función que en la referencia — transparencia legal
+          y aviso de que este sitio no depende de Meta/Facebook/Instagram. */}
+      <section className="max-w-3xl mx-auto px-6 py-14 border-t border-star-light/15">
+        <div className="text-muted text-xs leading-relaxed space-y-3">
+          <p>
+            Este sitio no es parte del sitio web de Facebook, Meta o Instagram, ni está respaldado
+            por ellos de ninguna manera. FACEBOOK e INSTAGRAM son marcas registradas de Meta, Inc.
+          </p>
+          <p>
+            Los resultados y experiencias que se mencionan en esta página (propios o de terceros
+            cuando se compartan) son personales y no típicos. No garantizo ingresos ni resultados
+            específicos: dependen de tu esfuerzo, tu producto, tu mercado, tu ejecución y factores
+            fuera de mi control. Todo negocio implica riesgo.
+          </p>
+          <p>
+            Al enviar tu nombre, correo o WhatsApp en esta página, autorizas a que te contacte por
+            esos medios para darte seguimiento sobre la mentoría, el Blueprint o la comunidad.
+          </p>
+        </div>
       </section>
     </div>
   );
