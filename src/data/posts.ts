@@ -35,6 +35,108 @@ export const CATEGORIES = [
 ] as const;
 export const posts: Post[] = [
   {
+    slug: 'lecciones-anuncios-meta-ads-para-vender-por-internet',
+    title: '1.513 Anuncios en Meta Ads en 30 Días: 6 Lecciones para Vender Más por Internet',
+    date: '2026-08-05',
+    category: 'Paid Media',
+    tags: ['Meta Ads', 'Publicidad en Facebook e Instagram', 'Emprendimiento', 'Vender por Internet'],
+    excerpt:
+      'Testeé 1.513 anuncios en Meta Ads en 30 días. Estas son 6 lecciones prácticas para emprendedores que quieren vender más por internet con Facebook e Instagram Ads.',
+    readTime: '7 min',
+    author: 'Samuel González',
+    metaDescription:
+      'Testeé 1.513 anuncios en Meta Ads en 30 días. Estas son 6 lecciones prácticas para emprendedores que quieren vender más por internet con Facebook e Instagram Ads.',
+    type: 'articulo',
+    relatedPosts: ['beta-cpa-meta-ads-escalar-presupuesto', 'ecommerce-en-5-pasos-con-dropi'],
+    content: `
+    <p>Testeé 1.513 anuncios en Meta Ads (Facebook e Instagram) en 30 días. No fue un plan de contenido con calendario. Fue el resultado de probar cosas nuevas cada día, sin apegarme a lo que "siempre funcionó".</p>
+    <br />
+    <p>Si estás empezando a vender por internet y quieres usar publicidad en Facebook o Instagram para conseguir clientes, esto no es una lista de trucos rápidos. Son las lecciones reales que me dejó ese mes, útiles tanto si apenas vas a lanzar tu primera campaña como si ya llevas tiempo invirtiendo en anuncios y sientes que dejaste de crecer.</p>
+    <br />
+    <p>Mi conclusión principal: deja de copiar lo que hace la competencia y lo que dicen los expertos en redes. Prueba cosas distintas, mide los resultados con calma, y deja que los números te digan qué funciona de verdad para tu producto.</p>
+    <br />
+    <div class="section">
+      <h2>1. Prueba cosas fuera de lo común, no solo lo "correcto"</h2>
+      <br />
+      <p>Los mejores anuncios que corrí ese mes no parecían anuncios. Parecían una publicación cualquiera que se coló entre las fotos de tus amigos. Esa es la clave de un buen anuncio: que se mezcle con lo que la gente ya está viendo, en vez de interrumpir.</p>
+      <br />
+      <p>Para encontrar ese tipo de contenido no sirve solo mirar qué anuncios está corriendo tu competencia. Ahí ves lo que otros ya decidieron mostrar, con sus propios gustos y errores incluidos. Lo que a mí me funciona es navegar el feed sin buscar anuncios, sino fijarme en las publicaciones normales que la gente comparte porque le gustan, no porque le pagaron por hacerlo. Eso es lo que tu cliente realmente ve y consume cuando nadie le está vendiendo nada.</p>
+      <br />
+      <p>Una técnica sencilla que uso mucho: hago una lista de todo lo que dicen los "expertos" que hay que hacer en un anuncio (texto llamativo en los primeros segundos, letras grandes, botón de compra agresivo, producto en primer plano) y, al lado, escribo exactamente lo contrario. Después lo pruebo.</p>
+      <br />
+      <p>No siempre gana lo contrario. A veces pierde feo. Pero cuando gana, gana fuerte, porque nadie más lo está intentando. Con una marca de suplementos que manejo, un competidor copió el diseño principal de nuestro anuncio: mismo estilo de letra, mismo color de fondo, mismo botón. En lugar de pelear por ese mismo diseño, empezamos a probar mensajes distintos sobre esa base. La diferencia terminó estando en lo que decíamos, no en cómo se veía.</p>
+    </div>
+    <br />
+    <div class="section">
+      <h2>2. Más anuncios no siempre significa más ventas</h2>
+      <br />
+      <p>Este es el error más caro que veo cometer a quienes empiezan: pensar que subir más y más anuncios siempre baja el costo de conseguir un cliente. Que si subes 50 variaciones más, la plataforma va a "aprender mejor" y todo va a mejorar solo.</p>
+      <br />
+      <p>No es así. Llega un momento, y llega más rápido de lo que uno cree, en el que subir más anuncios parecidos deja de ayudar. Puedes duplicar la cantidad de anuncios y el costo por cliente se queda igual, o incluso sube, porque terminas compitiendo contigo mismo por la misma audiencia con anuncios que en el fondo dicen lo mismo.</p>
+      <br />
+      <p>La forma de mejorar no es subir más anuncios iguales, es subir anuncios distintos entre sí. Un video hecho con el celular por un cliente real, al lado de una imagen fija bien diseñada, al lado de un testimonio largo. No cinco versiones del mismo anuncio con el color del botón cambiado.</p>
+      <br />
+      <p>Con esa misma marca de suplementos, el mensaje que mejor funcionó no fue una variación más del mismo anuncio. Fue una idea completamente nueva: en vez de hablarle al cliente sobre lo que él creía que era su problema (la comida, el estrés, la falta de disciplina), le hablamos de la causa real detrás de ese problema. Esa sola idea superó por mucho a las diez variaciones "correctas" que ya habíamos probado antes.</p>
+    </div>
+    <br />
+    <div class="section">
+      <h2>3. Las herramientas de inteligencia artificial ya no son una ventaja por sí solas</h2>
+      <br />
+      <p>Aquí muchos se van a molestar conmigo, pero hay que decirlo: hoy cualquier persona con las mismas herramientas de inteligencia artificial que tú puede crear un anuncio con buena imagen en minutos. Eso ya no te hace destacar. Es una cáscara que se ve bien por fuera, pero que no te protege de nadie más haciendo lo mismo.</p>
+      <br />
+      <p>Si tu única ventaja era "saber usar bien la herramienta para generar imágenes", esa ventaja se está acabando muy rápido, porque cada vez más gente accede a las mismas herramientas. Lo que sí sigue marcando la diferencia es el pensamiento detrás del anuncio: por qué elegiste ese mensaje, qué duda o miedo específico del cliente estás resolviendo, en qué momento de decisión de compra está esa persona.</p>
+      <br />
+      <p>Esto no aplica solo a tiendas online. En proyectos de publicidad para el sector automotriz construimos una tabla que cruza distintos deseos humanos (seguridad, pertenencia, reconocimiento, entre otros) con distintos niveles de conocimiento del cliente sobre el producto. La inteligencia artificial puede generarte 30 imágenes distintas en cinco minutos. Lo que no genera sola es esa tabla que te dice cuáles de esas 30 ideas vale la pena probar primero. Eso lo sigues decidiendo tú.</p>
+    </div>
+    <br />
+    <div class="section">
+      <h2>4. Mejorar tu proceso de venta multiplica el efecto de tus anuncios</h2>
+      <br />
+      <p>Esta fue la lección que más me sorprendió. Anuncios que yo había descartado como malos en un proceso de venta antiguo se convirtieron en ganadores cuando los corrí sobre un proceso de venta mejorado. Mismo anuncio, mismo presupuesto de prueba, resultado totalmente distinto.</p>
+      <br />
+      <p>Piénsalo como la marea que sube y levanta todos los barcos del puerto, incluso los que estaban medio hundidos. Un mejor proceso de venta (tu página web, tu formulario, tu proceso de pago, tus mensajes de seguimiento) no solo mejora tu mejor anuncio. Mejora también a los anuncios promedio, lo suficiente como para que algunos empiecen a ser rentables.</p>
+      <br />
+      <p>Antes de descartar un anuncio por "no funcionar", pregúntate si el problema es realmente el anuncio, o es todo lo que pasa después de que la persona hace clic.</p>
+    </div>
+    <br />
+    <div class="section">
+      <h2>5. Quien gestiona la pauta todavía hace la diferencia</h2>
+      <br />
+      <p>Hay una idea dando vueltas que dice que Facebook lo hace todo solo, que la plataforma es tan inteligente que ya no importa quién gestione la cuenta. No es cierto, y este mes de pruebas me lo confirmó con datos, no con opiniones.</p>
+      <br />
+      <p>Calculo que la gestión de la cuenta (cómo se organiza la campaña, cuándo subir presupuesto y cuándo frenar, cómo diferenciar un resultado real de una casualidad) sigue representando cerca del 20% del resultado final. No es el 80%, la calidad del anuncio y del producto siguen siendo lo más importante. Pero ese 20% es la diferencia entre un negocio rentable y uno que se ve bien en el reporte mientras pierde dinero por debajo.</p>
+      <br />
+      <p>La plataforma optimiza según lo que tú le indiques, con la estructura que tú le das. Si esa estructura está mal armada, vas a tener resultados mediocres, sin importar qué tan avanzada sea la tecnología detrás.</p>
+    </div>
+    <br />
+    <div class="section">
+      <h2>6. Dos reglas que te van a ahorrar dinero</h2>
+      <br />
+      <ul>
+        <li><strong>No edites un anuncio que ya está corriendo para "probar una variación".</strong> Cuando editas o duplicas un anuncio dentro de la misma publicación para testear algo nuevo, confundes a la plataforma. Sigue usando información de la versión anterior que ya no aplica, y eso te da datos poco confiables. Si vas a probar algo de verdad, créalo como una publicación completamente nueva.</li>
+        <li><strong>Un anuncio no deja de funcionar porque "la gente ya se cansó de verlo".</strong> En la mayoría de los casos, deja de funcionar por una de tres razones: la estructura de la campaña dejó de mostrarlo a la gente correcta, el proceso de venta después del clic dejó de convertir igual de bien, o el margen del producto (precio, costos, oferta) ya no soporta lo que cuesta conseguir un cliente. Antes de descartar un anuncio, revisa esas tres cosas.</li>
+      </ul>
+    </div>
+    <br />
+    <div class="section">
+      <h2>Para cerrar: atrévete a cambios grandes</h2>
+      <br />
+      <p>Si te quedas con una sola idea de estas 1.513 pruebas, que sea esta: deja de hacer solo cambios pequeños. Cambiar únicamente el título, mover el botón, ajustar un color, eso no es realmente probar. Es quedarte cómodo disfrazado de estar trabajando.</p>
+      <br />
+      <p>Quienes de verdad crecen se atreven a cambios grandes: reorganizan toda la campaña, prueban un formato que nadie más en su sector está usando, rediseñan por completo su proceso de venta en vez de solo el anuncio. Quienes se quedan estancados siguen puliendo el mismo anuncio ganador hasta que deja de funcionar, sin entender por qué.</p>
+      <br />
+      <p>Si estás empezando a vender por internet, no busques la fórmula perfecta de otra persona. Prueba, mide, y deja que tus propios resultados te muestren el camino.</p>
+    </div>
+    <br />
+    <div class="cta">
+      <h2>¿Llevas tiempo invirtiendo en publicidad y sientes que dejaste de crecer?</h2>
+      <p>Lo más probable es que el problema no sea tu anuncio. Sea tu estructura de campaña, tu proceso de venta, o la variedad de lo que estás probando.</p>
+    </div>
+    <br />
+    <a target="_blank" href="https://samuelgonzalez.org/?utm_source=blog-1513-anuncios&utm_medium=blog" class="text-cyan-400 hover:underline">¿Quieres que revisemos juntos tu cuenta de Meta Ads? Haz clic aquí.</a>
+    `,
+  },
+  {
     slug: 'descripciones-de-producto-que-no-suenan-genericas',
     title: 'Cómo Escribir Descripciones de Producto que No Suenen a Todas las Demás Tiendas',
     date: '2026-08-02',
