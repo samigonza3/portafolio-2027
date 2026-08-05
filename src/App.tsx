@@ -941,6 +941,19 @@ function HomePage() {
   );
 }
 
+// Al cambiar de ruta, React Router no reinicia el scroll por defecto: el
+// navegador conserva la posición donde quedó la página anterior. Este
+// componente fuerza el salto al inicio cada vez que cambia el pathname.
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 export default function App() {
   const location = useLocation();
   // La página de Mentoría es un landing page de venta directa: el menú y el
@@ -951,6 +964,7 @@ export default function App() {
 
   return (
     <>
+      <ScrollToTop />
       {!isLandingPage && <NavBar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
