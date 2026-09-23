@@ -20,7 +20,8 @@ export default function BlogSidebar() {
   }, {});
 
   return (
-    <aside className="lg:w-64 shrink-0 lg:border-r border-b lg:border-b-0 border-star-light/15 lg:h-[calc(100vh-4rem)] lg:sticky lg:top-16">
+    <aside className="shrink-0 px-4 pt-4 lg:pl-6 lg:pr-0 lg:w-72 lg:h-[calc(100vh-4rem)] lg:sticky lg:top-16 lg:py-6">
+      <div className="glass-panel lg:h-full flex flex-col overflow-hidden">
       {/* Toggle solo en mobile/tablet */}
       <button
         onClick={() => setMobileOpen((v) => !v)}
@@ -36,7 +37,7 @@ export default function BlogSidebar() {
       </button>
 
       <div
-        className={`${mobileOpen ? 'block' : 'hidden'} lg:block lg:h-full lg:overflow-y-auto px-6 pb-8 lg:py-8`}
+        className={`${mobileOpen ? 'block' : 'hidden'} lg:block lg:flex-1 lg:min-h-0 lg:overflow-y-auto glass-scroll px-6 pb-8 lg:py-8`}
       >
         <Link to="/" className="hidden lg:flex items-center gap-2 mb-8 group">
           <Home className="w-4 h-4 text-muted group-hover:text-star-light transition-colors" />
@@ -64,7 +65,7 @@ export default function BlogSidebar() {
                 className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
                   isBlogList && !activeCategory
                     ? 'bg-star/12 text-star-light border border-star-light/25'
-                    : 'text-muted hover:text-frost hover:bg-space-800'
+                    : 'text-muted hover:text-frost hover:bg-white/5'
                 }`}
               >
                 Todas
@@ -79,7 +80,7 @@ export default function BlogSidebar() {
                   className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
                     isBlogList && activeCategory === cat
                       ? 'bg-star/12 text-star-light border border-star-light/25'
-                      : 'text-muted hover:text-frost hover:bg-space-800'
+                      : 'text-muted hover:text-frost hover:bg-white/5'
                   }`}
                 >
                   {cat}
@@ -111,6 +112,7 @@ export default function BlogSidebar() {
             </a>
           </div>
         </div>
+      </div>
       </div>
     </aside>
   );
