@@ -17,6 +17,7 @@ import BlogPost from './components/BlogPost';
 import Blog from './components/Blog';
 import GoogleAdsChecklist from './components/GoogleAdsChecklist';
 import FoundationalDocsTool from './components/FoundationalDocsTool';
+import RutaClaraDiagnostico, { type RutaClaraLead } from './components/RutaClaraDiagnostico';
 import DropshippingMentoria from './components/DropshippingMentoria';
 import { posts } from './data/posts';
 
@@ -941,6 +942,37 @@ function HomePage() {
   );
 }
 
+// Envía el lead del diagnóstico Ruta Clara a Netlify Forms (formulario
+// "ruta-clara", registrado como formulario oculto en index.html). Si falla,
+// el componente igual muestra el diagnóstico al usuario.
+async function enviarLeadRutaClara(lead: RutaClaraLead) {
+  const campos: Record<string, string> = {
+    'form-name': 'ruta-clara',
+    nombre: lead.nombre,
+    whatsapp: lead.whatsapp,
+    email: lead.email,
+    rama: lead.rama,
+    puntaje_global: String(lead.puntaje_global),
+    cuello: lead.cuello,
+    nivel: lead.nivel,
+    dimensiones: JSON.stringify(lead.dimensiones),
+    metricas: JSON.stringify(lead.metricas),
+    mensaje: lead.mensaje,
+  };
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'fbclid'].forEach((k) => {
+    if (typeof lead[k] === 'string') campos[k] = lead[k] as string;
+  });
+  const body = Object.keys(campos)
+    .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(campos[k])}`)
+    .join('&');
+  const res = await fetch('/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body,
+  });
+  if (!res.ok) throw new Error(`Netlify Forms respondió con estado ${res.status}`);
+}
+
 // Al cambiar de ruta, React Router no reinicia el scroll por defecto: el
 // navegador conserva la posición donde quedó la página anterior. Este
 // componente fuerza el salto al inicio cada vez que cambia el pathname.
@@ -974,6 +1006,8 @@ export default function App() {
         <Route path="/mentoria-dropshipping" element={<DropshippingMentoria />} />
         <Route path="/google-ads-checklist" element={<GoogleAdsChecklist />} />
         <Route path="/recursos/google-ads-checklist" element={<GoogleAdsChecklist />} />
+        <Route path="/diagnostico" element={<RutaClaraDiagnostico onLead={enviarLeadRutaClara} />} />
+        <Route path="/recursos/ruta-clara" element={<RutaClaraDiagnostico onLead={enviarLeadRutaClara} />} />
       </Routes>
       {!isLandingPage && <Footer />}
     </>
