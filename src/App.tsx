@@ -12,6 +12,7 @@ import {
   Sparkles,
   Menu,
   X,
+  ChevronDown,
 } from 'lucide-react';
 import BlogPost from './components/BlogPost';
 import Blog from './components/Blog';
@@ -376,6 +377,75 @@ function HeroPhoto({
   );
 }
 
+// Herramientas gratuitas del sitio. Fuente única para el menú desplegable
+// (escritorio y mobile) y el footer: para publicar una herramienta nueva
+// solo agrega un objeto aquí (y su <Route> en App).
+const herramientas = [
+  {
+    nombre: 'Documentos Fundacionales',
+    descripcion: 'Genera los 4 documentos de tu marca con IA.',
+    to: '/herramientas/foundational-docs',
+  },
+  {
+    nombre: 'Ruta Clara',
+    descripcion: 'Diagnóstico de tu tienda de dropshipping.',
+    to: '/diagnostico',
+  },
+];
+
+// Desplegable "Herramientas" del nav de escritorio. Se abre con hover o
+// clic, y se cierra al salir, al elegir una opción o con Escape.
+function HerramientasMenu() {
+  const [open, setOpen] = useState(false);
+  const { pathname } = useLocation();
+  const activo = herramientas.some((h) => pathname === h.to);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') setOpen(false);
+      }}
+    >
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-haspopup="true"
+        aria-expanded={open}
+        className={`label-mono inline-flex items-center gap-1.5 transition-colors hover:!text-frost ${
+          activo ? '!text-frost' : '!text-muted'
+        }`}
+      >
+        Herramientas
+        <ChevronDown className={`w-3.5 h-3.5 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full pt-3 w-72">
+          <div className="rounded-card border border-star-light/15 bg-space-900/95 backdrop-blur-md p-2 shadow-star">
+            {herramientas.map((h) => (
+              <Link
+                key={h.to}
+                to={h.to}
+                onClick={() => setOpen(false)}
+                className="block rounded-xl px-4 py-3 transition-colors hover:bg-star/10"
+              >
+                <span className="block text-sm font-bold text-frost">{h.nombre}</span>
+                <span className="block text-xs text-muted mt-0.5">{h.descripcion}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function NavBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const closeMobile = () => setMobileOpen(false);
@@ -408,12 +478,7 @@ function NavBar() {
           >
             Mentoría
           </Link>
-          <Link
-            to="/herramientas/foundational-docs"
-            className="label-mono !text-muted hover:!text-frost transition-colors"
-          >
-            Herramientas
-          </Link>
+          <HerramientasMenu />
           <a href="/#contacto" className="btn-pill-light">
             Hablemos <ArrowRight className="w-3.5 h-3.5" />
           </a>
@@ -462,13 +527,19 @@ function NavBar() {
           >
             Mentoría
           </Link>
-          <Link
-            to="/herramientas/foundational-docs"
-            onClick={closeMobile}
-            className="label-mono !text-muted hover:!text-frost transition-colors"
-          >
-            Herramientas
-          </Link>
+          <div className="flex flex-col gap-3">
+            <span className="label-mono !text-muted">Herramientas</span>
+            {herramientas.map((h) => (
+              <Link
+                key={h.to}
+                to={h.to}
+                onClick={closeMobile}
+                className="pl-4 border-l border-star-light/15 text-sm font-semibold text-ice hover:text-frost transition-colors"
+              >
+                {h.nombre}
+              </Link>
+            ))}
+          </div>
           <a href="/#contacto" onClick={closeMobile} className="btn-pill-light w-fit">
             Hablemos <ArrowRight className="w-3.5 h-3.5" />
           </a>
@@ -502,12 +573,11 @@ function Footer() {
               <Link to="/blog" className="text-ice hover:text-star-light transition-colors">
                 Blog
               </Link>
-              <Link
-                to="/herramientas/foundational-docs"
-                className="text-ice hover:text-star-light transition-colors"
-              >
-                Documentos Fundacionales
-              </Link>
+              {herramientas.map((h) => (
+                <Link key={h.to} to={h.to} className="text-ice hover:text-star-light transition-colors">
+                  {h.nombre}
+                </Link>
+              ))}
               <Link
                 to="/mentoria-dropshipping"
                 className="text-ice hover:text-star-light transition-colors"
