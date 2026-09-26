@@ -12,6 +12,7 @@ const STATIC_ROUTES = [
   { path: '/', priority: '1.0', changefreq: 'weekly' },
   { path: '/blog', priority: '0.9', changefreq: 'weekly' },
   { path: '/mentoria-dropshipping', priority: '0.9', changefreq: 'monthly' },
+  { path: '/comienza-aqui-tu-mentoria', priority: '0.9', changefreq: 'monthly' },
   { path: '/diagnostico', priority: '0.8', changefreq: 'monthly' },
   { path: '/herramientas/foundational-docs', priority: '0.8', changefreq: 'monthly' },
   { path: '/google-ads-checklist', priority: '0.6', changefreq: 'monthly' },

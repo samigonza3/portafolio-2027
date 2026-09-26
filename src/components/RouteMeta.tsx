@@ -25,6 +25,11 @@ const META: Record<string, Meta> = {
     title: 'Mentoría de Dropshipping | Samuel González',
     description: 'Inicia tu camino en el comercio electrónico con acompañamiento paso a paso.',
   },
+  '/comienza-aqui-tu-mentoria': {
+    title: 'Mentoría privada de dropshipping | Samuel González',
+    description:
+      'Acompañamiento 1 a 1 o grupal para construir y escalar tu tienda de dropshipping: 4 horas al mes, tareas, plan de entrenamiento y revisión de tus números.',
+  },
   '/google-ads-checklist': {
     title: 'Checklist de Google Ads | Samuel González',
     description: 'Checklist gratuito para auditar y optimizar tus campañas de Google Ads.',

@@ -21,6 +21,7 @@ import GoogleAdsChecklist from './components/GoogleAdsChecklist';
 import FoundationalDocsTool from './components/FoundationalDocsTool';
 import RutaClaraDiagnostico, { type RutaClaraLead } from './components/RutaClaraDiagnostico';
 import DropshippingMentoria from './components/DropshippingMentoria';
+import MentoriaPrivada from './components/MentoriaPrivada';
 import { posts } from './data/posts';
 import { CONTACTO } from './data/contacto';
 import RouteMeta from './components/RouteMeta';
@@ -1241,7 +1242,7 @@ export default function App() {
   // footer son "fugas" que sacan al visitante antes de que convierta, así
   // que no se muestran en esa ruta (misma lógica que funnels de referencia
   // como masterescala.co).
-  const isLandingPage = location.pathname.startsWith('/mentoria-dropshipping');
+  const isLandingPage = /^\/(mentoria-dropshipping|comienza-aqui-tu-mentoria)\/?$/.test(location.pathname);
 
   return (
     <>
@@ -1254,6 +1255,7 @@ export default function App() {
         <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/herramientas/foundational-docs" element={<FoundationalDocsTool />} />
         <Route path="/mentoria-dropshipping" element={<DropshippingMentoria />} />
+        <Route path="/comienza-aqui-tu-mentoria" element={<MentoriaPrivada />} />
         <Route path="/google-ads-checklist" element={<GoogleAdsChecklist />} />
         <Route path="/recursos/google-ads-checklist" element={<GoogleAdsChecklist />} />
         <Route path="/diagnostico" element={<RutaClaraDiagnostico onLead={enviarLeadRutaClara} />} />
