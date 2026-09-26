@@ -115,10 +115,40 @@ const QUALIFY_ITEMS = [
   },
 ];
 
-// TODO: cuando tengas capturas de resultados de clientes o de tus propias
-// tiendas, agrégalas aquí como rutas de imagen (ej: '/resultados/venta-1.png')
-// y la sección de resultados las muestra automáticamente en grid.
-const RESULT_IMAGES: string[] = [];
+// Capturas reales de resultados (en /public/resultados). Para agregar
+// otra, súmala aquí con su texto alternativo y su pie de foto.
+const RESULT_IMAGES: { src: string; alt: string; caption: string }[] = [
+  {
+    src: '/resultados/pedidos-abr-jun-2026.webp',
+    alt: 'Panel de pedidos de abril a junio de 2026: 1.503 pedidos generados y $138.922.159 vendidos',
+    caption: 'Abr a jun 2026: 1.503 pedidos y $138,9 M vendidos',
+  },
+  {
+    src: '/resultados/pedidos-jul-sep-2026.webp',
+    alt: 'Panel de pedidos de julio a septiembre de 2026: 2.802 pedidos generados y $252.911.013 vendidos',
+    caption: 'Jul a sep 2026: 2.802 pedidos y $252,9 M vendidos',
+  },
+  {
+    src: '/resultados/rendimiento-abr-jun-2026.webp',
+    alt: 'Gráfica de rendimiento diario de abril a junio de 2026 con pedidos, utilidad y entregados',
+    caption: 'Rendimiento diario abr a jun 2026',
+  },
+  {
+    src: '/resultados/rendimiento-jul-sep-2026.webp',
+    alt: 'Gráfica de rendimiento diario de julio a septiembre de 2026 con pedidos, utilidad y entregados',
+    caption: 'Rendimiento diario jul a sep 2026',
+  },
+  {
+    src: '/resultados/sesiones-tienda-2026.webp',
+    alt: 'Sesiones de la tienda online en 2026: 159.422, un 395% más que el periodo anterior',
+    caption: '159.422 sesiones en la tienda en 2026 (+395%)',
+  },
+  {
+    src: '/resultados/ventas-tienda-2026.webp',
+    alt: 'Ventas totales de la tienda online en 2026: $408.835.124, un 250% más que el periodo anterior',
+    caption: '$408,8 M en ventas de la tienda en 2026 (+250%)',
+  },
+];
 
 // TODO: cuando tengas testimonios de estudiantes o clientes de la mentoría,
 // agrégalos aquí. Mientras el array esté vacío, la sección de prueba social
@@ -839,11 +869,29 @@ export default function DropshippingMentoria() {
 
       {/* Resultados */}
       <section className="max-w-5xl mx-auto px-3 sm:px-6 py-14 border-t border-star-light/15">
-        <h2 className="text-2xl md:text-3xl font-extrabold mb-8 text-center">Algunos resultados</h2>
+        <h2 className="text-2xl md:text-3xl font-extrabold mb-3 text-center">Algunos resultados</h2>
+        <p className="text-muted text-sm text-center mb-10">
+          Capturas reales de los paneles de mis tiendas en 2026. Valores en pesos colombianos.
+        </p>
         {RESULT_IMAGES.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {RESULT_IMAGES.map((src) => (
-              <img key={src} src={src} alt="Resultado" className="rounded-xl border border-star-light/15" />
+          <div className="grid md:grid-cols-2 gap-5">
+            {RESULT_IMAGES.map((r) => (
+              <figure
+                key={r.src}
+                className="rounded-2xl border border-star-light/15 bg-space-900/70 p-3 transition-colors hover:border-cyan-400/40"
+              >
+                <a href={r.src} target="_blank" rel="noopener noreferrer" className="block">
+                  <div className="rounded-xl bg-white p-2 sm:p-3 aspect-[2/1] flex items-center justify-center overflow-hidden">
+                    <img
+                      src={r.src}
+                      alt={r.alt}
+                      loading="lazy"
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  </div>
+                </a>
+                <figcaption className="text-ice text-sm font-semibold mt-3 px-1">{r.caption}</figcaption>
+              </figure>
             ))}
           </div>
         ) : (
