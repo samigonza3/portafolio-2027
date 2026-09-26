@@ -28,7 +28,7 @@ const META: Record<string, Meta> = {
   '/empieza-aqui-tu-mentoria': {
     title: 'Mentoría privada de dropshipping | Samuel González',
     description:
-      'Acompañamiento 1 a 1 o grupal para construir y escalar tu tienda de dropshipping: 4 horas al mes, tareas, plan de entrenamiento y revisión de tus números.',
+      'Acompañamiento 1 a 1 para construir y escalar tu tienda de dropshipping: 4 horas al mes, tareas, plan de entrenamiento y revisión de tus números.',
   },
   '/google-ads-checklist': {
     title: 'Checklist de Google Ads | Samuel González',

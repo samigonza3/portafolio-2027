@@ -4,7 +4,7 @@ import {
   BookingForm,
   EMAIL_RE,
   FieldError,
-  MentoriaProceso,
+  MapaEscalera,
   encodeFormData,
   inputBase,
   inputState,
@@ -675,7 +675,7 @@ export default function DropshippingMentoria() {
               <h3 className="text-lg font-extrabold mb-1">Mentoría</h3>
               <p className="label-mono !text-signal-teal mb-4">{MENTORIA_PRICE}</p>
               <p className="text-ice text-sm mb-6 flex-1">
-                Acompañamiento 1 a 1 o grupal, con revisión experta de tu tienda, tus campañas y tus
+                Acompañamiento 1 a 1, con revisión experta de tu tienda, tus campañas y tus
                 números, para escalar con sistema.
               </p>
               <Link to="/empieza-aqui-tu-mentoria" className="btn-ghost w-full justify-center !border-teal-400/50">
@@ -687,16 +687,16 @@ export default function DropshippingMentoria() {
       </section>
 
       {/* Cómo funciona la mentoría */}
-      <section id="mentoria" className="max-w-5xl mx-auto px-4 sm:px-6 py-14 border-t border-star-light/15">
+      <section id="mentoria" className="max-w-7xl mx-auto px-4 sm:px-6 py-14 border-t border-star-light/15">
         <div className="text-center mb-10">
-          <span className="eyebrow">03 · Premium</span>
-          <h2 className="text-2xl md:text-3xl font-extrabold mt-4 mb-3">Así funciona la mentoría</h2>
+          <span className="eyebrow">El plan completo</span>
+          <h2 className="text-2xl md:text-3xl font-extrabold mt-4 mb-3">Del grupo gratis a la mentoría</h2>
           <p className="text-ice text-sm max-w-xl mx-auto">
-            Es la etapa de transformación: dejas de probar solo y trabajamos juntos sobre tu tienda
-            real, con un sistema para escalarla.
+            Así avanzas paso a paso: entras gratis al grupo, sigues el Blueprint y, cuando ya
+            aplicaste, trabajamos juntos en la mentoría para escalar tu tienda.
           </p>
         </div>
-        <MentoriaProceso />
+        <MapaEscalera />
         <div className="text-center mt-12">
           <a href="#reservar" className="btn-star">
             Agendar llamada <ArrowRight className="w-4 h-4" />
@@ -793,7 +793,7 @@ const FAQS = [
   },
   {
     q: '¿Cómo funciona la mentoría?',
-    a: 'Es acompañamiento 1 a 1 o grupal. Revisamos tu tienda, tus campañas y tus números, y armamos un sistema para escalar. Los cupos son limitados cada mes.',
+    a: 'Es acompañamiento 1 a 1, siempre en sesiones privadas por videollamada. Revisamos tu tienda, tus campañas y tus números, y armamos un sistema para escalar. Los cupos son limitados cada mes.',
   },
   {
     q: '¿Qué pasa después de solicitar la llamada?',

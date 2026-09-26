@@ -25,7 +25,7 @@ import {
   Calculator,
   TrendingUp,
 } from 'lucide-react';
-import { BookingForm, MentoriaProceso } from './mentoria/shared';
+import { BookingForm, MapaEscalera } from './mentoria/shared';
 import { MENTORIA } from '../data/oferta';
 
 // ============================================================
@@ -138,7 +138,7 @@ const NO_ES = [
 const CONDICIONES = [
   { label: 'Inversión', valor: `${PRECIO} (equivale a ${MENTORIA.precioHora} por hora)` },
   { label: 'Tiempo', valor: `${MENTORIA.horasMes} horas de sesiones privadas al mes, repartidas de forma flexible` },
-  { label: 'Modalidad', valor: '1 a 1 o grupal, por videollamada' },
+  { label: 'Modalidad', valor: '1 a 1, en sesiones privadas por videollamada' },
   { label: 'Permanencia', valor: 'Renovación mensual, sin contrato largo' },
   { label: 'Cupos', valor: `${MENTORIA.cupos} cupos al mes, asignados en orden de confirmación` },
   {
@@ -164,8 +164,8 @@ const FAQS = [
     a: 'Puedes entrar igual, siempre que tengas el capital y el tiempo para probar. La primera sesión se enfoca en elegir producto y montar la base correctamente.',
   },
   {
-    q: '¿Es 1 a 1 o en grupo?',
-    a: 'Puede ser 1 a 1 o grupal. Lo definimos en la conversación de encaje según tu etapa y lo que necesites.',
+    q: '¿Las sesiones son en grupo?',
+    a: 'No. Todas las sesiones son 1 a 1, solo tú y yo por videollamada, para trabajar directamente sobre tu tienda y tus números.',
   },
   {
     q: '¿Qué necesito tener listo para la primera sesión?',
@@ -243,17 +243,17 @@ export default function MentoriaPrivada() {
       </section>
 
       {/* ===== Qué es ===== */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 py-14 md:py-20 border-t border-star-light/15">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-14 md:py-20 border-t border-star-light/15">
         <SectionTitle
-          eyebrow="Qué es"
+          eyebrow="El plan completo"
           title={
             <>
-              La etapa de <span className="text-teal-300">transformación</span>
+              Del grupo gratis a la <span className="text-teal-300">mentoría</span>
             </>
           }
-          sub="La comunidad te muestra el camino y el Blueprint te da el mapa. La mentoría es donde lo ejecutas con alguien al lado, sobre tu tienda real."
+          sub="La comunidad te muestra el camino y el Blueprint te da el mapa. La mentoría es la etapa de transformación: donde lo ejecutas con alguien al lado, sobre tu tienda real."
         />
-        <MentoriaProceso />
+        <MapaEscalera destacar="mentoria" />
       </section>
 
       {/* ===== Paso a paso ===== */}
