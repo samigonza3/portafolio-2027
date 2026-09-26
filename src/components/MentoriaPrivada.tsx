@@ -25,7 +25,7 @@ import {
   Calculator,
   TrendingUp,
 } from 'lucide-react';
-import { BookingForm, MapaEscalera } from './mentoria/shared';
+import { BookingForm } from './mentoria/shared';
 import { MENTORIA } from '../data/oferta';
 
 // ============================================================
@@ -240,20 +240,6 @@ export default function MentoriaPrivada() {
             ))}
           </div>
         </div>
-      </section>
-
-      {/* ===== Qué es ===== */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-14 md:py-20 border-t border-star-light/15">
-        <SectionTitle
-          eyebrow="El plan completo"
-          title={
-            <>
-              Del grupo gratis a la <span className="text-teal-300">mentoría</span>
-            </>
-          }
-          sub="La comunidad te muestra el camino y el Blueprint te da el mapa. La mentoría es la etapa de transformación: donde lo ejecutas con alguien al lado, sobre tu tienda real."
-        />
-        <MapaEscalera destacar="mentoria" />
       </section>
 
       {/* ===== Paso a paso ===== */}

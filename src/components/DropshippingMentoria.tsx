@@ -4,7 +4,6 @@ import {
   BookingForm,
   EMAIL_RE,
   FieldError,
-  MapaEscalera,
   encodeFormData,
   inputBase,
   inputState,
@@ -683,24 +682,6 @@ export default function DropshippingMentoria() {
               </Link>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Cómo funciona la mentoría */}
-      <section id="mentoria" className="max-w-7xl mx-auto px-4 sm:px-6 py-14 border-t border-star-light/15">
-        <div className="text-center mb-10">
-          <span className="eyebrow">El plan completo</span>
-          <h2 className="text-2xl md:text-3xl font-extrabold mt-4 mb-3">Del grupo gratis a la mentoría</h2>
-          <p className="text-ice text-sm max-w-xl mx-auto">
-            Así avanzas paso a paso: entras gratis al grupo, sigues el Blueprint y, cuando ya
-            aplicaste, trabajamos juntos en la mentoría para escalar tu tienda.
-          </p>
-        </div>
-        <MapaEscalera />
-        <div className="text-center mt-12">
-          <a href="#reservar" className="btn-star">
-            Agendar llamada <ArrowRight className="w-4 h-4" />
-          </a>
         </div>
       </section>
 
