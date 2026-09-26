@@ -23,7 +23,7 @@ import {
 // ---------- Configuración ----------
 
 const CONFIG = {
-  marca: 'Ruta Clara',
+  marca: 'Diagnóstico para Dropshippers',
   trm: 4000,
   links: {
     mentoria: '/#contacto',
@@ -1411,7 +1411,7 @@ export default function RutaClaraDiagnostico({ onLead }: RutaClaraDiagnosticoPro
   const pregunta = visibles[Math.min(idx, visibles.length - 1)];
 
   useEffect(() => {
-    document.title = `${CONFIG.marca} · Diagnóstico de tu tienda | Samuel González`;
+    document.title = `${CONFIG.marca} | Samuel González`;
   }, []);
 
   useEffect(() => {
@@ -1511,7 +1511,7 @@ export default function RutaClaraDiagnostico({ onLead }: RutaClaraDiagnosticoPro
     return (
       <Pantalla center>
         <div className="space-y-8">
-          <span className="eyebrow">{CONFIG.marca} · Diagnóstico</span>
+          <span className="eyebrow">{CONFIG.marca}</span>
           <h1 className="text-4xl md:text-5xl font-extrabold leading-[1.05]">
             Descubre qué está frenando <span className="glow">tu tienda</span>, con tus propios números.
           </h1>

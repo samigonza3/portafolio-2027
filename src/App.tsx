@@ -90,7 +90,7 @@ const experiences = [
     period: '2019 — 2020',
     description:
       'Escalé campañas de performance para grandes marcas, optimizando CAC y ROAS con automatización y segmentación avanzada.',
-    logo: null,
+    logo: '/digital57-logo.png',
   },
   {
     company: 'Banco de Occidente',
@@ -109,6 +109,7 @@ const experiences = [
     description:
       'Fusiono Marketing, Data & Code para crear estrategias digitales integrales, optimizando adquisición, automatización y analítica avanzada.',
     logo: null,
+    photo: '/freelance-samuel.webp',
   },
 ];
 
@@ -144,6 +145,15 @@ const companies = [
   { name: 'Learn English', logo: '/learn_english_international_logo.jpg' },
   { name: 'Tres Cuatro Cinco Bogotá', logo: '/tres_cuatro_cinco.webp' },
   { name: 'Tay Beach', logo: '/tay_beach.jpg' },
+  // Logos con fondo propio o en color claro: el campo `bg` pinta la
+  // tarjeta del mismo color del logo para que no quede un recuadro encima.
+  { name: 'Distrito Salvaje Food Hall', logo: '/logo-distrito-salvaje.png', bg: '#0B1533' },
+  { name: 'Sr. Buñuelo', logo: '/logo-sr-bunuelo.png', bg: '#F6B001' },
+  { name: 'Bâoli Miami', logo: '/logo-baoli-miami.png' },
+  { name: 'IRRVRNT', logo: '/logo-irrvrnt.png', bg: '#DB6C3E' },
+  { name: 'Debora', logo: '/logo-debora.png', bg: '#000000' },
+  { name: 'Easy American Ride Services', logo: '/logo-easy-american.png', bg: '#1B073C' },
+  { name: 'Attar Perfumería', logo: '/logo-attar.png', bg: '#1B4668' },
 ];
 
 // Campo de estrellas animado (firma visual del sistema azul galaxia).
@@ -194,13 +204,16 @@ function LogosMarquee() {
             {companies.map((company, index) => (
               <div
                 key={`${rep}-${index}`}
-                className="flex items-center justify-center p-6 bg-frost/95 border border-star-light/15 rounded-card h-24 w-40 shrink-0"
+                className={`flex items-center justify-center p-6 border border-star-light/15 rounded-card h-24 w-40 shrink-0 ${
+                  company.bg ? '' : 'bg-frost/95'
+                }`}
+                style={company.bg ? { backgroundColor: company.bg } : undefined}
                 title={company.name}
               >
                 <img
                   src={company.logo}
                   alt={company.name}
-                  className="max-h-12 max-w-full object-contain"
+                  className={`${company.bg ? 'max-h-16' : 'max-h-12'} max-w-full object-contain`}
                   loading="lazy"
                 />
               </div>
@@ -387,7 +400,7 @@ const herramientas = [
     to: '/herramientas/foundational-docs',
   },
   {
-    nombre: 'Ruta Clara',
+    nombre: 'Diagnóstico para Dropshippers',
     descripcion: 'Diagnóstico de tu tienda de dropshipping.',
     to: '/diagnostico',
   },
@@ -683,7 +696,7 @@ function HomePage() {
             <h1 className="display-xl text-[13vw] sm:text-6xl md:text-7xl lg:text-8xl">
               Data, Marketing
               <br />
-              y Code al
+              &amp; Code
             </h1>
             <HeroPhoto
               src="/hero-waterfall.jpg"
@@ -692,22 +705,24 @@ function HomePage() {
               parallaxSpeed={0.08}
             />
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 mt-4 md:mt-5 items-center">
+          <div className="grid grid-cols-2 md:grid-cols-[0.75fr_1.25fr_1.25fr_0.75fr] gap-4 md:gap-5 mt-4 md:mt-5 items-center">
             <HeroPhoto
               src="/hero-moon.jpg"
               alt="Luna en cuarto creciente fotografiada en Perú"
-              className="h-24 md:h-32"
+              className="h-24 md:h-32 order-2 md:order-none"
               parallaxSpeed={0.06}
               zoom={1.1}
             />
-            <h2 className="display-xl text-3xl sm:text-4xl md:text-6xl">
-              Servicio de marcas
+            <h2 className="display-xl text-[9vw] sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl col-span-2 md:col-span-1 order-1 md:order-none">
+              Al servicio de marcas
             </h2>
-            <h2 className="display-xl text-3xl sm:text-4xl md:text-6xl">que crecen</h2>
+            <h2 className="display-xl text-[9vw] sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl col-span-2 md:col-span-1 order-1 md:order-none">
+              En crecimiento
+            </h2>
             <HeroPhoto
               src="/hero-sunset.jpg"
               alt="Atardecer sobre el lago Titicaca, entre Perú y Bolivia"
-              className="h-24 md:h-32"
+              className="h-24 md:h-32 order-2 md:order-none"
               parallaxSpeed={0.11}
             />
           </div>
@@ -744,13 +759,12 @@ function HomePage() {
             </div>
           </div>
           <p className="text-ice text-base md:text-lg max-w-xl mx-auto mt-8 leading-relaxed">
-            <strong className="text-frost">Más de 10 años</strong> conectando adquisición pagada,
-            analítica de datos y desarrollo para marcas que necesitan crecer con evidencia, no con
-            corazonadas. <strong className="text-frost">Telefónica · UNICEF · Banco de Occidente · IFMG</strong>.
+            <strong className="text-frost">+15 años</strong> conectando adquisición pagada, analítica
+            de datos y desarrollo web para marcas nacionales e internacionales.
           </p>
           <div className="flex flex-wrap justify-center gap-4 mt-10">
             <a href="#servicios" className="btn-star">
-              Explorar servicios <ArrowRight className="w-4 h-4" />
+              Conoce cómo puedo ayudarte <ArrowRight className="w-4 h-4" />
             </a>
             <Link to="/blog" className="btn-ghost">
               Leer el blog
@@ -808,6 +822,23 @@ function HomePage() {
                   <p className="label-mono !text-signal-teal !tracking-widest mb-4">{exp.period}</p>
                   <p className="text-muted text-sm leading-relaxed max-w-lg">{exp.description}</p>
                 </div>
+                {exp.photo ? (
+                  <div className="relative h-56 md:h-72 overflow-hidden rounded-card border border-star-light/15">
+                    <img
+                      src={exp.photo}
+                      alt="Samuel González trabajando como freelance"
+                      className="absolute inset-0 w-full h-full object-cover object-[center_30%]"
+                      loading="lazy"
+                    />
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background:
+                          'linear-gradient(180deg, rgba(4,8,23,0) 55%, rgba(4,8,23,.55) 100%), linear-gradient(120deg, rgba(62,123,255,.18), rgba(4,8,23,0))',
+                      }}
+                    />
+                  </div>
+                ) : (
                 <PhotoBlock className="h-40 md:h-56">
                   {exp.logo ? (
                     <div className="bg-frost/95 rounded-xl p-4 flex items-center justify-center w-4/5 h-2/3">
@@ -822,6 +853,7 @@ function HomePage() {
                     <Code2 className="w-10 h-10 text-star-light opacity-70" />
                   )}
                 </PhotoBlock>
+                )}
               </div>
             </div>
           );
@@ -879,7 +911,7 @@ function HomePage() {
       <section className="border-t border-star-light/15">
         <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
           <div className="flex items-end justify-between gap-6 mb-12 flex-wrap">
-            <h2 className="display-xl text-4xl sm:text-5xl md:text-6xl">Ideas recientes</h2>
+            <h2 className="display-xl text-4xl sm:text-5xl md:text-6xl">Blog</h2>
             <Link to="/blog" className="btn-ghost !py-2.5 text-xs">
               Ver todo el blog <ArrowRight className="w-4 h-4" />
             </Link>
@@ -920,6 +952,22 @@ function HomePage() {
             </div>
             <Link to="/herramientas/foundational-docs" className="btn-amber shrink-0">
               Probar la herramienta <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="card-amber mt-5 p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div>
+              <span className="label-mono !text-signal-amber mb-3 block">Herramienta gratuita</span>
+              <h3 className="text-2xl md:text-3xl font-extrabold mb-2">
+                <span className="glow-amber">Diagnóstico para Dropshippers</span>
+              </h3>
+              <p className="text-ice text-sm max-w-xl">
+                Responde unas preguntas sobre tu tienda y descubre cuál es el cuello de botella
+                que hoy te frena las ventas, con un plan de acción para los próximos 14 días.
+              </p>
+            </div>
+            <Link to="/diagnostico" className="btn-amber shrink-0">
+              Hacer mi diagnóstico <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
@@ -1006,6 +1054,39 @@ function HomePage() {
               </p>
             )}
           </form>
+        </div>
+
+        {/* Banner promocional de la Mentoría: usa la misma paleta de la
+            landing /mentoria-dropshipping (negro a nebula, acento cian y
+            botón rojo) para que el salto entre páginas se sienta continuo. */}
+        <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-24">
+          <div className="relative overflow-hidden rounded-2xl border border-cyan-400/30 bg-gradient-to-br from-black via-space-950 to-nebula p-8 md:p-12">
+            <div
+              className="absolute -top-24 -right-24 w-72 h-72 rounded-full pointer-events-none"
+              style={{ background: 'radial-gradient(circle, rgba(34,211,238,0.28), transparent 70%)' }}
+            />
+            <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+              <div className="max-w-2xl">
+                <span className="label-mono !text-cyan-400 mb-4 block">Mentoría de Dropshipping</span>
+                <h3 className="display-xl text-3xl sm:text-4xl md:text-5xl mb-4">
+                  Inicia tu camino en el{' '}
+                  <span className="text-cyan-400 drop-shadow-[0_0_18px_rgba(34,211,238,0.45)]">
+                    comercio electrónico
+                  </span>
+                </h3>
+                <p className="text-ice text-sm md:text-base leading-relaxed">
+                  Deja de probar solo. Te acompaño paso a paso a construir una tienda que venda:
+                  producto, pauta y operación, con el mismo sistema que aplico todos los días.
+                </p>
+              </div>
+              <Link
+                to="/mentoria-dropshipping"
+                className="shrink-0 inline-flex items-center gap-2 rounded-full bg-[#FF2D55] hover:bg-[#e6234c] text-white font-bold text-sm sm:text-base px-7 py-4 transition-all hover:-translate-y-0.5 shadow-[0_12px_32px_-8px_rgba(255,45,85,0.6)]"
+              >
+                Quiero empezar mi tienda <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </div>
