@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { ArrowRight, Users, SearchCheck, Target, Trophy } from 'lucide-react';
 
-// Piezas compartidas entre /mentoria-dropshipping y /comienza-aqui-tu-mentoria: el
+// Piezas compartidas entre /mentoria-dropshipping y /empieza-aqui-tu-mentoria: el
 // formulario de reserva de llamada y el mapa de la mentoría.
 
 export function encodeFormData(data: Record<string, string>) {

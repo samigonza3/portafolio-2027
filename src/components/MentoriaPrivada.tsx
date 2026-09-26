@@ -29,7 +29,7 @@ import { BookingForm, MentoriaProceso } from './mentoria/shared';
 import { MENTORIA } from '../data/oferta';
 
 // ============================================================
-// Landing de la Mentoría privada (/comienza-aqui-tu-mentoria)
+// Landing de la Mentoría privada (/empieza-aqui-tu-mentoria)
 // Punto de llegada para quien ya decidió ir por la mentoría: explica
 // qué se hace, cómo, en qué formato y con qué condiciones, y cierra con
 // el mismo formulario de reserva de /mentoria-dropshipping.
@@ -434,7 +434,7 @@ export default function MentoriaPrivada() {
         </div>
         <div className="rounded-card p-[1px] bg-gradient-to-br from-teal-400/70 to-emerald-500/40">
           <div className="rounded-card bg-space-900 p-6 sm:p-8">
-            <BookingForm origen="comienza-aqui-tu-mentoria" />
+            <BookingForm origen="empieza-aqui-tu-mentoria" />
           </div>
         </div>
       </section>

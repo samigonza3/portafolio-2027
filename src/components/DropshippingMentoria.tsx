@@ -678,7 +678,7 @@ export default function DropshippingMentoria() {
                 Acompañamiento 1 a 1 o grupal, con revisión experta de tu tienda, tus campañas y tus
                 números, para escalar con sistema.
               </p>
-              <Link to="/comienza-aqui-tu-mentoria" className="btn-ghost w-full justify-center !border-teal-400/50">
+              <Link to="/empieza-aqui-tu-mentoria" className="btn-ghost w-full justify-center !border-teal-400/50">
                 Ver la mentoría completa <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
