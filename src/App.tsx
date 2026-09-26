@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Megaphone,
   Code2,
@@ -13,6 +13,7 @@ import {
   Menu,
   X,
   ChevronDown,
+  MapPin,
 } from 'lucide-react';
 import BlogPost from './components/BlogPost';
 import Blog from './components/Blog';
@@ -21,6 +22,12 @@ import FoundationalDocsTool from './components/FoundationalDocsTool';
 import RutaClaraDiagnostico, { type RutaClaraLead } from './components/RutaClaraDiagnostico';
 import DropshippingMentoria from './components/DropshippingMentoria';
 import { posts } from './data/posts';
+import { CONTACTO } from './data/contacto';
+import RouteMeta from './components/RouteMeta';
+import CookieBanner from './components/CookieBanner';
+import NotFound from './components/NotFound';
+import Gracias from './components/Gracias';
+import { PoliticaPrivacidad, TerminosCondiciones } from './components/LegalPage';
 
 const services = [
   {
@@ -54,7 +61,7 @@ const experiences = [
     period: '2026 — Actualidad',
     description:
       'Lidero la ejecución de TikTok Ads para tres cuentas del sector automotriz financiero en Estados Unidos y apoyo campañas de Meta y Microsoft Advertising, combinando optimización de campañas con analítica de datos para maximizar el retorno por lead.',
-    logo: '/ifmg-logo.png',
+    logo: '/ifmg-logo.webp',
   },
   {
     company: 'Smartmuscle Lab',
@@ -81,7 +88,7 @@ const experiences = [
     period: '2020 — 2022',
     description:
       'Ejecuté la estrategia de adquisición de donantes por el canal digital, superando metas con CRO, A/B testing y segmentación data-driven.',
-    logo: '/logo-UNICEF-500x281.png',
+    logo: '/logo-UNICEF-500x281.webp',
   },
   {
     company: 'Digital57',
@@ -90,7 +97,7 @@ const experiences = [
     period: '2019 — 2020',
     description:
       'Escalé campañas de performance para grandes marcas, optimizando CAC y ROAS con automatización y segmentación avanzada.',
-    logo: '/digital57-logo.png',
+    logo: '/digital57-logo.webp',
   },
   {
     company: 'Banco de Occidente',
@@ -118,27 +125,27 @@ const teaching = [
     name: 'Universidad Icesi',
     course: 'Manejo de Plataformas Digitales',
     city: 'Cali, Colombia',
-    logo: '/logo-icesi.png',
+    logo: '/logo-icesi.webp',
   },
   {
     name: 'Universidad de San Buenaventura Cali',
     course: 'Visualización de Datos',
     city: 'Cali, Colombia',
-    logo: '/logo-usb-cali.png',
+    logo: '/logo-usb-cali.webp',
   },
   {
     name: 'Partners Academy',
     course: 'Content Marketing · Diplomado en Marketing Digital',
     city: 'Virtual',
-    logo: '/logo-partners-academy.png',
+    logo: '/logo-partners-academy.webp',
   },
 ];
 
 const companies = [
   { name: 'Smartmuscle Lab', logo: '/OIP.webp' },
   { name: 'Telefonica Hispam', logo: '/Telefonica-Logo-500x281.png' },
-  { name: 'UNICEF', logo: '/logo-UNICEF-500x281.png' },
-  { name: 'Applebees', logo: '/applebees-png-logo-6501.png' },
+  { name: 'UNICEF', logo: '/logo-UNICEF-500x281.webp' },
+  { name: 'Applebees', logo: '/applebees-png-logo-6501.webp' },
   { name: 'CarSync', logo: '/logo_black.svg' },
   { name: 'Banco de Occidente', logo: '/Banco_de_Occidente_logo.png' },
   { name: 'El Bardo Bogotá', logo: '/el_bardo.webp' },
@@ -147,13 +154,13 @@ const companies = [
   { name: 'Tay Beach', logo: '/tay_beach.jpg' },
   // Logos con fondo propio o en color claro: el campo `bg` pinta la
   // tarjeta del mismo color del logo para que no quede un recuadro encima.
-  { name: 'Distrito Salvaje Food Hall', logo: '/logo-distrito-salvaje.png', bg: '#0B1533' },
-  { name: 'Sr. Buñuelo', logo: '/logo-sr-bunuelo.png', bg: '#F6B001' },
-  { name: 'Bâoli Miami', logo: '/logo-baoli-miami.png' },
-  { name: 'IRRVRNT', logo: '/logo-irrvrnt.png', bg: '#DB6C3E' },
-  { name: 'Debora', logo: '/logo-debora.png', bg: '#000000' },
-  { name: 'Easy American Ride Services', logo: '/logo-easy-american.png', bg: '#1B073C' },
-  { name: 'Attar Perfumería', logo: '/logo-attar.png', bg: '#1B4668' },
+  { name: 'Distrito Salvaje Food Hall', logo: '/logo-distrito-salvaje.webp', bg: '#0B1533' },
+  { name: 'Sr. Buñuelo', logo: '/logo-sr-bunuelo.webp', bg: '#F6B001' },
+  { name: 'Bâoli Miami', logo: '/logo-baoli-miami.webp' },
+  { name: 'IRRVRNT', logo: '/logo-irrvrnt.webp', bg: '#DB6C3E' },
+  { name: 'Debora', logo: '/logo-debora.webp', bg: '#000000' },
+  { name: 'Easy American Ride Services', logo: '/logo-easy-american.webp', bg: '#1B073C' },
+  { name: 'Attar Perfumería', logo: '/logo-attar.webp', bg: '#1B4668' },
 ];
 
 // Campo de estrellas animado (firma visual del sistema azul galaxia).
@@ -603,19 +610,42 @@ function Footer() {
             <h4 className="label-mono !text-muted mb-4">Conecta</h4>
             <div className="flex flex-col gap-2.5 text-sm">
               <a
-                href="https://www.linkedin.com/in/samuelgonzalez/"
+                href={CONTACTO.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-ice hover:text-star-light transition-colors inline-flex items-center gap-2"
               >
                 <Linkedin className="w-4 h-4" /> LinkedIn
               </a>
-              <a
-                href="/#contacto"
-                className="text-ice hover:text-star-light transition-colors inline-flex items-center gap-2"
-              >
-                <Mail className="w-4 h-4" /> Contacto
-              </a>
+              {CONTACTO.email ? (
+                <a
+                  href={`mailto:${CONTACTO.email}`}
+                  className="text-ice hover:text-star-light transition-colors inline-flex items-center gap-2"
+                >
+                  <Mail className="w-4 h-4" /> {CONTACTO.email}
+                </a>
+              ) : (
+                <a
+                  href="/#contacto"
+                  className="text-ice hover:text-star-light transition-colors inline-flex items-center gap-2"
+                >
+                  <Mail className="w-4 h-4" /> Contacto
+                </a>
+              )}
+              <span className="text-ice inline-flex items-center gap-2">
+                <MapPin className="w-4 h-4" /> {CONTACTO.ciudad}
+              </span>
+            </div>
+          </div>
+          <div>
+            <h4 className="label-mono !text-muted mb-4">Legal</h4>
+            <div className="flex flex-col gap-2.5 text-sm">
+              <Link to="/privacidad" className="text-ice hover:text-star-light transition-colors">
+                Política de Privacidad
+              </Link>
+              <Link to="/terminos" className="text-ice hover:text-star-light transition-colors">
+                Términos y Condiciones
+              </Link>
             </div>
           </div>
         </div>
@@ -627,13 +657,45 @@ function Footer() {
   );
 }
 
+function validateContact(data: Record<string, string>) {
+  const errors: Record<string, string> = {};
+  const name = (data.user_name ?? '').trim();
+  const email = (data.user_email ?? '').trim();
+  const message = (data.message ?? '').trim();
+  if (name.length < 2) errors.user_name = 'Escribe tu nombre.';
+  if (!email) errors.user_email = 'Escribe tu correo electrónico.';
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))
+    errors.user_email = 'Este correo no parece válido. Revisa que tenga @ y un dominio.';
+  if (message.length < 10) errors.message = 'Cuéntame un poco más (mínimo 10 caracteres).';
+  return errors;
+}
+
+function FieldError({ id, message }: { id: string; message?: string }) {
+  if (!message) return null;
+  return (
+    <p id={id} role="alert" className="text-signal-amber text-xs font-semibold mt-1.5">
+      {message}
+    </p>
+  );
+}
+
 function HomePage() {
   const formRef = useRef<HTMLFormElement>(null);
+  const navigate = useNavigate();
   const [sending, setSending] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [formStatus, setFormStatus] = useState<{
     message: string;
     type: 'success' | 'error' | null;
   }>({ message: '', type: null });
+
+  const clearError = (field: string) =>
+    setErrors((prev) => {
+      if (!prev[field]) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
 
   const latestPosts = [...posts].sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 3);
 
@@ -660,6 +722,18 @@ function HomePage() {
       data[key] = String(value);
     });
 
+    // Validación propia (el form usa noValidate) para mostrar el error
+    // debajo de cada campo, con el mismo estilo del sitio.
+    const nextErrors = validateContact(data);
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) {
+      setFormStatus({ message: 'Revisa los campos marcados antes de enviar.', type: 'error' });
+      const first = form.querySelector<HTMLElement>(`[name="${Object.keys(nextErrors)[0]}"]`);
+      first?.focus();
+      setSending(false);
+      return;
+    }
+
     try {
       const response = await fetch('/', {
         method: 'POST',
@@ -671,11 +745,9 @@ function HomePage() {
         throw new Error(`Netlify Forms respondió con estado ${response.status}`);
       }
 
-      setFormStatus({
-        message: '¡Mensaje enviado con éxito! Me pondré en contacto contigo pronto.',
-        type: 'success',
-      });
       form.reset();
+      setFormStatus({ message: '', type: null });
+      navigate('/gracias');
     } catch (error) {
       console.error('Error al enviar el formulario a Netlify:', error);
       setFormStatus({
@@ -699,7 +771,7 @@ function HomePage() {
               &amp; Code
             </h1>
             <HeroPhoto
-              src="/hero-waterfall.jpg"
+              src="/hero-waterfall.webp"
               alt="Pareja en una banca frente a una cascada iluminada, Cataratas del Niágara"
               className="h-56 md:h-72"
               parallaxSpeed={0.08}
@@ -707,7 +779,7 @@ function HomePage() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-[0.75fr_1.25fr_1.25fr_0.75fr] gap-4 md:gap-5 mt-4 md:mt-5 items-center">
             <HeroPhoto
-              src="/hero-moon.jpg"
+              src="/hero-moon.webp"
               alt="Luna en cuarto creciente fotografiada en Perú"
               className="h-24 md:h-32 order-2 md:order-none"
               parallaxSpeed={0.06}
@@ -720,7 +792,7 @@ function HomePage() {
               En crecimiento
             </h2>
             <HeroPhoto
-              src="/hero-sunset.jpg"
+              src="/hero-sunset.webp"
               alt="Atardecer sobre el lago Titicaca, entre Perú y Bolivia"
               className="h-24 md:h-32 order-2 md:order-none"
               parallaxSpeed={0.11}
@@ -989,6 +1061,7 @@ function HomePage() {
             method="POST"
             data-netlify="true"
             netlify-honeypot="bot-field"
+            noValidate
             className="space-y-5"
           >
             {/* Requerido por Netlify Forms para asociar el envío con el formulario detectado en el build */}
@@ -1009,9 +1082,15 @@ function HomePage() {
                   id="user_name"
                   name="user_name"
                   required
-                  className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-frost placeholder-muted focus:border-star-light/45 focus:outline-none transition-colors"
+                  aria-invalid={!!errors.user_name}
+                  aria-describedby={errors.user_name ? 'user_name-error' : undefined}
+                  onInput={() => clearError('user_name')}
+                  className={`w-full rounded-xl bg-space-900 border px-4 py-3 text-frost placeholder-muted focus:outline-none transition-colors ${
+                    errors.user_name ? 'border-signal-amber' : 'border-star-light/15 focus:border-star-light/45'
+                  }`}
                   placeholder="Tu nombre"
                 />
+                <FieldError id="user_name-error" message={errors.user_name} />
               </div>
               <div>
                 <label htmlFor="user_email" className="block text-sm font-semibold text-ice mb-2">
@@ -1022,9 +1101,15 @@ function HomePage() {
                   id="user_email"
                   name="user_email"
                   required
-                  className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-frost placeholder-muted focus:border-star-light/45 focus:outline-none transition-colors"
+                  aria-invalid={!!errors.user_email}
+                  aria-describedby={errors.user_email ? 'user_email-error' : undefined}
+                  onInput={() => clearError('user_email')}
+                  className={`w-full rounded-xl bg-space-900 border px-4 py-3 text-frost placeholder-muted focus:outline-none transition-colors ${
+                    errors.user_email ? 'border-signal-amber' : 'border-star-light/15 focus:border-star-light/45'
+                  }`}
                   placeholder="tucorreo@email.com"
                 />
+                <FieldError id="user_email-error" message={errors.user_email} />
               </div>
             </div>
             <div>
@@ -1036,13 +1121,26 @@ function HomePage() {
                 name="message"
                 required
                 rows={5}
-                className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-frost placeholder-muted focus:border-star-light/45 focus:outline-none transition-colors resize-y"
+                aria-invalid={!!errors.message}
+                aria-describedby={errors.message ? 'message-error' : undefined}
+                onInput={() => clearError('message')}
+                className={`w-full rounded-xl bg-space-900 border px-4 py-3 text-frost placeholder-muted focus:outline-none transition-colors resize-y ${
+                  errors.message ? 'border-signal-amber' : 'border-star-light/15 focus:border-star-light/45'
+                }`}
                 placeholder="Cuéntame sobre tu proyecto..."
               />
+              <FieldError id="message-error" message={errors.message} />
             </div>
             <button type="submit" disabled={sending} className="btn-star w-full justify-center disabled:opacity-60">
               {sending ? 'Enviando...' : 'Enviar mensaje'} <Send className="w-4 h-4" />
             </button>
+            <p className="text-xs text-muted text-center">
+              Al enviar aceptas el tratamiento de tus datos según la{' '}
+              <Link to="/privacidad" className="text-star-light underline hover:text-frost">
+                Política de Privacidad
+              </Link>
+              .
+            </p>
             {formStatus.type && (
               <p
                 role="status"
@@ -1148,6 +1246,7 @@ export default function App() {
   return (
     <>
       <ScrollToTop />
+      <RouteMeta />
       {!isLandingPage && <NavBar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -1159,8 +1258,13 @@ export default function App() {
         <Route path="/recursos/google-ads-checklist" element={<GoogleAdsChecklist />} />
         <Route path="/diagnostico" element={<RutaClaraDiagnostico onLead={enviarLeadRutaClara} />} />
         <Route path="/recursos/ruta-clara" element={<RutaClaraDiagnostico onLead={enviarLeadRutaClara} />} />
+        <Route path="/privacidad" element={<PoliticaPrivacidad />} />
+        <Route path="/terminos" element={<TerminosCondiciones />} />
+        <Route path="/gracias" element={<Gracias />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       {!isLandingPage && <Footer />}
+      <CookieBanner />
     </>
   );
 }

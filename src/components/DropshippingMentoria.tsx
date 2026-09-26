@@ -314,7 +314,11 @@ function LeadCaptureForm() {
       )}
 
       <p className="text-xs text-muted leading-relaxed">
-        Al dar clic aceptas que te contacte por WhatsApp o correo para darte seguimiento.
+        Al dar clic aceptas que te contacte por WhatsApp o correo para darte seguimiento, según la{' '}
+        <Link to="/privacidad" className="underline hover:text-frost">
+          Política de Privacidad
+        </Link>
+        .
       </p>
     </form>
   );

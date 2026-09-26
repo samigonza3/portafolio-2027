@@ -278,3 +278,11 @@ html {
     width: 6px;
   }
 }
+
+/* Páginas legales: espacio entre secciones. */
+.legal-page h2 {
+  margin-top: 2.25rem;
+}
+.legal-page p {
+  margin-bottom: 1rem;
+}

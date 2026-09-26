@@ -6,6 +6,18 @@
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
+  // Google Consent Mode v2: todo arranca denegado hasta que el visitante
+  // decide en el banner de cookies (src/components/CookieBanner.tsx).
+  var consent = null;
+  try { consent = localStorage.getItem('cookie-consent'); } catch (e) {}
+  var granted = consent === 'granted' ? 'granted' : 'denied';
+  gtag('consent', 'default', {
+    ad_storage: granted,
+    ad_user_data: granted,
+    ad_personalization: granted,
+    analytics_storage: granted,
+    wait_for_update: 500
+  });
   gtag('js', new Date());
 
   gtag('config', 'G-3T9MQBQJKD');
@@ -19,8 +31,25 @@
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#040817" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Samuel González. Paid Media & Data Analyst. Data Science, Marketing Digital y Desarrollo Full Stack. Más de 10 años impulsando resultados con datos." />
-    <title>Samuel González | Data. Marketing. Code.</title>
+    <meta name="description" content="Samuel González. +15 años conectando adquisición pagada, analítica de datos y desarrollo web para marcas nacionales e internacionales." />
+    <title>Samuel González | Data, Marketing &amp; Code</title>
+    <link rel="canonical" href="https://samuelgonzalez.org/" />
+
+    <!-- Open Graph / redes sociales -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Samuel González" />
+    <meta property="og:locale" content="es_CO" />
+    <meta property="og:url" content="https://samuelgonzalez.org/" />
+    <meta property="og:title" content="Samuel González | Data, Marketing &amp; Code" />
+    <meta property="og:description" content="+15 años conectando adquisición pagada, analítica de datos y desarrollo web para marcas nacionales e internacionales." />
+    <meta property="og:image" content="https://samuelgonzalez.org/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Samuel González. Data, Marketing &amp; Code al servicio de marcas en crecimiento." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Samuel González | Data, Marketing &amp; Code" />
+    <meta name="twitter:description" content="+15 años conectando adquisición pagada, analítica de datos y desarrollo web para marcas nacionales e internacionales." />
+    <meta name="twitter:image" content="https://samuelgonzalez.org/og-image.png" />
   </head>
   <body>
     <div id="root"></div>

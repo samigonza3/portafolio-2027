@@ -1895,7 +1895,11 @@ function Captura({
             onChange={(e) => setAcepta(e.target.checked)}
           />
           <span>
-            Acepto recibir mi diagnóstico y mensajes de Samuel González por WhatsApp y correo. Puedo darme de baja cuando quiera.
+            Acepto recibir mi diagnóstico y mensajes de Samuel González por WhatsApp y correo, y el tratamiento de mis datos según la{' '}
+            <a href="/privacidad" target="_blank" rel="noopener" className="text-star-light underline">
+              Política de Privacidad
+            </a>
+            . Puedo darme de baja cuando quiera.
           </span>
         </label>
         {error && (
