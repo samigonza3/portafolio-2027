@@ -4,7 +4,7 @@
 export const CONTACTO = {
   responsable: 'Samuel González',
   ciudad: 'Cali, Valle del Cauca, Colombia',
-  email: '',
+  email: 'samuelgonzalezs94@gmail.com',
   linkedin: 'https://www.linkedin.com/in/samuelgonzalez/',
   sitio: 'samuelgonzalez.org',
 };

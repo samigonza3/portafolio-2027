@@ -1545,7 +1545,7 @@ export default function RutaClaraDiagnostico({ onLead }: RutaClaraDiagnosticoPro
             <p className="text-sm text-muted">Sirve si ya vendes y también si apenas vas a empezar.</p>
           </div>
           <p className="text-xs text-muted border-t border-star-light/10 pt-6">
-            Construido por Samuel González con más de 10 años en Meta, Google, TikTok y Microsoft Ads y una maestría en
+            Construido por Samuel González con más de 15 años en Meta, Google, TikTok y Microsoft Ads y una maestría en
             Data Science. Sin promesas de cifras: si no es tu momento, el resultado te lo dice.
           </p>
         </div>

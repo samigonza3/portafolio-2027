@@ -1,13 +1,11 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
-  Check,
   MessageCircle,
   BookOpen,
   Video,
   Sparkles,
-  Clock,
   Briefcase,
   Rocket,
   GraduationCap,
@@ -18,6 +16,13 @@ import {
   PlayCircle,
   Volume2,
   VolumeX,
+  Download,
+  X,
+  CheckCircle2,
+  Users,
+  SearchCheck,
+  Target,
+  Trophy,
 } from 'lucide-react';
 
 // ============================================================
@@ -30,20 +35,19 @@ import {
 // gratuita, Blueprint de pago único ($5) y mentoría 1:1 ($250).
 // ============================================================
 
-// TODO: reemplazar por el link real del grupo/canal de WhatsApp.
-const WHATSAPP_LINK = 'https://chat.whatsapp.com/LADFopGXS5mF6O3eMDRcV6';
+// Grupo gratuito de WhatsApp (primer escalón de la oferta).
+const WHATSAPP_LINK = 'https://chat.whatsapp.com/JftSBkjqFmxHAvSiFgVRD3';
+
+// PDF del caso de estudio que se descarga desde el popup tras dejar los
+// datos. TODO: subir el archivo a /public con exactamente este nombre.
+const CASE_STUDY_PDF = '/caso-de-estudio-dropshipping.pdf';
+
+// Precios visibles en la página (se usan en tarjetas y FAQ).
+const BLUEPRINT_PRICE = '$19 USD';
+const MENTORIA_PRICE = '$250 USD';
 
 // TODO: reemplazar por el link real de cobro en Bold (checkout.bold.co/payment/...).
 const BLUEPRINT_PAYMENT_LINK = 'https://checkout.bold.co/payment/TU-LINK-DE-BOLD';
-
-// Horarios disponibles para la llamada de discovery. Samuel los actualiza
-// directamente aquí (agregar o quitar líneas) cuando cambie su disponibilidad.
-const AVAILABLE_SLOTS = [
-  'Martes 10:00 a.m. (hora Colombia)',
-  'Miércoles 4:00 p.m. (hora Colombia)',
-  'Jueves 11:00 a.m. (hora Colombia)',
-  'Viernes 3:00 p.m. (hora Colombia)',
-];
 
 // Países con bandera + indicativo telefónico, para el selector de WhatsApp
 // con prefijo de país (mismo patrón visual que la referencia de Master
@@ -70,8 +74,6 @@ const COUNTRY_CODES = [
   { name: 'Estados Unidos', flag: '🇺🇸', dial: '+1' },
   { name: 'Venezuela', flag: '🇻🇪', dial: '+58' },
 ];
-
-const COUNTRIES = COUNTRY_CODES.map((c) => c.name);
 
 // TODO: reemplazar por el video real (ej: '/mentoria-hero.mp4'). Mientras
 // esté vacío, se muestra un placeholder en el mismo espacio para no
@@ -177,30 +179,120 @@ function encodeFormData(data: Record<string, string>) {
     .join('&');
 }
 
-// Formulario de captura de lead en el hero, mismo set de campos que la
-// referencia: nombre, correo, país y WhatsApp. Al enviarlo, guarda el lead
-// vía Netlify Forms y lleva al visitante a las 3 formas de empezar.
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+const inputBase =
+  'w-full rounded-xl bg-space-900 border px-4 py-3 text-sm text-frost placeholder:text-muted outline-none transition-colors';
+const inputState = (hasError: boolean) =>
+  hasError ? 'border-red-400/80' : 'border-star-light/15 focus:border-cyan-400/60';
+
+function FieldError({ message }: { message?: string }) {
+  if (!message) return null;
+  return (
+    <p role="alert" className="text-red-400 text-xs font-semibold mt-1.5 text-left">
+      {message}
+    </p>
+  );
+}
+
+// Popup que aparece cuando el lead se guardó bien: descarga del caso de
+// estudio en PDF y acceso al grupo gratuito de WhatsApp.
+function CaseStudyModal({ open, name, onClose }: { open: boolean; name: string; onClose: () => void }) {
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+  const firstName = name.trim().split(/\s+/)[0];
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/75 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="case-study-title"
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-md rounded-2xl border border-cyan-400/30 bg-gradient-to-br from-black via-space-950 to-nebula p-7 sm:p-8 text-center shadow-[0_0_60px_-15px_rgba(34,211,238,0.45)]"
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Cerrar"
+          className="absolute top-3 right-3 w-9 h-9 rounded-full inline-flex items-center justify-center text-muted hover:text-frost hover:bg-white/5"
+        >
+          <X className="w-5 h-5" />
+        </button>
+        <CheckCircle2 className="w-12 h-12 text-cyan-400 mx-auto mb-4" />
+        <h2 id="case-study-title" className="display-xl text-2xl sm:text-3xl mb-3">
+          {firstName ? `¡Listo, ${firstName}!` : '¡Listo!'}
+        </h2>
+        <p className="text-ice text-sm leading-relaxed mb-6">
+          Tu caso de estudio está listo para descargar. Y si quieres seguir aprendiendo conmigo,
+          únete gratis a la comunidad de WhatsApp.
+        </p>
+        <div className="space-y-3">
+          <a
+            href={CASE_STUDY_PDF}
+            download
+            className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#FF2D55] hover:bg-[#e6234c] text-white font-bold text-sm sm:text-base px-6 py-4 transition-colors"
+          >
+            <Download className="w-5 h-5" /> Descargar el caso de estudio (PDF)
+          </a>
+          <a
+            href={WHATSAPP_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] hover:bg-[#1ebe5b] text-black font-bold text-sm sm:text-base px-6 py-4 transition-colors"
+          >
+            <MessageCircle className="w-5 h-5" /> Unirme gratis al grupo de WhatsApp
+          </a>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            onClose();
+            document.getElementById('opciones')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          className="mt-5 text-xs text-muted underline hover:text-frost"
+        >
+          Ver las 3 formas de empezar
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Formulario de captura del hero: nombre, correo, país y WhatsApp. Si el
+// correo es válido y Netlify guarda el lead, se abre el popup del caso de
+// estudio.
 function LeadCaptureForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const [countryIndex, setCountryIndex] = useState(0);
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [sending, setSending] = useState(false);
-  const [status, setStatus] = useState<{ message: string; type: 'success' | 'error' | null }>({
-    message: '',
-    type: null,
-  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitError, setSubmitError] = useState('');
+  const [modal, setModal] = useState<{ open: boolean; name: string }>({ open: false, name: '' });
 
   const selectedCountry = COUNTRY_CODES[countryIndex];
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSending(true);
-
     const form = formRef.current;
-    if (!form) {
-      setSending(false);
-      return;
-    }
+    if (!form) return;
 
     const formData = new FormData(form);
     const data: Record<string, string> = {};
@@ -208,140 +300,194 @@ function LeadCaptureForm() {
       data[key] = String(value);
     });
 
+    const nextErrors: Record<string, string> = {};
+    if ((data.lead_name ?? '').trim().length < 2) nextErrors.lead_name = 'Escribe tu nombre.';
+    const email = (data.lead_email ?? '').trim();
+    if (!email) nextErrors.lead_email = 'Escribe tu correo para enviarte el caso de estudio.';
+    else if (!EMAIL_RE.test(email))
+      nextErrors.lead_email = 'Este correo no parece válido. Revisa que tenga @ y un dominio.';
+    if (whatsappNumber.replace(/\D/g, '').length < 7)
+      nextErrors.lead_whatsapp = 'Escribe un número de WhatsApp válido.';
+    setErrors(nextErrors);
+    setSubmitError('');
+    if (Object.keys(nextErrors).length > 0) return;
+
+    setSending(true);
     try {
       const response = await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: encodeFormData(data),
       });
-
       if (!response.ok) {
         throw new Error(`Netlify Forms respondió con estado ${response.status}`);
       }
-
-      setStatus({
-        message: 'Listo. Aquí abajo tienes el caso de estudio completo y las 3 formas de empezar.',
-        type: 'success',
-      });
+      window.gtag?.('event', 'generate_lead', { form_name: 'lead-mentoria' });
+      setModal({ open: true, name: data.lead_name ?? '' });
       form.reset();
       setCountryIndex(0);
       setWhatsappNumber('');
-      document.getElementById('opciones')?.scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
       console.error('Error al enviar el lead a Netlify:', error);
-      setStatus({
-        message: 'Hubo un error al enviar tus datos. Intenta de nuevo o escríbeme directo.',
-        type: 'error',
-      });
+      setSubmitError('Hubo un error al enviar tus datos. Intenta de nuevo en un momento.');
     } finally {
       setSending(false);
     }
   };
 
+  const clear = (field: string) =>
+    setErrors((prev) => {
+      if (!prev[field]) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+
   return (
-    <form
-      ref={formRef}
-      onSubmit={handleSubmit}
-      name="lead-mentoria"
-      data-netlify="true"
-      netlify-honeypot="bot-field"
-      className="space-y-3 text-left"
-    >
-      <input type="hidden" name="form-name" value="lead-mentoria" />
-      <p className="hidden">
-        <label>
-          No llenar: <input name="bot-field" />
-        </label>
-      </p>
-
-      <input
-        type="text"
-        name="lead_name"
-        required
-        placeholder="Nombre completo"
-        className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-sm text-frost placeholder:text-muted focus:border-cyan-400/60 outline-none"
-      />
-      <input
-        type="email"
-        name="lead_email"
-        required
-        placeholder="Correo electrónico"
-        className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-sm text-frost placeholder:text-muted focus:border-cyan-400/60 outline-none"
-      />
-      {/* Campo oculto con el nombre del país, para mantener el mismo dato
-          que antes viajaba en lead_country (ahora se elige junto al
-          indicativo de WhatsApp, como en la referencia) */}
-      <input type="hidden" name="lead_country" value={selectedCountry.name} />
-      {/* WhatsApp con selector de bandera + indicativo pegado al campo,
-          igual que la referencia */}
-      <div className="flex gap-2">
-        <select
-          value={countryIndex}
-          onChange={(e) => setCountryIndex(Number(e.target.value))}
-          aria-label="Indicativo de país"
-          className="shrink-0 w-[6.5rem] rounded-xl bg-space-900 border border-star-light/15 px-2 py-3 text-sm text-frost focus:border-cyan-400/60 outline-none"
-        >
-          {COUNTRY_CODES.map((c, i) => (
-            <option key={c.name} value={i}>
-              {c.flag} {c.dial}
-            </option>
-          ))}
-        </select>
-        <input
-          type="tel"
-          value={whatsappNumber}
-          onChange={(e) => setWhatsappNumber(e.target.value)}
-          required
-          placeholder="Número de WhatsApp"
-          className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-sm text-frost placeholder:text-muted focus:border-cyan-400/60 outline-none"
-        />
-      </div>
-      <input type="hidden" name="lead_whatsapp" value={`${selectedCountry.dial} ${whatsappNumber}`} />
-
-      <button
-        type="submit"
-        disabled={sending}
-        className="w-full justify-center inline-flex items-center gap-2 rounded-full bg-[#FF2D55] hover:bg-[#e6234c] text-white font-bold text-sm sm:text-base px-6 py-4 transition-colors disabled:opacity-60"
+    <>
+      <form
+        ref={formRef}
+        onSubmit={handleSubmit}
+        name="lead-mentoria"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        noValidate
+        className="space-y-3 text-left"
       >
-        <PlayCircle className="w-5 h-5" />
-        {sending ? 'Enviando...' : 'ACCEDE AQUÍ al caso de estudio'}
-      </button>
-
-      {status.type && (
-        <p className={`text-sm ${status.type === 'success' ? 'text-cyan-400' : 'text-red-400'}`}>
-          {status.message}
+        <input type="hidden" name="form-name" value="lead-mentoria" />
+        <p className="hidden">
+          <label>
+            No llenar: <input name="bot-field" />
+          </label>
         </p>
-      )}
 
-      <p className="text-xs text-muted leading-relaxed">
-        Al dar clic aceptas que te contacte por WhatsApp o correo para darte seguimiento, según la{' '}
-        <Link to="/privacidad" className="underline hover:text-frost">
-          Política de Privacidad
-        </Link>
-        .
-      </p>
-    </form>
+        <div>
+          <input
+            type="text"
+            name="lead_name"
+            required
+            autoComplete="name"
+            placeholder="Nombre completo"
+            aria-invalid={!!errors.lead_name}
+            onInput={() => clear('lead_name')}
+            className={`${inputBase} ${inputState(!!errors.lead_name)}`}
+          />
+          <FieldError message={errors.lead_name} />
+        </div>
+        <div>
+          <input
+            type="email"
+            name="lead_email"
+            required
+            autoComplete="email"
+            placeholder="Correo electrónico"
+            aria-invalid={!!errors.lead_email}
+            onInput={() => clear('lead_email')}
+            className={`${inputBase} ${inputState(!!errors.lead_email)}`}
+          />
+          <FieldError message={errors.lead_email} />
+        </div>
+        <input type="hidden" name="lead_country" value={selectedCountry.name} />
+        <div>
+          <div className="flex gap-2">
+            <select
+              value={countryIndex}
+              onChange={(e) => setCountryIndex(Number(e.target.value))}
+              aria-label="Indicativo de país"
+              className="shrink-0 w-[6.5rem] rounded-xl bg-space-900 border border-star-light/15 px-2 py-3 text-sm text-frost focus:border-cyan-400/60 outline-none"
+            >
+              {COUNTRY_CODES.map((c, i) => (
+                <option key={c.name} value={i}>
+                  {c.flag} {c.dial}
+                </option>
+              ))}
+            </select>
+            <input
+              type="tel"
+              value={whatsappNumber}
+              onChange={(e) => {
+                setWhatsappNumber(e.target.value);
+                clear('lead_whatsapp');
+              }}
+              required
+              autoComplete="tel-national"
+              placeholder="Número de WhatsApp"
+              aria-invalid={!!errors.lead_whatsapp}
+              className={`${inputBase} ${inputState(!!errors.lead_whatsapp)}`}
+            />
+          </div>
+          <FieldError message={errors.lead_whatsapp} />
+        </div>
+        <input type="hidden" name="lead_whatsapp" value={`${selectedCountry.dial} ${whatsappNumber}`} />
+
+        <button
+          type="submit"
+          disabled={sending}
+          className="w-full justify-center inline-flex items-center gap-2 rounded-full bg-[#FF2D55] hover:bg-[#e6234c] text-white font-bold text-sm sm:text-base px-6 py-4 transition-colors disabled:opacity-60"
+        >
+          <Download className="w-5 h-5" />
+          {sending ? 'Enviando...' : 'QUIERO EL CASO DE ESTUDIO'}
+        </button>
+
+        {submitError && (
+          <p role="alert" className="text-sm text-red-400">
+            {submitError}
+          </p>
+        )}
+
+        <p className="text-xs text-muted leading-relaxed">
+          Al dar clic aceptas que te contacte por WhatsApp o correo para darte seguimiento, según la{' '}
+          <Link to="/privacidad" className="underline hover:text-frost">
+            Política de Privacidad
+          </Link>
+          .
+        </p>
+      </form>
+      <CaseStudyModal
+        open={modal.open}
+        name={modal.name}
+        onClose={() => setModal({ open: false, name: '' })}
+      />
+    </>
   );
+}
+
+// Pregunta de filtro para la llamada: cuántos pedidos al día saca hoy.
+const PEDIDOS_OPCIONES = [
+  'Todavía no vendo nada (estoy empezando)',
+  'Entre 1 y 5 pedidos al día',
+  'Entre 6 y 20 pedidos al día',
+  'Más de 20 pedidos al día',
+];
+
+function todayISO() {
+  const d = new Date();
+  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+  return d.toISOString().slice(0, 10);
 }
 
 function BookingForm() {
   const formRef = useRef<HTMLFormElement>(null);
-  const [selectedSlot, setSelectedSlot] = useState(AVAILABLE_SLOTS[0]);
   const [sending, setSending] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<{ message: string; type: 'success' | 'error' | null }>({
     message: '',
     type: null,
   });
+  const minDate = todayISO();
+
+  const clear = (field: string) =>
+    setErrors((prev) => {
+      if (!prev[field]) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSending(true);
-
     const form = formRef.current;
-    if (!form) {
-      setSending(false);
-      return;
-    }
+    if (!form) return;
 
     const formData = new FormData(form);
     const data: Record<string, string> = {};
@@ -349,27 +495,40 @@ function BookingForm() {
       data[key] = String(value);
     });
 
+    const nextErrors: Record<string, string> = {};
+    if (!data.fecha_tentativa) nextErrors.fecha_tentativa = 'Elige una fecha tentativa.';
+    else if (data.fecha_tentativa < minDate) nextErrors.fecha_tentativa = 'Elige una fecha de hoy en adelante.';
+    const email = (data.user_email ?? '').trim();
+    if (!email) nextErrors.user_email = 'Escribe tu correo para confirmarte la llamada.';
+    else if (!EMAIL_RE.test(email))
+      nextErrors.user_email = 'Este correo no parece válido. Revisa que tenga @ y un dominio.';
+    if (!data.pedidos_dia) nextErrors.pedidos_dia = 'Cuéntame en qué punto estás hoy.';
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) {
+      setStatus({ message: '', type: null });
+      return;
+    }
+
+    setSending(true);
     try {
       const response = await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: encodeFormData(data),
       });
-
       if (!response.ok) {
         throw new Error(`Netlify Forms respondió con estado ${response.status}`);
       }
-
+      window.gtag?.('event', 'generate_lead', { form_name: 'reserva-mentoria' });
       setStatus({
-        message: 'Solicitud enviada. Te escribo por WhatsApp o correo para confirmar el horario.',
+        message: 'Solicitud enviada. Te escribo al correo para confirmar la fecha y el horario.',
         type: 'success',
       });
       form.reset();
-      setSelectedSlot(AVAILABLE_SLOTS[0]);
     } catch (error) {
       console.error('Error al enviar la reserva a Netlify:', error);
       setStatus({
-        message: 'Hubo un error al enviar tu solicitud. Intenta de nuevo o escríbeme directo.',
+        message: 'Hubo un error al enviar tu solicitud. Intenta de nuevo en un momento.',
         type: 'error',
       });
     } finally {
@@ -384,7 +543,8 @@ function BookingForm() {
       name="reserva-mentoria"
       data-netlify="true"
       netlify-honeypot="bot-field"
-      className="space-y-4"
+      noValidate
+      className="space-y-5"
     >
       <input type="hidden" name="form-name" value="reserva-mentoria" />
       <p className="hidden">
@@ -394,115 +554,201 @@ function BookingForm() {
       </p>
 
       <div>
-        <label className="label-mono !text-muted block mb-3">Elige un horario</label>
-        <div className="grid sm:grid-cols-2 gap-2.5">
-          {AVAILABLE_SLOTS.map((slot) => (
-            <button
-              type="button"
-              key={slot}
-              onClick={() => setSelectedSlot(slot)}
-              className={`text-left text-sm px-4 py-3 rounded-xl border transition-colors ${
-                selectedSlot === slot
-                  ? 'border-star-light bg-star/10 text-frost'
-                  : 'border-star-light/15 text-ice hover:border-star-light/40'
-              }`}
-            >
-              <Clock className="w-3.5 h-3.5 inline-block mr-2 -mt-0.5" />
-              {slot}
-            </button>
-          ))}
-        </div>
-        <input type="hidden" name="slot" value={selectedSlot} />
+        <label htmlFor="fecha_tentativa" className="block text-sm font-semibold text-ice mb-2">
+          Fecha tentativa para la llamada
+        </label>
+        <input
+          id="fecha_tentativa"
+          type="date"
+          name="fecha_tentativa"
+          min={minDate}
+          required
+          aria-invalid={!!errors.fecha_tentativa}
+          onInput={() => clear('fecha_tentativa')}
+          className={`${inputBase} ${inputState(!!errors.fecha_tentativa)} [color-scheme:dark]`}
+        />
+        <FieldError message={errors.fecha_tentativa} />
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-4">
+      <div>
+        <label htmlFor="booking_email" className="block text-sm font-semibold text-ice mb-2">
+          Correo electrónico
+        </label>
         <input
-          type="text"
-          name="user_name"
-          required
-          placeholder="Tu nombre"
-          className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-sm text-frost placeholder:text-muted focus:border-star-light/45 outline-none"
-        />
-        <input
+          id="booking_email"
           type="email"
           name="user_email"
           required
-          placeholder="Tu correo"
-          className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-sm text-frost placeholder:text-muted focus:border-star-light/45 outline-none"
+          autoComplete="email"
+          placeholder="tucorreo@email.com"
+          aria-invalid={!!errors.user_email}
+          onInput={() => clear('user_email')}
+          className={`${inputBase} ${inputState(!!errors.user_email)}`}
         />
+        <FieldError message={errors.user_email} />
       </div>
-      <input
-        type="text"
-        name="user_whatsapp"
-        required
-        placeholder="Tu WhatsApp (con indicativo)"
-        className="w-full rounded-xl bg-space-900 border border-star-light/15 px-4 py-3 text-sm text-frost placeholder:text-muted focus:border-star-light/45 outline-none"
-      />
+
+      <fieldset>
+        <legend className="block text-sm font-semibold text-ice mb-2">
+          ¿Cuántos pedidos al día sacas hoy?
+        </legend>
+        <div className="grid sm:grid-cols-2 gap-2.5">
+          {PEDIDOS_OPCIONES.map((op) => (
+            <label
+              key={op}
+              className="flex items-center gap-3 rounded-xl border border-star-light/15 px-4 py-3 text-sm text-ice cursor-pointer transition-colors hover:border-cyan-400/40 has-[:checked]:border-cyan-400 has-[:checked]:bg-cyan-400/10 has-[:checked]:text-frost"
+            >
+              <input
+                type="radio"
+                name="pedidos_dia"
+                value={op}
+                onChange={() => clear('pedidos_dia')}
+                className="accent-cyan-400"
+              />
+              {op}
+            </label>
+          ))}
+        </div>
+        <FieldError message={errors.pedidos_dia} />
+      </fieldset>
 
       <button type="submit" disabled={sending} className="btn-star w-full justify-center disabled:opacity-60">
-        {sending ? 'Enviando...' : 'Solicitar este horario'}
+        {sending ? 'Enviando...' : 'Solicitar mi llamada'}
         <ArrowRight className="w-4 h-4" />
       </button>
 
       {status.type && (
-        <p className={`text-sm ${status.type === 'success' ? 'text-signal-teal' : 'text-red-400'}`}>
+        <p role="status" className={`text-sm ${status.type === 'success' ? 'text-signal-teal' : 'text-red-400'}`}>
           {status.message}
         </p>
       )}
 
       <p className="text-xs text-muted leading-relaxed">
-        Al confirmar, coordinamos por WhatsApp o correo el link de la llamada. El cupo de mentoría 1:1
-        de $250 USD es limitado por semana.
+        La fecha es tentativa y está sujeta a disponibilidad. Te confirmo el horario exacto por
+        correo. Los cupos de mentoría son limitados cada mes.
       </p>
     </form>
+  );
+}
+
+// Proceso de la mentoría (tercer escalón): nodo central con sus 4
+// componentes, igual al mapa de la escalera de valor.
+const MENTORIA_NODOS = [
+  { icon: Users, title: 'Qué recibes', text: 'Acompañamiento 1 a 1 o grupal' },
+  { icon: SearchCheck, title: 'Revisión experta', text: 'Tienda, campañas y números' },
+  { icon: Target, title: 'Objetivo', text: 'Escalar tu tienda con sistema' },
+  { icon: Trophy, title: 'Resultado', text: 'Casos de éxito que se vuelven contenido' },
+];
+
+function NodoCard({ icon: Icon, title, text }: (typeof MENTORIA_NODOS)[number]) {
+  return (
+    <div className="rounded-xl border border-star-light/15 bg-space-900/90 p-4 h-full">
+      <p className="font-extrabold text-frost text-sm mb-1 flex items-center gap-2">
+        <Icon className="w-4 h-4 text-teal-300" /> {title}
+      </p>
+      <p className="text-ice text-sm leading-snug">{text}</p>
+    </div>
+  );
+}
+
+function NodoCentral() {
+  return (
+    <div className="rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-500 px-6 py-5 shadow-[0_0_50px_-10px_rgba(20,184,166,0.65)] text-left">
+      <p className="text-[11px] font-bold tracking-[0.2em] text-teal-50/90 mb-1">03 · PREMIUM</p>
+      <p className="text-2xl font-extrabold text-white leading-tight">Mentoría</p>
+      <p className="text-sm text-teal-50/90 mt-1">Etapa: transformación</p>
+    </div>
+  );
+}
+
+function MentoriaProceso() {
+  const [a, b, c, d] = MENTORIA_NODOS;
+  return (
+    <>
+      {/* Mobile: nodo arriba y sus 4 componentes debajo */}
+      <div className="md:hidden space-y-4">
+        <NodoCentral />
+        <div className="grid grid-cols-2 gap-3">
+          {MENTORIA_NODOS.map((n) => (
+            <NodoCard key={n.title} {...n} />
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: mapa con conectores curvos */}
+      <div className="hidden md:grid relative max-w-3xl mx-auto grid-cols-2 gap-x-24 grid-rows-[92px_64px_120px_64px_92px]">
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          viewBox="0 0 100 432"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <g fill="none" stroke="rgba(45,212,191,0.75)" strokeWidth="1.5" vectorEffect="non-scaling-stroke">
+            <path d="M22 92 C22 130 50 120 50 156" vectorEffect="non-scaling-stroke" />
+            <path d="M78 92 C78 130 50 120 50 156" vectorEffect="non-scaling-stroke" />
+            <path d="M50 276 C50 312 22 302 22 340" vectorEffect="non-scaling-stroke" />
+            <path d="M50 276 C50 312 78 302 78 340" vectorEffect="non-scaling-stroke" />
+          </g>
+          <path
+            d="M66 216 C96 216 99 280 94 336"
+            fill="none"
+            stroke="rgba(45,212,191,0.6)"
+            strokeWidth="1.5"
+            strokeDasharray="5 5"
+            vectorEffect="non-scaling-stroke"
+          />
+        </svg>
+        <div className="row-start-1 col-start-1 relative">
+          <NodoCard {...a} />
+        </div>
+        <div className="row-start-1 col-start-2 relative">
+          <NodoCard {...b} />
+        </div>
+        <div className="row-start-3 col-span-2 relative flex justify-center">
+          <div className="w-72">
+            <NodoCentral />
+          </div>
+        </div>
+        <div className="row-start-5 col-start-1 relative">
+          <NodoCard {...c} />
+        </div>
+        <div className="row-start-5 col-start-2 relative">
+          <NodoCard {...d} />
+        </div>
+      </div>
+    </>
   );
 }
 
 export default function DropshippingMentoria() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-space-950 to-nebula text-frost">
-      {/* Barra superior de contexto, full-bleed y en color de contraste,
-          primer elemento que se ve mobile-first */}
       <div className="bg-cyan-400 text-black text-center py-2.5 px-3">
         <p className="label-mono !text-black !tracking-wide text-[11px] sm:text-xs font-bold">
           Programa de mentoría para emprendedores y emprendedoras
         </p>
       </div>
 
-      {/* Hero: orden mobile-first — copy principal, subcopy, formulario y
-          por último el video, siguiendo de cerca la referencia de Master
-          Escala pero con márgenes reducidos para que se vea completo */}
+      {/* Hero: título, subtítulo corto, formulario y video */}
       <section className="max-w-3xl mx-auto px-3 sm:px-6 pt-10 pb-16">
         <div className="text-center mb-8">
           <span className="eyebrow">Caso de estudio · $10.000 USD de facturación en el mes 2</span>
           <h1 className="display-xl text-4xl sm:text-5xl md:text-6xl mt-6 mb-6">
-            Te enseño cómo vender{' '}
+            Te enseño el sistema de dropshipping para que vendas{' '}
             <span className="text-cyan-400 drop-shadow-[0_0_18px_rgba(34,211,238,0.45)]">
-              CUALQUIER COSA
-            </span>
-            <br />
-            por internet.
+              LO QUE SEA
+            </span>{' '}
+            por internet
           </h1>
-          <p className="text-ice text-lg mb-4">
-            Ingresa tus datos y aprende con este caso de estudio cómo llegamos a $10.000 USD de
-            facturación en el mes 2, en una tienda armada desde cero, con el mismo proceso que
-            uso hoy con mis propios proyectos y con grandes marcas nacionales e internacionales.
-          </p>
-          <p className="text-muted text-sm">
-            Parte de ese proceso también está en la guía{' '}
-            <Link
-              to="/blog/ecommerce-en-5-pasos-con-dropi"
-              className="text-cyan-400 underline hover:text-frost"
-            >
-              "Cómo lanzar un ecommerce en 5 pasos con Dropi"
-            </Link>
-            .
+          <p className="text-ice text-lg max-w-xl mx-auto">
+            Deja tus datos y descarga gratis el caso de estudio de cómo llegamos a $10.000 USD de
+            facturación en el mes 2 con una tienda desde cero.
           </p>
         </div>
 
         <div className="rounded-2xl border border-cyan-400/20 bg-space-900 p-5 sm:p-8 mb-6">
           <p className="label-mono !text-cyan-400 mb-4 text-center">
-            Déjame tus datos y accede al caso de estudio
+            Recibe el caso de estudio gratis
           </p>
           <LeadCaptureForm />
         </div>
@@ -510,17 +756,27 @@ export default function DropshippingMentoria() {
         <HeroVideo />
       </section>
 
-      {/* Calificación / para quién es, en tarjetas con ícono como la referencia */}
-      <section className="max-w-5xl mx-auto px-3 sm:px-6 py-14 border-t border-star-light/15">
-        <h2 className="text-2xl md:text-3xl font-extrabold mb-8 text-center">
-          Esto es para ti solo si...
+      {/* Para quién es */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 py-14 border-t border-star-light/15">
+        <h2 className="display-xl text-3xl md:text-5xl mb-3 text-center">
+          Esto es para ti <span className="text-cyan-400">si...</span>
         </h2>
-        <div className="grid sm:grid-cols-2 gap-4">
-          {QUALIFY_ITEMS.map(({ icon: Icon, title, description }) => (
-            <div key={title} className="card-galaxy p-6 flex items-start gap-4">
-              <Icon className="w-6 h-6 text-star-light shrink-0 mt-0.5" />
+        <p className="text-muted text-center text-sm mb-10">Si te identificas con al menos una, sigue leyendo.</p>
+        <div className="grid md:grid-cols-2 gap-3 md:gap-4">
+          {QUALIFY_ITEMS.map(({ icon: Icon, title, description }, i) => (
+            <div
+              key={title}
+              className={`rounded-2xl border border-star-light/15 bg-space-900/70 p-5 md:p-6 flex items-start gap-4 transition-colors hover:border-cyan-400/40 ${
+                i === QUALIFY_ITEMS.length - 1 && QUALIFY_ITEMS.length % 2 === 1
+                  ? 'md:col-span-2 md:max-w-[calc(50%-0.5rem)] md:mx-auto md:w-full'
+                  : ''
+              }`}
+            >
+              <span className="shrink-0 w-11 h-11 rounded-xl bg-cyan-400/10 border border-cyan-400/25 inline-flex items-center justify-center">
+                <Icon className="w-5 h-5 text-cyan-400" />
+              </span>
               <div>
-                <h3 className="font-extrabold text-frost mb-1">{title}</h3>
+                <h3 className="font-extrabold text-frost text-base mb-1">{title}</h3>
                 <p className="text-ice text-sm leading-relaxed">{description}</p>
               </div>
             </div>
@@ -528,8 +784,6 @@ export default function DropshippingMentoria() {
         </div>
       </section>
 
-      {/* Prueba social: solo se muestra cuando haya testimonios reales cargados
-          en TESTIMONIALS, igual que la referencia pero sin inventar nada. */}
       {TESTIMONIALS.length > 0 && (
         <section className="max-w-5xl mx-auto px-3 sm:px-6 py-14 border-t border-star-light/15">
           <h2 className="text-2xl md:text-3xl font-extrabold mb-8 text-center">
@@ -546,11 +800,10 @@ export default function DropshippingMentoria() {
         </section>
       )}
 
-      {/* Autoridad del mentor, mismo formato que la ficha de perfil de la
-          referencia: foto, nombre, redes y bio */}
+      {/* Autoridad */}
       <section className="max-w-4xl mx-auto px-3 sm:px-6 py-14 border-t border-star-light/15">
         <h2 className="text-2xl md:text-3xl font-extrabold mb-6 text-center">
-          Por qué te conviene escucharme
+          +15 años de experiencia en marketing digital, ecommerce y desarrollo web
         </h2>
         <div className="card-galaxy p-8 md:p-10">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-6">
@@ -573,9 +826,9 @@ export default function DropshippingMentoria() {
             </div>
           </div>
           <p className="text-ice leading-relaxed mb-4">
-            Llevo más de una década diseñando campañas y sistemas de medición para marcas grandes y
-            para negocios que están empezando: desde equipos corporativos como Telefónica, UNICEF y
-            Banco de Occidente, hasta emprendedores que arrancan su primer ecommerce.
+            Llevo más de 15 años diseñando campañas y sistemas de medición para marcas grandes y para
+            negocios que están empezando: desde equipos corporativos como Telefónica, UNICEF y Banco
+            de Occidente, hasta emprendedores que arrancan su primer ecommerce.
           </p>
           <p className="text-ice leading-relaxed">
             No prometo cifras de ingresos ni fórmulas mágicas. Te ofrezco un método claro, basado en
@@ -584,8 +837,7 @@ export default function DropshippingMentoria() {
         </div>
       </section>
 
-      {/* Resultados: solo se muestra cuando haya capturas reales cargadas en
-          RESULT_IMAGES. Mientras tanto, se deja el espacio listo y marcado. */}
+      {/* Resultados */}
       <section className="max-w-5xl mx-auto px-3 sm:px-6 py-14 border-t border-star-light/15">
         <h2 className="text-2xl md:text-3xl font-extrabold mb-8 text-center">Algunos resultados</h2>
         {RESULT_IMAGES.length > 0 ? (
@@ -605,7 +857,7 @@ export default function DropshippingMentoria() {
         )}
       </section>
 
-      {/* Las 3 formas de empezar: la oferta real de Samuel */}
+      {/* Escalera de valor: 3 formas de empezar */}
       <section id="opciones" className="max-w-5xl mx-auto px-3 sm:px-6 py-14 border-t border-star-light/15">
         <div className="text-center mb-10">
           <span className="eyebrow">Elige cómo empezar</span>
@@ -613,8 +865,8 @@ export default function DropshippingMentoria() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-6 items-stretch">
-          {/* WhatsApp */}
           <div className="card-galaxy p-7 flex flex-col">
+            <p className="label-mono !text-muted mb-4">01 · Gratis</p>
             <MessageCircle className="w-8 h-8 text-star-light mb-4" />
             <h3 className="text-lg font-extrabold mb-1">Comunidad de WhatsApp</h3>
             <p className="label-mono !text-signal-teal mb-4">Gratis</p>
@@ -632,17 +884,17 @@ export default function DropshippingMentoria() {
             </a>
           </div>
 
-          {/* Blueprint */}
           <div className="card-galaxy p-7 flex flex-col border-star-light/45 relative">
-            <span className="absolute -top-3 left-1/2 -translate-x-1/2 label-mono !text-star-light bg-space-900 px-3 py-1 rounded-full border border-star-light/30">
+            <span className="absolute -top-3 left-1/2 -translate-x-1/2 label-mono !text-star-light bg-space-900 px-3 py-1 rounded-full border border-star-light/30 whitespace-nowrap">
               Más popular
             </span>
+            <p className="label-mono !text-muted mb-4">02 · Pago único</p>
             <BookOpen className="w-8 h-8 text-star-light mb-4" />
             <h3 className="text-lg font-extrabold mb-1">Blueprint: cómo hacer dropshipping paso a paso</h3>
-            <p className="label-mono !text-star-light mb-4">$5 USD · pago único</p>
+            <p className="label-mono !text-star-light mb-4">{BLUEPRINT_PRICE} · pago único</p>
             <p className="text-ice text-sm mb-6 flex-1">
-              La guía completa y aplicada: de la idea al primer pedido. El mismo proceso que uso con
-              mis propios proyectos y clientes, en un documento que puedes seguir hoy.
+              El mapa visual y el PDF con el paso a paso para arrancar desde cero, aunque no sepas
+              nada: de la idea al primer pedido.
             </p>
             <a
               href={BLUEPRINT_PAYMENT_LINK}
@@ -654,19 +906,39 @@ export default function DropshippingMentoria() {
             </a>
           </div>
 
-          {/* Discovery call */}
-          <div className="card-galaxy p-7 flex flex-col">
-            <Video className="w-8 h-8 text-star-light mb-4" />
-            <h3 className="text-lg font-extrabold mb-1">Mentoría 1:1</h3>
-            <p className="label-mono !text-signal-teal mb-4">$250 USD</p>
-            <p className="text-ice text-sm mb-6 flex-1">
-              Una llamada de discovery para revisar tu caso puntual, resolver dudas y definir un plan
-              de acción hecho a tu medida.
-            </p>
-            <a href="#reservar" className="btn-ghost w-full justify-center">
-              Agendar llamada <ArrowRight className="w-4 h-4" />
-            </a>
+          <div className="rounded-card p-[1px] bg-gradient-to-br from-teal-400 to-emerald-500 shadow-[0_0_40px_-12px_rgba(20,184,166,0.6)]">
+            <div className="rounded-card bg-space-800 p-7 flex flex-col h-full">
+              <p className="label-mono !text-teal-300 mb-4">03 · Premium</p>
+              <Video className="w-8 h-8 text-teal-300 mb-4" />
+              <h3 className="text-lg font-extrabold mb-1">Mentoría</h3>
+              <p className="label-mono !text-signal-teal mb-4">{MENTORIA_PRICE}</p>
+              <p className="text-ice text-sm mb-6 flex-1">
+                Acompañamiento 1 a 1 o grupal, con revisión experta de tu tienda, tus campañas y tus
+                números, para escalar con sistema.
+              </p>
+              <a href="#mentoria" className="btn-ghost w-full justify-center !border-teal-400/50">
+                Ver cómo funciona <ArrowRight className="w-4 h-4" />
+              </a>
+            </div>
           </div>
+        </div>
+      </section>
+
+      {/* Cómo funciona la mentoría */}
+      <section id="mentoria" className="max-w-5xl mx-auto px-4 sm:px-6 py-14 border-t border-star-light/15">
+        <div className="text-center mb-10">
+          <span className="eyebrow">03 · Premium</span>
+          <h2 className="text-2xl md:text-3xl font-extrabold mt-4 mb-3">Así funciona la mentoría</h2>
+          <p className="text-ice text-sm max-w-xl mx-auto">
+            Es la etapa de transformación: dejas de probar solo y trabajamos juntos sobre tu tienda
+            real, con un sistema para escalarla.
+          </p>
+        </div>
+        <MentoriaProceso />
+        <div className="text-center mt-12">
+          <a href="#reservar" className="btn-star">
+            Agendar llamada <ArrowRight className="w-4 h-4" />
+          </a>
         </div>
       </section>
 
@@ -674,50 +946,33 @@ export default function DropshippingMentoria() {
       <section id="reservar" className="max-w-2xl mx-auto px-3 sm:px-6 py-14 border-t border-star-light/15">
         <div className="text-center mb-8">
           <Sparkles className="w-6 h-6 text-star-light mx-auto mb-3" />
-          <h2 className="text-2xl md:text-3xl font-extrabold mb-2">Agenda tu llamada de discovery</h2>
+          <h2 className="text-2xl md:text-3xl font-extrabold mb-2">Agenda tu llamada</h2>
           <p className="text-ice text-sm max-w-md mx-auto">
-            Elige el horario que más se te acomode y déjame tus datos. Te confirmo por WhatsApp o
-            correo.
+            Elige una fecha tentativa y cuéntame en qué punto estás. Revisamos si la mentoría es para
+            ti y te confirmo por correo.
           </p>
         </div>
-        <div className="card-galaxy p-8">
+        <div className="card-galaxy p-6 sm:p-8">
           <BookingForm />
         </div>
       </section>
 
-      {/* FAQ corto */}
+      {/* FAQ */}
       <section className="max-w-3xl mx-auto px-3 sm:px-6 py-14 border-t border-star-light/15">
         <h2 className="text-2xl md:text-3xl font-extrabold mb-8 text-center">Preguntas frecuentes</h2>
-        <div className="space-y-6">
-          <div>
-            <h3 className="font-bold text-frost mb-1.5">¿Qué recibo exactamente con el Blueprint?</h3>
-            <p className="text-ice text-sm">
-              Un documento paso a paso sobre cómo estructurar y lanzar tu dropshipping, con el mismo
-              enfoque que uso en mis propios proyectos. Pago único de $5 USD, acceso inmediato tras
-              la compra.
-            </p>
-          </div>
-          <div>
-            <h3 className="font-bold text-frost mb-1.5">¿La comunidad de WhatsApp tiene algún costo?</h3>
-            <p className="text-ice text-sm">
-              No, es gratuita. Ahí comparto recursos y contenido antes que en cualquier otro canal.
-            </p>
-          </div>
-          <div>
-            <h3 className="font-bold text-frost mb-1.5">¿Qué pasa después de agendar la mentoría 1:1?</h3>
-            <p className="text-ice text-sm">
-              Te contacto para confirmar el horario y coordinar el pago de los $250 USD antes de la
-              llamada. En la sesión revisamos tu caso concreto y salimos con un plan claro.
-            </p>
-          </div>
-          <div>
-            <h3 className="font-bold text-frost mb-1.5">¿Me garantizas resultados o ingresos específicos?</h3>
-            <p className="text-ice text-sm">
-              No. Te doy un método basado en datos y acompañamiento directo, pero tus resultados
-              dependen de tu producto, tu mercado, tu ejecución y tu constancia. Cualquiera que te
-              prometa una cifra fija de ingresos te está vendiendo humo.
-            </p>
-          </div>
+        <div className="space-y-3">
+          {FAQS.map((f) => (
+            <details
+              key={f.q}
+              className="group rounded-xl border border-star-light/15 bg-space-900/60 px-5 py-4 open:border-cyan-400/40"
+            >
+              <summary className="cursor-pointer list-none flex items-center justify-between gap-4 font-bold text-frost">
+                {f.q}
+                <span className="text-cyan-400 text-xl leading-none transition-transform group-open:rotate-45">+</span>
+              </summary>
+              <p className="text-ice text-sm leading-relaxed mt-3">{f.a}</p>
+            </details>
+          ))}
         </div>
       </section>
 
@@ -730,26 +985,64 @@ export default function DropshippingMentoria() {
         </a>
       </section>
 
-      {/* Disclaimers: igual función que en la referencia — transparencia legal
-          y aviso de que este sitio no depende de Meta/Facebook/Instagram. */}
-      <section className="max-w-3xl mx-auto px-3 sm:px-6 py-14 border-t border-star-light/15">
-        <div className="text-muted text-xs leading-relaxed space-y-3">
+      {/* Disclaimers compactos */}
+      <footer className="border-t border-star-light/10">
+        <div className="max-w-3xl mx-auto px-4 py-6 text-muted/70 text-[10px] sm:text-[11px] leading-snug space-y-1.5 text-center">
           <p>
-            Este sitio no es parte del sitio web de Facebook, Meta o Instagram, ni está respaldado
-            por ellos de ninguna manera. FACEBOOK e INSTAGRAM son marcas registradas de Meta, Inc.
+            Este sitio no es parte de Facebook, Meta o Instagram ni está respaldado por ellos.
+            FACEBOOK e INSTAGRAM son marcas registradas de Meta, Inc.
           </p>
           <p>
-            Los resultados y experiencias que se mencionan en esta página (propios o de terceros
-            cuando se compartan) son personales y no típicos. No garantizo ingresos ni resultados
-            específicos: dependen de tu esfuerzo, tu producto, tu mercado, tu ejecución y factores
-            fuera de mi control. Todo negocio implica riesgo.
+            Los resultados mencionados no son típicos ni garantizados: dependen de tu esfuerzo,
+            producto, mercado y ejecución. Todo negocio implica riesgo.
           </p>
           <p>
-            Al enviar tu nombre, correo o WhatsApp en esta página, autorizas a que te contacte por
-            esos medios para darte seguimiento sobre la mentoría, el Blueprint o la comunidad.
+            © {new Date().getFullYear()} Samuel González ·{' '}
+            <Link to="/privacidad" className="underline hover:text-frost">
+              Privacidad
+            </Link>{' '}
+            ·{' '}
+            <Link to="/terminos" className="underline hover:text-frost">
+              Términos
+            </Link>
           </p>
         </div>
-      </section>
+      </footer>
     </div>
   );
 }
+
+const FAQS = [
+  {
+    q: '¿Cómo recibo el caso de estudio?',
+    a: 'Deja tu nombre, correo y WhatsApp en el formulario de arriba. Apenas se envíe, se abre una ventana para descargar el PDF y unirte al grupo gratuito de WhatsApp.',
+  },
+  {
+    q: '¿Necesito experiencia previa para empezar?',
+    a: 'No. El Blueprint está pensado para arrancar desde cero, y en la comunidad y la mentoría resolvemos las dudas a medida que avanzas.',
+  },
+  {
+    q: '¿Qué incluye el Blueprint?',
+    a: `Un mapa visual y un PDF con el paso a paso para lanzar tu tienda de dropshipping: producto, tienda, pauta y operación. Pago único de ${BLUEPRINT_PRICE} con acceso inmediato.`,
+  },
+  {
+    q: '¿La comunidad de WhatsApp tiene algún costo?',
+    a: 'No, es gratuita. Ahí comparto recursos, respondo dudas rápidas y aviso primero cuando publico contenido nuevo.',
+  },
+  {
+    q: '¿Cómo funciona la mentoría?',
+    a: 'Es acompañamiento 1 a 1 o grupal. Revisamos tu tienda, tus campañas y tus números, y armamos un sistema para escalar. Los cupos son limitados cada mes.',
+  },
+  {
+    q: '¿Qué pasa después de solicitar la llamada?',
+    a: 'Reviso tu solicitud y te escribo al correo para confirmar el horario según disponibilidad. En la llamada vemos si la mentoría encaja con tu momento y, si es así, coordinamos el pago y el arranque.',
+  },
+  {
+    q: '¿Necesito dinero para pauta?',
+    a: 'Sí. Para vender por internet necesitas un presupuesto para anuncios, además del costo de la tienda. En la mentoría definimos uno acorde a tu etapa para no quemar dinero probando.',
+  },
+  {
+    q: '¿Me garantizas resultados o ingresos específicos?',
+    a: 'No. Te doy un método basado en datos y acompañamiento directo, pero tus resultados dependen de tu producto, tu mercado, tu ejecución y tu constancia. Quien te prometa una cifra fija de ingresos te está vendiendo humo.',
+  },
+];

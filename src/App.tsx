@@ -577,7 +577,7 @@ function Footer() {
           <div>
             <p className="font-display font-bold text-xl mb-3">Samuel González</p>
             <p className="text-muted text-sm leading-relaxed max-w-xs">
-              Data · Marketing · Code. Más de 10 años convirtiendo datos en decisiones y
+              Data · Marketing · Code. Más de 15 años convirtiendo datos en decisiones y
               campañas en resultados.
             </p>
           </div>
@@ -875,7 +875,7 @@ function HomePage() {
           <h2 className="display-xl text-4xl sm:text-5xl md:text-6xl mb-4">
             Experiencia <span className="glow">probada</span>
           </h2>
-          <p className="text-muted mb-4">10+ años entre paid media, data y producto.</p>
+          <p className="text-muted mb-4">15+ años entre paid media, data y producto.</p>
         </div>
         {experiences.map((exp, index) => {
           const reverse = index % 2 === 1;
