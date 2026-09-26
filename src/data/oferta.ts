@@ -7,9 +7,9 @@ export const BLUEPRINT = {
 };
 
 export const MENTORIA = {
-  precio: 'USD 80',
+  precio: 'USD 299',
   periodo: 'al mes',
-  precioHora: 'USD 20',
+  precioHora: 'unos USD 75',
   horasMes: 4,
   cupos: 10,
 };
