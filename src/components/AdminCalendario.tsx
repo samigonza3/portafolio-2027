@@ -523,7 +523,7 @@ export default function AdminCalendario() {
   const availableSlots = generateSlots(state, 42);
 
   function copyLink() {
-    const encoded = encodeSlots(availableSlots);
+    const encoded = encodeURIComponent(encodeSlots(availableSlots));
     const url = `${window.location.origin}/reservar-espacio?v=${encoded}`;
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
@@ -532,7 +532,7 @@ export default function AdminCalendario() {
   }
 
   function preview() {
-    const encoded = encodeSlots(availableSlots);
+    const encoded = encodeURIComponent(encodeSlots(availableSlots));
     window.open(`/reservar-espacio?v=${encoded}`, '_blank');
   }
 
