@@ -59,7 +59,7 @@ function decodeSlots(encoded: string): CalendarSlot[] {
   try {
     const raw = atob(encoded);
     // New compact format: YYYYMMDDHHMMHHMMT per slot, separated by ~
-    if (/^[0-9]{17}[mckl]/.test(raw)) {
+    if (/^[0-9]{16}[mckl]/.test(raw)) {
       return raw.split('~').map(s => {
         const date = s.slice(0, 4) + '-' + s.slice(4, 6) + '-' + s.slice(6, 8);
         const startTime = s.slice(8, 10) + ':' + s.slice(10, 12);
