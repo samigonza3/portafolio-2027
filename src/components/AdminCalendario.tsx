@@ -127,8 +127,18 @@ function saveState(s: CalendarState) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
 }
 
+const TYPE_SHORT: Record<SlotType, string> = { mentoria: 'm', consultoria: 'c', clase: 'k', libre: 'l' };
+
 function encodeSlots(slots: CalendarSlot[]): string {
-  return btoa(encodeURIComponent(JSON.stringify(slots)));
+  // Compact format: each slot = YYYYMMDDHHMMHHMMT (17 chars), separated by ~
+  // e.g. 20261020150016001 → date=2026-10-20 start=15:00 end=16:00 type=l
+  const compact = slots.map(s =>
+    s.date.replace(/-/g, '') +
+    s.startTime.replace(':', '') +
+    s.endTime.replace(':', '') +
+    TYPE_SHORT[s.type]
+  ).join('~');
+  return btoa(compact);
 }
 
 function generateSlots(state: CalendarState, days = 42): CalendarSlot[] {

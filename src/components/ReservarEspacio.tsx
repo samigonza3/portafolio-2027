@@ -53,9 +53,23 @@ const MONTHS_ES = [
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
+const TYPE_MAP: Record<string, SlotType> = { m: 'mentoria', c: 'consultoria', k: 'clase', l: 'libre' };
+
 function decodeSlots(encoded: string): CalendarSlot[] {
   try {
-    return JSON.parse(decodeURIComponent(atob(encoded)));
+    const raw = atob(encoded);
+    // New compact format: YYYYMMDDHHMMHHMMT per slot, separated by ~
+    if (/^[0-9]{17}[mckl]/.test(raw)) {
+      return raw.split('~').map(s => {
+        const date = s.slice(0, 4) + '-' + s.slice(4, 6) + '-' + s.slice(6, 8);
+        const startTime = s.slice(8, 10) + ':' + s.slice(10, 12);
+        const endTime = s.slice(12, 14) + ':' + s.slice(14, 16);
+        const type: SlotType = TYPE_MAP[s.slice(16)] ?? 'libre';
+        return { id: date + '-' + startTime, date, startTime, endTime, type };
+      });
+    }
+    // Legacy JSON fallback
+    return JSON.parse(decodeURIComponent(raw));
   } catch {
     return [];
   }
