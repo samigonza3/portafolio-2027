@@ -47,6 +47,12 @@ const META: Record<string, Meta> = {
     description: 'Condiciones de uso del sitio, sus herramientas gratuitas y servicios.',
   },
   '/gracias': { title: 'Gracias por escribirme | Samuel González', noindex: true },
+  '/reservar-espacio': {
+    title: 'Reservar un espacio | Samuel González',
+    description: 'Agenda una sesión 1:1 con Samuel González — mentoría, consultoría o clase de marketing digital.',
+    noindex: true,
+  },
+  '/admin/calendario': { title: 'Admin · Calendario | Samuel González', noindex: true },
 };
 
 const SELF_MANAGED = [/^\/blog\/.+/, /^\/diagnostico$/, /^\/recursos\/ruta-clara$/];
