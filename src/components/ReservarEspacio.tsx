@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import {
   Calendar,
@@ -12,11 +12,12 @@ import {
   User,
   Mail,
   MessageSquare,
-  Tag,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { CONTACTO } from '../data/contacto';
 
-// ─── Tipos (duplicados aquí para que el componente sea auto-contenido) ───────
+// ─── Tipos ───────────────────────────────────────────────────────────────────
 
 type SlotType = 'mentoria' | 'consultoria' | 'clase' | 'libre';
 
@@ -29,7 +30,7 @@ interface CalendarSlot {
   notes?: string;
 }
 
-// ─── Constantes ─────────────────────────────────────────────────────────────
+// ─── Constantes ──────────────────────────────────────────────────────────────
 
 const TYPE_LABELS: Record<SlotType, string> = {
   mentoria: 'Mentoría 1:1',
@@ -38,27 +39,43 @@ const TYPE_LABELS: Record<SlotType, string> = {
   libre: 'Sesión libre',
 };
 
-const TYPE_COLORS: Record<SlotType, { card: string; badge: string }> = {
-  mentoria: { card: 'border-star/40 hover:border-star/70', badge: 'bg-star/20 text-star-light border-star/30' },
-  consultoria: { card: 'border-signal-teal/30 hover:border-signal-teal/60', badge: 'bg-signal-teal/15 text-signal-teal border-signal-teal/30' },
-  clase: { card: 'border-signal-amber/30 hover:border-signal-amber/60', badge: 'bg-signal-amber/15 text-signal-amber border-signal-amber/30' },
-  libre: { card: 'border-frost/15 hover:border-frost/40', badge: 'bg-frost/10 text-frost border-frost/20' },
+const TYPE_DOT: Record<SlotType, string> = {
+  mentoria: 'bg-star',
+  consultoria: 'bg-signal-teal',
+  clase: 'bg-signal-amber',
+  libre: 'bg-frost/50',
 };
 
-const DAYS_ES = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+const TYPE_CARD: Record<SlotType, string> = {
+  mentoria: 'border-star/40 hover:border-star/70',
+  consultoria: 'border-signal-teal/30 hover:border-signal-teal/60',
+  clase: 'border-signal-amber/30 hover:border-signal-amber/60',
+  libre: 'border-frost/15 hover:border-frost/40',
+};
+
+const TYPE_BADGE: Record<SlotType, string> = {
+  mentoria: 'bg-star/20 text-star-light border-star/30',
+  consultoria: 'bg-signal-teal/15 text-signal-teal border-signal-teal/30',
+  clase: 'bg-signal-amber/15 text-signal-amber border-signal-amber/30',
+  libre: 'bg-frost/10 text-frost border-frost/20',
+};
+
+const DAY_NAMES = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 const MONTHS_ES = [
   'Enero','Febrero','Marzo','Abril','Mayo','Junio',
   'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre',
 ];
+const DAYS_ES = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-const TYPE_MAP: Record<string, SlotType> = { m: 'mentoria', c: 'consultoria', k: 'clase', l: 'libre' };
+const TYPE_MAP: Record<string, SlotType> = {
+  m: 'mentoria', c: 'consultoria', k: 'clase', l: 'libre',
+};
 
 function decodeSlots(encoded: string): CalendarSlot[] {
   try {
     const raw = atob(encoded);
-    // New compact format: YYYYMMDDHHMMHHMMT per slot, separated by ~
     if (/^[0-9]{16}[mckl]/.test(raw)) {
       return raw.split('~').map(s => {
         const date = s.slice(0, 4) + '-' + s.slice(4, 6) + '-' + s.slice(6, 8);
@@ -68,34 +85,27 @@ function decodeSlots(encoded: string): CalendarSlot[] {
         return { id: date + '-' + startTime, date, startTime, endTime, type };
       });
     }
-    // Legacy JSON fallback
     return JSON.parse(decodeURIComponent(raw));
   } catch {
     return [];
   }
 }
 
-function today() {
+function todayStr() {
   const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
 function formatDateLong(iso: string) {
   const [y, m, d] = iso.split('-');
-  const dt = new Date(Number(y), Number(m)-1, Number(d));
-  return `${DAYS_ES[dt.getDay()]} ${d} de ${MONTHS_ES[Number(m)-1]}`;
-}
-
-function formatDateShort(iso: string) {
-  const [, m, d] = iso.split('-');
-  const dt = new Date(Number(iso.split('-')[0]), Number(m)-1, Number(d));
-  return { day: d, month: MONTHS_ES[Number(m)-1].slice(0,3), weekday: DAYS_ES[dt.getDay()] };
+  const dt = new Date(Number(y), Number(m) - 1, Number(d));
+  return `${DAYS_ES[dt.getDay()]} ${d} de ${MONTHS_ES[Number(m) - 1]}`;
 }
 
 // ─── Step indicator ──────────────────────────────────────────────────────────
 
 function StepIndicator({ current }: { current: 1 | 2 | 3 }) {
-  const steps = ['Elige fecha', 'Elige hora', 'Tus datos'];
+  const steps = ['Fecha', 'Horario', 'Datos'];
   return (
     <div className="flex items-center gap-1 justify-center mb-8">
       {steps.map((label, i) => {
@@ -126,18 +136,71 @@ function StepIndicator({ current }: { current: 1 | 2 | 3 }) {
   );
 }
 
-// ─── Step 1: Pick a date ─────────────────────────────────────────────────────
+// ─── Step 1: Calendar ────────────────────────────────────────────────────────
 
-function StepDate({ slots, onSelect }: { slots: CalendarSlot[]; onSelect: (date: string) => void }) {
-  const td = today();
-  const dates = [...new Set(slots.filter(s => s.date >= td).map(s => s.date))].sort();
+function StepDate({
+  slots,
+  onSelect,
+}: {
+  slots: CalendarSlot[];
+  onSelect: (date: string) => void;
+}) {
+  const td = todayStr();
+  const [ty, tm] = td.split('-').map(Number);
 
-  if (dates.length === 0) {
+  const [viewYear, setViewYear] = useState(ty);
+  const [viewMonth, setViewMonth] = useState(tm - 1); // 0-indexed
+
+  // Available dates set and types map
+  const dateTypes = new Map<string, Set<SlotType>>();
+  slots.forEach(s => {
+    if (s.date >= td) {
+      if (!dateTypes.has(s.date)) dateTypes.set(s.date, new Set());
+      dateTypes.get(s.date)!.add(s.type);
+    }
+  });
+  const availableDates = new Set(dateTypes.keys());
+
+  // Calendar grid
+  const firstDayOfWeek = new Date(viewYear, viewMonth, 1).getDay(); // 0=Sun
+  const startOffset = (firstDayOfWeek + 6) % 7; // Monday-first
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+  const cells: (number | null)[] = [
+    ...Array(startOffset).fill(null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ];
+  while (cells.length % 7 !== 0) cells.push(null);
+
+  // Navigation guards
+  const isCurrentMonth = viewYear === ty && viewMonth === tm - 1;
+  const maxDate = availableDates.size > 0
+    ? [...availableDates].sort().at(-1)!
+    : td;
+  const [maxY, maxM] = maxDate.split('-').map(Number);
+  const isMaxMonth = viewYear > maxY || (viewYear === maxY && viewMonth >= maxM - 1);
+
+  const goPrev = () => {
+    if (viewMonth === 0) { setViewYear(y => y - 1); setViewMonth(11); }
+    else setViewMonth(m => m - 1);
+  };
+  const goNext = () => {
+    if (viewMonth === 11) { setViewYear(y => y + 1); setViewMonth(0); }
+    else setViewMonth(m => m + 1);
+  };
+
+  // All unique types that appear in available dates (for legend)
+  const allTypes = new Set<SlotType>();
+  dateTypes.forEach(types => types.forEach(t => allTypes.add(t)));
+
+  if (availableDates.size === 0) {
     return (
       <div className="text-center py-12">
         <AlertCircle className="w-10 h-10 mx-auto mb-3 text-signal-amber/50" />
         <p className="text-frost font-semibold">No hay disponibilidad activa</p>
-        <p className="text-muted text-sm mt-1">Este link ha expirado o aún no hay horarios configurados.</p>
+        <p className="text-muted text-sm mt-1">
+          Este link ha expirado o aún no hay horarios configurados.
+        </p>
         <a
           href={`mailto:${CONTACTO.email}`}
           className="mt-5 inline-flex items-center gap-2 btn-pill-light"
@@ -151,35 +214,94 @@ function StepDate({ slots, onSelect }: { slots: CalendarSlot[]; onSelect: (date:
   return (
     <div>
       <h2 className="font-sans font-extrabold text-frost text-lg mb-1">Elige una fecha</h2>
-      <p className="text-muted text-sm mb-6">Selecciona el día que mejor te funciona.</p>
+      <p className="text-muted text-sm mb-5">Los días marcados tienen disponibilidad.</p>
 
-      <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-        {dates.map(date => {
-          const { day, month, weekday } = formatDateShort(date);
-          const typesOnDay = [...new Set(slots.filter(s => s.date === date).map(s => s.type))];
+      {/* Month nav */}
+      <div className="flex items-center justify-between mb-3">
+        <button
+          onClick={goPrev}
+          disabled={isCurrentMonth}
+          className="w-8 h-8 flex items-center justify-center rounded-lg bg-space-800 border border-star-light/15 text-muted hover:text-frost hover:border-star-light/40 disabled:opacity-25 disabled:cursor-not-allowed transition-all"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </button>
+        <span className="font-sans font-bold text-frost text-sm tracking-wide">
+          {MONTHS_ES[viewMonth]} {viewYear}
+        </span>
+        <button
+          onClick={goNext}
+          disabled={isMaxMonth}
+          className="w-8 h-8 flex items-center justify-center rounded-lg bg-space-800 border border-star-light/15 text-muted hover:text-frost hover:border-star-light/40 disabled:opacity-25 disabled:cursor-not-allowed transition-all"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </button>
+      </div>
+
+      {/* Day names */}
+      <div className="grid grid-cols-7 mb-1.5">
+        {DAY_NAMES.map(d => (
+          <div
+            key={d}
+            className="text-center text-[9px] font-bold uppercase tracking-widest text-muted/50 py-1.5"
+          >
+            {d}
+          </div>
+        ))}
+      </div>
+
+      {/* Days grid */}
+      <div className="grid grid-cols-7 gap-1">
+        {cells.map((day, i) => {
+          if (!day) return <div key={`e-${i}`} className="aspect-square" />;
+
+          const dateStr = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+          const isAvailable = availableDates.has(dateStr);
+          const isToday = dateStr === td;
+          const isPast = dateStr < td;
+          const types = dateTypes.get(dateStr);
+
           return (
             <button
-              key={date}
-              onClick={() => onSelect(date)}
-              className="flex flex-col items-center gap-1 bg-space-900 border border-star-light/15 hover:border-star-light/45 rounded-xl py-4 px-3 transition-all group hover:bg-star/8"
+              key={`d-${i}`}
+              onClick={() => isAvailable && onSelect(dateStr)}
+              disabled={!isAvailable || isPast}
+              className={`
+                relative aspect-square flex flex-col items-center justify-center rounded-xl text-sm font-semibold transition-all select-none
+                ${isAvailable && !isPast
+                  ? 'bg-space-800 border border-star-light/20 hover:border-star-light/50 hover:bg-star/10 text-frost cursor-pointer'
+                  : 'text-muted/20 cursor-default'}
+                ${isToday ? 'ring-1 ring-star-light/50 ring-offset-1 ring-offset-space-900' : ''}
+              `}
             >
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted group-hover:text-star-light transition-colors">{weekday}</span>
-              <span className="font-display font-bold text-2xl text-frost leading-none">{day}</span>
-              <span className="text-xs text-muted">{month}</span>
-              <div className="flex gap-1 mt-1">
-                {typesOnDay.slice(0, 3).map(t => (
-                  <div key={t} className={`w-2 h-2 rounded-full border ${TYPE_COLORS[t].badge}`} />
-                ))}
-              </div>
+              <span className={isToday ? 'text-star-light' : ''}>{day}</span>
+              {types && types.size > 0 && (
+                <div className="flex gap-0.5 absolute bottom-1.5">
+                  {[...types].slice(0, 3).map(t => (
+                    <div key={t} className={`w-1 h-1 rounded-full ${TYPE_DOT[t]}`} />
+                  ))}
+                </div>
+              )}
             </button>
           );
         })}
       </div>
+
+      {/* Legend */}
+      {allTypes.size > 0 && (
+        <div className="flex gap-4 mt-4 flex-wrap border-t border-star-light/10 pt-4">
+          {([...allTypes] as SlotType[]).map(type => (
+            <div key={type} className="flex items-center gap-1.5">
+              <div className={`w-2 h-2 rounded-full ${TYPE_DOT[type]}`} />
+              <span className="text-[10px] text-muted/60">{TYPE_LABELS[type]}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
-// ─── Step 2: Pick a time slot ────────────────────────────────────────────────
+// ─── Step 2: Time slots ──────────────────────────────────────────────────────
 
 function StepTime({
   slots,
@@ -196,13 +318,16 @@ function StepTime({
 
   return (
     <div>
-      <button onClick={onBack} className="flex items-center gap-1.5 text-muted hover:text-frost transition-colors text-sm mb-5">
+      <button
+        onClick={onBack}
+        className="flex items-center gap-1.5 text-muted hover:text-frost transition-colors text-sm mb-5"
+      >
         <ArrowLeft className="w-4 h-4" /> Cambiar fecha
       </button>
 
       <h2 className="font-sans font-extrabold text-frost text-lg mb-1">Elige un horario</h2>
       <p className="text-muted text-sm mb-6">
-        <Calendar className="w-3.5 h-3.5 inline mr-1" />
+        <Calendar className="w-3.5 h-3.5 inline mr-1 -mt-0.5" />
         {formatDateLong(date)}
       </p>
 
@@ -211,15 +336,17 @@ function StepTime({
           <button
             key={slot.id}
             onClick={() => onSelect(slot)}
-            className={`flex items-center gap-4 bg-space-900 border rounded-xl px-5 py-4 transition-all text-left ${TYPE_COLORS[slot.type].card} hover:bg-star/5`}
+            className={`flex items-center gap-4 bg-space-900 border rounded-xl px-5 py-4 transition-all text-left ${TYPE_CARD[slot.type]} hover:bg-star/5`}
           >
-            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-space-800">
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-space-800 shrink-0">
               <Clock className="w-5 h-5 text-star-light" />
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-sans font-bold text-frost">{slot.startTime} – {slot.endTime}</span>
-                <span className={`inline-flex text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${TYPE_COLORS[slot.type].badge}`}>
+                <span className="font-sans font-bold text-frost">
+                  {slot.startTime} – {slot.endTime}
+                </span>
+                <span className={`inline-flex text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${TYPE_BADGE[slot.type]}`}>
                   {TYPE_LABELS[slot.type]}
                 </span>
               </div>
@@ -287,28 +414,36 @@ function StepForm({
 
   return (
     <div>
-      <button onClick={onBack} className="flex items-center gap-1.5 text-muted hover:text-frost transition-colors text-sm mb-5">
+      <button
+        onClick={onBack}
+        className="flex items-center gap-1.5 text-muted hover:text-frost transition-colors text-sm mb-5"
+      >
         <ArrowLeft className="w-4 h-4" /> Cambiar horario
       </button>
 
-      {/* Slot selected summary */}
-      <div className={`flex items-center gap-3 bg-space-900 border rounded-xl px-4 py-3 mb-6 ${TYPE_COLORS[slot.type].card}`}>
-        <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-star/15">
+      {/* Selected slot summary */}
+      <div className={`flex items-center gap-3 bg-space-900 border rounded-xl px-4 py-3 mb-6 ${TYPE_CARD[slot.type]}`}>
+        <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-star/15 shrink-0">
           <Clock className="w-4 h-4 text-star-light" />
         </div>
         <div>
           <p className="text-frost font-semibold text-sm">{formatDateLong(slot.date)}</p>
-          <p className="text-muted text-xs">{slot.startTime} – {slot.endTime} · {TYPE_LABELS[slot.type]}</p>
+          <p className="text-muted text-xs">
+            {slot.startTime} – {slot.endTime} · {TYPE_LABELS[slot.type]}
+          </p>
         </div>
       </div>
 
       <h2 className="font-sans font-extrabold text-frost text-lg mb-1">Tus datos</h2>
       <p className="text-muted text-sm mb-6">Completa la info y confirmo tu reserva por email.</p>
 
-      {/* Hidden Netlify form field */}
+      {/* Hidden Netlify form declaration */}
       <form name="reservar-espacio" data-netlify="true" hidden>
-        <input name="nombre" /><input name="email" /><input name="empresa" />
-        <input name="mensaje" /><input name="slot" />
+        <input name="nombre" />
+        <input name="email" />
+        <input name="empresa" />
+        <input name="mensaje" />
+        <input name="slot" />
       </form>
 
       <form onSubmit={submit} className="flex flex-col gap-4">
@@ -411,11 +546,10 @@ function SuccessScreen({ slot }: { slot: CalendarSlot }) {
       </div>
       <h2 className="font-sans font-extrabold text-frost text-xl mb-2">¡Reserva enviada!</h2>
       <p className="text-muted text-sm max-w-xs mx-auto">
-        Samuel revisará tu solicitud y te confirmará por correo.
-        Quedan reservados para ti:
+        Samuel revisará tu solicitud y te confirmará por correo. Quedan reservados para ti:
       </p>
       <div className="mt-4 inline-flex items-center gap-2 bg-space-900 border border-signal-teal/30 rounded-xl px-5 py-3">
-        <Clock className="w-4 h-4 text-signal-teal" />
+        <Clock className="w-4 h-4 text-signal-teal shrink-0" />
         <span className="text-frost font-semibold text-sm">
           {formatDateLong(slot.date)} · {slot.startTime}–{slot.endTime}
         </span>
@@ -429,7 +563,7 @@ function SuccessScreen({ slot }: { slot: CalendarSlot }) {
   );
 }
 
-// ─── Blank state (no slots param) ────────────────────────────────────────────
+// ─── No slots state ──────────────────────────────────────────────────────────
 
 function NoSlotsState() {
   return (
@@ -437,7 +571,8 @@ function NoSlotsState() {
       <Calendar className="w-10 h-10 mx-auto mb-3 text-star-light/30" />
       <h2 className="font-sans font-extrabold text-frost text-lg mb-2">Reserva un espacio</h2>
       <p className="text-muted text-sm max-w-xs mx-auto">
-        Para ver los horarios disponibles necesitas el link personalizado de Samuel. Si te lo compartió, asegúrate de abrirlo completo.
+        Para ver los horarios disponibles necesitas el link personalizado de Samuel.
+        Si te lo compartió, asegúrate de abrirlo completo.
       </p>
       <a
         href={`mailto:${CONTACTO.email}`}
@@ -449,7 +584,7 @@ function NoSlotsState() {
   );
 }
 
-// ─── Main Component ──────────────────────────────────────────────────────────
+// ─── Main ─────────────────────────────────────────────────────────────────────
 
 export default function ReservarEspacio() {
   const [searchParams] = useSearchParams();
@@ -464,7 +599,6 @@ export default function ReservarEspacio() {
 
   return (
     <div className="min-h-screen bg-space-950">
-      {/* Header (tu NavBar inline simplificado con el mismo estilo) */}
       <header className="sticky top-0 z-30 backdrop-blur-md bg-space-950/80 border-b border-star-light/15">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link to="/" className="font-sans font-extrabold text-lg tracking-tight text-frost">
@@ -477,9 +611,7 @@ export default function ReservarEspacio() {
         </div>
       </header>
 
-      {/* Content */}
       <main className="max-w-lg mx-auto px-6 py-10">
-        {/* Page title */}
         <div className="mb-8">
           <div className="eyebrow mb-4">
             <Calendar className="w-3 h-3" /> Reservar espacio
@@ -492,7 +624,6 @@ export default function ReservarEspacio() {
           </p>
         </div>
 
-        {/* Card */}
         <div className="bg-space-900/60 border border-star-light/10 rounded-card p-6 sm:p-8">
           {!hasSlots ? (
             <NoSlotsState />
@@ -526,7 +657,6 @@ export default function ReservarEspacio() {
           )}
         </div>
 
-        {/* Footer note */}
         {!success && (
           <p className="text-center text-muted/40 text-xs mt-6">
             ¿Prefieres escribir directamente?{' '}
