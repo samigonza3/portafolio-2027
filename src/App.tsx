@@ -29,6 +29,8 @@ import CookieBanner from './components/CookieBanner';
 import NotFound from './components/NotFound';
 import Gracias from './components/Gracias';
 import { PoliticaPrivacidad, TerminosCondiciones } from './components/LegalPage';
+import AdminCalendario from './components/AdminCalendario';
+import ReservarEspacio from './components/ReservarEspacio';
 
 const services = [
   {
@@ -1242,7 +1244,7 @@ export default function App() {
   // footer son "fugas" que sacan al visitante antes de que convierta, así
   // que no se muestran en esa ruta (misma lógica que funnels de referencia
   // como masterescala.co).
-  const isLandingPage = /^\/(mentoria-dropshipping|empieza-aqui-tu-mentoria)\/?$/.test(location.pathname);
+  const isLandingPage = /^\/(mentoria-dropshipping|empieza-aqui-tu-mentoria|reservar-espacio|admin\/calendario)\/?$/.test(location.pathname);
 
   return (
     <>
@@ -1263,6 +1265,8 @@ export default function App() {
         <Route path="/privacidad" element={<PoliticaPrivacidad />} />
         <Route path="/terminos" element={<TerminosCondiciones />} />
         <Route path="/gracias" element={<Gracias />} />
+        <Route path="/reservar-espacio" element={<ReservarEspacio />} />
+        <Route path="/admin/calendario" element={<AdminCalendario />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       {!isLandingPage && <Footer />}
