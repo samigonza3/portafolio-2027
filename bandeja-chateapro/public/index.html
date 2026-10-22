@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#040817" />
+    <title>Bandeja | Samuel González</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23040817'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%233E7BFF'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/app.css" />
+  </head>
+  <body>
+    <div class="stars" aria-hidden="true"></div>
+
+    <section id="gate" class="gate" hidden>
+      <div class="glass-panel gate-card">
+        <span class="eyebrow">Bandeja privada</span>
+        <h1 class="display-xl gate-title" id="gate-title">Entrar</h1>
+        <p class="muted" id="gate-text">Escribe tu clave para ver tus conversaciones.</p>
+        <form id="login-form" autocomplete="off">
+          <label class="sr-only" for="pw">Clave</label>
+          <input id="pw" type="password" class="input" placeholder="Clave de acceso" required />
+          <button class="btn-star" type="submit">Entrar</button>
+          <p class="form-error" id="login-error" role="alert"></p>
+        </form>
+      </div>
+    </section>
+
+    <main id="shell" class="shell" data-view="list" hidden>
+      <aside class="glass-panel side" aria-label="Panel gerencial">
+        <div class="side-head">
+          <span class="eyebrow">Bandeja</span>
+          <span class="badge-demo" id="badge-demo" hidden>Demostración</span>
+        </div>
+        <h1 class="display-xl brand">Panel<br /><span class="glow">gerencial</span></h1>
+
+        <div class="metrics">
+          <div class="metric card-galaxy">
+            <div class="label-mono">Chats hoy</div>
+            <div class="metric-value" id="m-today">0</div>
+            <div class="metric-sub" id="m-today-sub"></div>
+          </div>
+          <div class="metric card-galaxy">
+            <div class="label-mono">Últimos 7 días</div>
+            <div class="metric-value" id="m-week">0</div>
+            <div class="metric-sub" id="m-week-sub"></div>
+            <div id="spark" class="spark" role="img" aria-label="Chats por día, últimos 7 días"></div>
+          </div>
+          <div class="metric card-galaxy">
+            <div class="label-mono">Por estado</div>
+            <div class="status-counts" id="m-status"></div>
+          </div>
+        </div>
+
+        <div class="side-foot">
+          <button class="btn-ghost small" id="btn-refresh" type="button">Actualizar</button>
+          <button class="btn-ghost small" id="btn-logout" type="button" hidden>Salir</button>
+        </div>
+      </aside>
+
+      <section class="glass-panel list" aria-label="Conversaciones">
+        <div class="list-head">
+          <h2 class="panel-title">Mensajes recientes</h2>
+          <div class="seg" role="group" aria-label="Estado">
+            <button type="button" class="seg-btn is-on" data-status="all">Todos</button>
+            <button type="button" class="seg-btn" data-status="open">Abiertos</button>
+          </div>
+        </div>
+        <div class="filters">
+          <input id="q" class="input" type="search" placeholder="Buscar nombre o teléfono" aria-label="Buscar" />
+          <select id="f-window" class="input" aria-label="Ventana">
+            <option value="24h">Últimas 24 h</option>
+            <option value="all">Todo el historial</option>
+          </select>
+          <select id="f-channel" class="input" aria-label="Canal">
+            <option value="">Todos los canales</option>
+            <option value="whatsapp_cloud">WhatsApp</option>
+            <option value="instagram">Instagram</option>
+            <option value="facebook">Messenger</option>
+            <option value="tiktok">TikTok</option>
+            <option value="web">Web</option>
+          </select>
+          <select id="f-tag" class="input" aria-label="Etiqueta">
+            <option value="">Todas las etiquetas</option>
+          </select>
+        </div>
+        <div class="chat-list glass-scroll" id="chat-list" role="list"></div>
+        <button class="btn-ghost small more" id="btn-more" type="button" hidden>Cargar más</button>
+      </section>
+
+      <section class="glass-panel thread" aria-label="Conversación">
+        <div class="thread-empty" id="thread-empty">
+          <span class="eyebrow">Sin selección</span>
+          <p class="muted">Elige una conversación para verla y responder.</p>
+        </div>
+
+        <div class="thread-body" id="thread-body" hidden>
+          <header class="thread-head">
+            <button class="btn-ghost small back" id="btn-back" type="button">Volver</button>
+            <div class="avatar" id="t-avatar"></div>
+            <div class="thread-id">
+              <h2 class="thread-name" id="t-name"></h2>
+              <div class="muted tiny" id="t-sub"></div>
+            </div>
+            <div class="thread-state" id="t-state"></div>
+          </header>
+
+          <div class="actions" id="actions">
+            <label class="act">
+              <span class="label-mono">Estado</span>
+              <select id="a-status" class="input small">
+                <option value="open">Abierto</option>
+                <option value="pending">Pendiente</option>
+                <option value="done">Resuelto</option>
+                <option value="spam">Spam</option>
+              </select>
+            </label>
+            <label class="act">
+              <span class="label-mono">Asignar a</span>
+              <select id="a-agent" class="input small"></select>
+            </label>
+            <div class="act">
+              <span class="label-mono">Bot</span>
+              <div class="act-row">
+                <select id="a-minutes" class="input small" aria-label="Minutos de pausa">
+                  <option value="30">30 min</option>
+                  <option value="120">2 h</option>
+                  <option value="1440">24 h</option>
+                </select>
+                <button class="btn-ghost small" id="a-pause" type="button">Pausar</button>
+                <button class="btn-ghost small" id="a-resume" type="button">Reanudar</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="tags-row" id="t-tags"></div>
+
+          <div class="messages glass-scroll" id="messages" aria-live="polite"></div>
+
+          <form class="composer" id="composer">
+            <label class="sr-only" for="c-text">Mensaje</label>
+            <textarea id="c-text" class="input" rows="2" maxlength="4000" placeholder="Escribe una respuesta. Enter envía, Shift+Enter salto de línea."></textarea>
+            <button class="btn-star" id="c-send" type="submit">Enviar</button>
+          </form>
+          <p class="notice" id="c-notice" hidden></p>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

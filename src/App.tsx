@@ -31,6 +31,7 @@ import Gracias from './components/Gracias';
 import { PoliticaPrivacidad, TerminosCondiciones } from './components/LegalPage';
 import AdminCalendario from './components/AdminCalendario';
 import ReservarEspacio from './components/ReservarEspacio';
+import TextReaderTool from './components/TextReaderTool';
 
 const services = [
   {
@@ -1299,6 +1300,7 @@ export default function App() {
         <Route path="/gracias" element={<Gracias />} />
         <Route path="/reservar-espacio" element={<ReservarEspacio />} />
         <Route path="/admin/calendario" element={<AdminCalendario />} />
+        <Route path="/herramientas/text-reader" element={<TextReaderTool />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       {!isLandingPage && <Footer />}

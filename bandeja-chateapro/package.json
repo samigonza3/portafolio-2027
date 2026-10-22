@@ -1,0 +1,12 @@
+{
+  "name": "bandeja-chateapro",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Bandeja propia sobre la API de ChateaPro, lista para Netlify",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "test": "node test/smoke.mjs"
+  }
+}
