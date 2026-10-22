@@ -414,7 +414,39 @@ const herramientas = [
     descripcion: 'Diagnóstico de tu tienda de dropshipping.',
     to: '/diagnostico',
   },
+  {
+    nombre: 'WiPi Converter',
+    descripcion: 'Convierte tus imágenes a WebP gratis.',
+    to: 'https://webp-converter.samuelgonzalez.org/',
+    externo: true,
+  },
 ];
+
+// Enlace de una herramienta: <a> en pestaña nueva si es externa, <Link> si es interna.
+function HerramientaLink({
+  h,
+  className,
+  onClick,
+  children,
+}: {
+  h: (typeof herramientas)[number];
+  className: string;
+  onClick?: () => void;
+  children: React.ReactNode;
+}) {
+  if ('externo' in h && h.externo) {
+    return (
+      <a href={h.to} target="_blank" rel="noopener noreferrer" onClick={onClick} className={className}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link to={h.to} onClick={onClick} className={className}>
+      {children}
+    </Link>
+  );
+}
 
 // Desplegable "Herramientas" del nav de escritorio. Se abre con hover o
 // clic, y se cierra al salir, al elegir una opción o con Escape.
@@ -452,15 +484,15 @@ function HerramientasMenu() {
         <div className="absolute right-0 top-full pt-3 w-72">
           <div className="rounded-card border border-star-light/15 bg-space-900/95 backdrop-blur-md p-2 shadow-star">
             {herramientas.map((h) => (
-              <Link
+              <HerramientaLink
                 key={h.to}
-                to={h.to}
+                h={h}
                 onClick={() => setOpen(false)}
                 className="block rounded-xl px-4 py-3 transition-colors hover:bg-star/10"
               >
                 <span className="block text-sm font-bold text-frost">{h.nombre}</span>
                 <span className="block text-xs text-muted mt-0.5">{h.descripcion}</span>
-              </Link>
+              </HerramientaLink>
             ))}
           </div>
         </div>
@@ -553,14 +585,14 @@ function NavBar() {
           <div className="flex flex-col gap-3">
             <span className="label-mono !text-muted">Herramientas</span>
             {herramientas.map((h) => (
-              <Link
+              <HerramientaLink
                 key={h.to}
-                to={h.to}
+                h={h}
                 onClick={closeMobile}
                 className="pl-4 border-l border-star-light/15 text-sm font-semibold text-ice hover:text-frost transition-colors"
               >
                 {h.nombre}
-              </Link>
+              </HerramientaLink>
             ))}
           </div>
           <a href="/#contacto" onClick={closeMobile} className="btn-pill-light w-fit">
@@ -597,9 +629,9 @@ function Footer() {
                 Blog
               </Link>
               {herramientas.map((h) => (
-                <Link key={h.to} to={h.to} className="text-ice hover:text-star-light transition-colors">
+                <HerramientaLink key={h.to} h={h} className="text-ice hover:text-star-light transition-colors">
                   {h.nombre}
-                </Link>
+                </HerramientaLink>
               ))}
               <Link
                 to="/mentoria-dropshipping"
