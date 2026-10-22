@@ -421,6 +421,11 @@ const herramientas = [
     to: 'https://webp-converter.samuelgonzalez.org/',
     externo: true,
   },
+  {
+    nombre: 'Lector de Texto',
+    descripcion: 'Convierte cualquier texto a voz con controles de reproducción.',
+    to: '/herramientas/text-reader',
+  },
 ];
 
 // Enlace de una herramienta: <a> en pestaña nueva si es externa, <Link> si es interna.
