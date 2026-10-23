@@ -11,6 +11,7 @@ import {
   X,
   SkipBack,
   SkipForward,
+  Loader2,
 } from 'lucide-react';
 
 // ─── Utilidades ────────────────────────────────────────────────────────────────
@@ -45,6 +46,33 @@ function pickVoice(voices: SpeechSynthesisVoice[], lang: string): SpeechSynthesi
   return enVoice || voices[0] || null;
 }
 
+// ─── Extractor PDF con pdfjs-dist desde CDN ────────────────────────────────────
+
+async function extractTextFromPDF(file: File): Promise<string> {
+  // Cargamos pdfjs dinámicamente para no añadir bundle weight
+  const pdfjsLib = await import(
+    /* @vite-ignore */
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs'
+  ) as any;
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+  let fullText = '';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const pageText = content.items
+      .map((item: any) => ('str' in item ? item.str : ''))
+      .join(' ');
+    fullText += pageText + '\n\n';
+  }
+  return fullText.trim();
+}
+
 // ─── Componente principal ───────────────────────────────────────────────────────
 
 export default function TextReaderTool() {
@@ -64,6 +92,8 @@ export default function TextReaderTool() {
   const [sentences, setSentences] = useState<string[]>([]);
   const [dragOver, setDragOver] = useState(false);
   const [showVoiceSelect, setShowVoiceSelect] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const [pdfError, setPdfError] = useState('');
 
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const sentenceIndexRef = useRef(0);
@@ -132,7 +162,6 @@ export default function TextReaderTool() {
       utt.onstart = () => {
         setHighlightIndex(idx);
         setProgress(Math.round((idx / parts.length) * 100));
-        // Scroll al highlight
         setTimeout(() => {
           highlightRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }, 50);
@@ -187,10 +216,10 @@ export default function TextReaderTool() {
     speakFrom(sentences, idx);
   };
 
-  // Leer archivo
-  const handleFile = (file: File) => {
-    const name = file.name;
-    setFileName(name);
+  // Leer archivo de texto plano
+  const handleTextFile = (file: File) => {
+    setFileName(file.name);
+    setPdfError('');
     stop();
     const reader = new FileReader();
     reader.onload = e => {
@@ -201,9 +230,41 @@ export default function TextReaderTool() {
     reader.readAsText(file, 'UTF-8');
   };
 
+  // Leer PDF
+  const handlePdfFile = async (file: File) => {
+    setFileName(file.name);
+    setPdfError('');
+    setPdfLoading(true);
+    stop();
+    try {
+      const extracted = await extractTextFromPDF(file);
+      if (!extracted.trim()) {
+        setPdfError('El PDF no contiene texto seleccionable (puede ser una imagen escaneada).');
+      } else {
+        setText(extracted);
+        prepareText(extracted);
+      }
+    } catch (err) {
+      console.error(err);
+      setPdfError('No se pudo leer el PDF. Asegúrate de que no esté protegido con contraseña.');
+    } finally {
+      setPdfLoading(false);
+    }
+  };
+
+  const handleFile = (file: File) => {
+    if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+      handlePdfFile(file);
+    } else {
+      handleTextFile(file);
+    }
+  };
+
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) handleFile(file);
+    // Reset input so el mismo archivo puede subirse de nuevo
+    e.target.value = '';
   };
 
   const onDrop = (e: React.DragEvent) => {
@@ -219,6 +280,7 @@ export default function TextReaderTool() {
     setFileName('');
     setSentences([]);
     setProgress(0);
+    setPdfError('');
   };
 
   const filteredVoices = voices.filter(v =>
@@ -254,20 +316,37 @@ export default function TextReaderTool() {
           onClick={() => fileInputRef.current?.click()}
         >
           <div className="flex flex-col items-center justify-center gap-2 py-6 px-4 text-center">
-            <Upload className="w-6 h-6 text-[#3e7bff]" />
-            <p className="text-sm font-semibold text-[#7fa8ff]">
-              {fileName ? fileName : 'Arrastra o haz clic para subir'}
-            </p>
-            <p className="text-xs text-[#7fa8ff]/40">.md · .txt · .doc compatible</p>
+            {pdfLoading ? (
+              <>
+                <Loader2 className="w-6 h-6 text-[#3e7bff] animate-spin" />
+                <p className="text-sm font-semibold text-[#7fa8ff]">Extrayendo texto del PDF…</p>
+              </>
+            ) : (
+              <>
+                <Upload className="w-6 h-6 text-[#3e7bff]" />
+                <p className="text-sm font-semibold text-[#7fa8ff]">
+                  {fileName ? fileName : 'Arrastra o haz clic para subir'}
+                </p>
+                <p className="text-xs text-[#7fa8ff]/40">.pdf · .md · .txt · .doc compatible</p>
+              </>
+            )}
           </div>
           <input
             ref={fileInputRef}
             type="file"
-            accept=".md,.txt,.doc,.docx,.text"
+            accept=".pdf,.md,.txt,.doc,.docx,.text"
             className="hidden"
             onChange={onFileChange}
           />
         </div>
+
+        {/* Error PDF */}
+        {pdfError && (
+          <div className="flex items-start gap-2 bg-[#ff4f4f]/10 border border-[#ff4f4f]/30 rounded-xl px-4 py-3 text-xs text-[#ff8f8f]">
+            <FileText className="w-4 h-4 shrink-0 mt-0.5" />
+            <span>{pdfError}</span>
+          </div>
+        )}
 
         {/* Textarea */}
         <div className="relative">
