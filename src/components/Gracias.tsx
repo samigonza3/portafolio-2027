@@ -8,6 +8,7 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react';
 export default function Gracias() {
   useEffect(() => {
     window.gtag?.('event', 'generate_lead', { form_name: 'contacto' });
+    window.fbq?.('track', 'Lead', { content_name: 'contacto' });
   }, []);
 
   return (

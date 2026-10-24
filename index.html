@@ -22,6 +22,24 @@
 
   gtag('config', 'G-3T9MQBQJKD');
 </script>
+    <!-- Meta Pixel: se carga una sola vez para toda la SPA. Respeta el mismo
+         consentimiento del banner de cookies (src/components/CookieBanner.tsx).
+         Los PageView de las navegaciones internas los dispara RouteMeta.tsx. -->
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      var fbConsent = null;
+      try { fbConsent = localStorage.getItem('cookie-consent'); } catch (e) {}
+      fbq('consent', fbConsent === 'granted' ? 'grant' : 'revoke');
+      fbq('init', '1617158523093486');
+      fbq('track', 'PageView');
+    </script>
     <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -52,6 +70,7 @@
     <meta name="twitter:image" content="https://samuelgonzalez.org/og-image.png" />
   </head>
   <body>
+    <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=1617158523093486&ev=PageView&noscript=1" /></noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
 

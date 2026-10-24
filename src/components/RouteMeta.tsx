@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 // Título, descripción y canonical por ruta. Las rutas dinámicas
@@ -69,6 +69,19 @@ function setMeta(selector: string, attr: 'name' | 'property', key: string, conte
 
 export default function RouteMeta() {
   const { pathname } = useLocation();
+  const lastTracked = useRef<string | null>(null);
+
+  // Meta Pixel: index.html ya dispara el PageView de la primera carga; aquí
+  // se cubren las navegaciones internas de la SPA (cada ruta nueva).
+  useEffect(() => {
+    if (lastTracked.current === null) {
+      lastTracked.current = pathname;
+      return;
+    }
+    if (lastTracked.current === pathname) return;
+    lastTracked.current = pathname;
+    window.fbq?.('track', 'PageView');
+  }, [pathname]);
 
   useEffect(() => {
     const path = pathname.length > 1 ? pathname.replace(/\/$/, '') : pathname;

@@ -36,6 +36,7 @@ export default function CookieBanner() {
       ad_user_data: value,
       ad_personalization: value,
     });
+    window.fbq?.('consent', value === 'granted' ? 'grant' : 'revoke');
     saveChoice(value);
     setVisible(false);
   };
