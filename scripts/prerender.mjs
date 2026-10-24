@@ -277,6 +277,14 @@ writeFileSync(
   pageHtml(nf, '<h1>Página no encontrada</h1><p>El enlace no existe o cambió de lugar.</p><p><a href="/">Ir al inicio</a></p>', { ogType: 'website', graph: null, isHome: false })
 );
 
+// 3b) Reglas de Netlify. Cada página vive en dist/<ruta>/index.html y, sin
+// estas reglas, Netlify redirige /ruta a /ruta/ (301). La reescritura
+// forzada (200!) sirve el archivo directo en la URL sin barra final, que es
+// la misma de los canonicals y el sitemap.
+const routes = [...PAGES.map((x) => x.path), ...posts.map((x) => `/blog/${x.slug}`)].filter((p) => p !== '/');
+const rules = routes.map((p) => `${p}  ${p}/index.html  200!`);
+writeFileSync(resolve(DIST, '_redirects'), `${rules.join('\n')}\n/*  /404.html  404\n`);
+
 // 4) Verificación rápida
 const problems = [];
 for (const p of [...PAGES.map((x) => x.path), ...posts.map((x) => `/blog/${x.slug}`)]) {
