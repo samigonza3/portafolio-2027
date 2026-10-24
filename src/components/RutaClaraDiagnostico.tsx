@@ -1411,10 +1411,6 @@ export default function RutaClaraDiagnostico({ onLead }: RutaClaraDiagnosticoPro
   const pregunta = visibles[Math.min(idx, visibles.length - 1)];
 
   useEffect(() => {
-    document.title = `${CONFIG.marca} | Samuel González`;
-  }, []);
-
-  useEffect(() => {
     guardarStorage(STORAGE_KEY, { pantalla: vista, idx, r: respuestas });
   }, [vista, idx, respuestas]);
 

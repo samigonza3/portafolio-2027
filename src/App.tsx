@@ -32,6 +32,8 @@ import { PoliticaPrivacidad, TerminosCondiciones } from './components/LegalPage'
 import AdminCalendario from './components/AdminCalendario';
 import ReservarEspacio from './components/ReservarEspacio';
 import TextReaderTool from './components/TextReaderTool';
+import Herramientas from './components/Herramientas';
+import { herramientas } from './data/herramientas';
 
 const services = [
   {
@@ -404,29 +406,6 @@ function HeroPhoto({
 // Herramientas gratuitas del sitio. Fuente única para el menú desplegable
 // (escritorio y mobile) y el footer: para publicar una herramienta nueva
 // solo agrega un objeto aquí (y su <Route> en App).
-const herramientas = [
-  {
-    nombre: 'Documentos Fundacionales',
-    descripcion: 'Genera los 4 documentos de tu marca con IA.',
-    to: '/herramientas/foundational-docs',
-  },
-  {
-    nombre: 'Diagnóstico para Dropshippers',
-    descripcion: 'Diagnóstico de tu tienda de dropshipping.',
-    to: '/diagnostico',
-  },
-  {
-    nombre: 'WiPi Converter',
-    descripcion: 'Convierte tus imágenes a WebP gratis.',
-    to: 'https://webp-converter.samuelgonzalez.org/',
-    externo: true,
-  },
-  {
-    nombre: 'Lector de Texto',
-    descripcion: 'Convierte cualquier texto a voz con controles de reproducción.',
-    to: '/herramientas/text-reader',
-  },
-];
 
 // Enlace de una herramienta: <a> en pestaña nueva si es externa, <Link> si es interna.
 function HerramientaLink({
@@ -1305,6 +1284,7 @@ export default function App() {
         <Route path="/gracias" element={<Gracias />} />
         <Route path="/reservar-espacio" element={<ReservarEspacio />} />
         <Route path="/admin/calendario" element={<AdminCalendario />} />
+        <Route path="/herramientas" element={<Herramientas />} />
         <Route path="/herramientas/text-reader" element={<TextReaderTool />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

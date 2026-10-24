@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { BookingForm } from './mentoria/shared';
 import { MENTORIA } from '../data/oferta';
+import { FAQS_MENTORIA as FAQS } from '../data/faqs';
 
 // ============================================================
 // Landing de la Mentoría privada (/empieza-aqui-tu-mentoria)
@@ -150,32 +151,6 @@ const CONDICIONES = [
   { label: 'Garantía', valor: 'No hay garantía de ingresos ni de resultados: dependen de tu ejecución y tu mercado' },
 ];
 
-const FAQS = [
-  {
-    q: '¿Cuánto cuesta y cómo se paga?',
-    a: `${PRECIO} por ${MENTORIA.horasMes} horas de sesiones privadas. Te comparto el link de pago cuando confirmamos tu cupo, antes de la primera sesión.`,
-  },
-  {
-    q: '¿Tengo que comprometerme por varios meses?',
-    a: 'No. La mentoría se renueva mes a mes y decides al final de cada ciclo si continúas.',
-  },
-  {
-    q: '¿Qué pasa si todavía no he vendido nada?',
-    a: 'Puedes entrar igual, siempre que tengas el capital y el tiempo para probar. La primera sesión se enfoca en elegir producto y montar la base correctamente.',
-  },
-  {
-    q: '¿Las sesiones son en grupo?',
-    a: 'No. Todas las sesiones son 1 a 1, solo tú y yo por videollamada, para trabajar directamente sobre tu tienda y tus números.',
-  },
-  {
-    q: '¿Qué necesito tener listo para la primera sesión?',
-    a: 'Acceso a tu tienda y a tus cuentas de anuncios si ya las tienes, tus números del último mes y claridad sobre cuánto capital y tiempo puedes invertir.',
-  },
-  {
-    q: '¿Me garantizas resultados?',
-    a: 'No. Te doy método, números y acompañamiento directo, pero los resultados dependen de tu producto, tu mercado, tu ejecución y tu constancia.',
-  },
-];
 
 function SectionTitle({ eyebrow, title, sub }: { eyebrow?: string; title: React.ReactNode; sub?: string }) {
   return (

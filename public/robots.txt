@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /gracias
+Disallow: /reservar-espacio
+Disallow: /admin/
 
 Sitemap: https://samuelgonzalez.org/sitemap.xml

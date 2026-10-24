@@ -1,61 +1,16 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
-// Título, descripción y canonical por ruta. Las rutas dinámicas
-// (/blog/:slug y el diagnóstico) definen su propio título desde su
-// componente, así que aquí se omiten para no pisarlo.
-export const SITE_URL = 'https://samuelgonzalez.org';
+// Título, descripción y canonical por ruta: salen de src/data/seo.ts (la
+// misma fuente que usa el prerender). Las rutas dinámicas (/blog/:slug)
+// definen su propio título desde su componente, así que aquí
+// se omiten para no pisarlo.
+import { PAGE_BY_PATH, SITE_URL, DEFAULT_DESCRIPTION } from '../data/seo';
+export { SITE_URL };
 
-const DEFAULT_DESCRIPTION =
-  'Samuel González. +15 años conectando adquisición pagada, analítica de datos y desarrollo web para marcas nacionales e internacionales.';
+const DEFAULT_DESCRIPTION_FALLBACK = DEFAULT_DESCRIPTION;
 
-type Meta = { title: string; description?: string; noindex?: boolean };
-
-const META: Record<string, Meta> = {
-  '/': { title: 'Samuel González | Data, Marketing & Code' },
-  '/blog': {
-    title: 'Blog | Samuel González',
-    description: 'Ideas prácticas sobre paid media, analítica, e-commerce y dropshipping.',
-  },
-  '/herramientas/foundational-docs': {
-    title: 'Documentos Fundacionales con IA | Samuel González',
-    description: 'Herramienta gratuita para generar los 4 documentos fundacionales de tu marca con IA.',
-  },
-  '/mentoria-dropshipping': {
-    title: 'Mentoría de Dropshipping | Samuel González',
-    description: 'Inicia tu camino en el comercio electrónico con acompañamiento paso a paso.',
-  },
-  '/empieza-aqui-tu-mentoria': {
-    title: 'Mentoría privada de dropshipping | Samuel González',
-    description:
-      'Acompañamiento 1 a 1 para construir y escalar tu tienda de dropshipping: 4 horas al mes, tareas, plan de entrenamiento y revisión de tus números.',
-  },
-  '/google-ads-checklist': {
-    title: 'Checklist de Google Ads | Samuel González',
-    description: 'Checklist gratuito para auditar y optimizar tus campañas de Google Ads.',
-  },
-  '/recursos/google-ads-checklist': {
-    title: 'Checklist de Google Ads | Samuel González',
-    description: 'Checklist gratuito para auditar y optimizar tus campañas de Google Ads.',
-  },
-  '/privacidad': {
-    title: 'Política de Privacidad | Samuel González',
-    description: 'Cómo se recolectan, usan y protegen tus datos personales en samuelgonzalez.org.',
-  },
-  '/terminos': {
-    title: 'Términos y Condiciones | Samuel González',
-    description: 'Condiciones de uso del sitio, sus herramientas gratuitas y servicios.',
-  },
-  '/gracias': { title: 'Gracias por escribirme | Samuel González', noindex: true },
-  '/reservar-espacio': {
-    title: 'Reservar un espacio | Samuel González',
-    description: 'Agenda una sesión 1:1 con Samuel González — mentoría, consultoría o clase de marketing digital.',
-    noindex: true,
-  },
-  '/admin/calendario': { title: 'Admin · Calendario | Samuel González', noindex: true },
-};
-
-const SELF_MANAGED = [/^\/blog\/.+/, /^\/diagnostico$/, /^\/recursos\/ruta-clara$/];
+const SELF_MANAGED = [/^\/blog\/.+/];
 
 function setMeta(selector: string, attr: 'name' | 'property', key: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(selector);
@@ -93,18 +48,19 @@ export default function RouteMeta() {
       canonical.rel = 'canonical';
       document.head.appendChild(canonical);
     }
-    canonical.href = `${SITE_URL}${path === '/' ? '/' : path}`;
+    const canonicalPath = PAGE_BY_PATH[path]?.canonicalPath ?? path;
+    canonical.href = `${SITE_URL}${canonicalPath === '/' ? '/' : canonicalPath}`;
     setMeta('meta[property="og:url"]', 'property', 'og:url', canonical.href);
 
-    const known = META[path];
+    const known = PAGE_BY_PATH[path];
     const isNotFound = !known && !SELF_MANAGED.some((r) => r.test(path));
     const noindex = known?.noindex || isNotFound;
     setMeta('meta[name="robots"]', 'name', 'robots', noindex ? 'noindex, follow' : 'index, follow');
 
     if (SELF_MANAGED.some((r) => r.test(path))) return;
 
-    const meta = known ?? { title: 'Página no encontrada | Samuel González' };
-    const description = meta.description ?? DEFAULT_DESCRIPTION;
+    const meta = known ?? { title: 'Página no encontrada | Samuel González', description: DEFAULT_DESCRIPTION_FALLBACK };
+    const description = meta.description;
     document.title = meta.title;
     setMeta('meta[name="description"]', 'name', 'description', description);
     setMeta('meta[property="og:title"]', 'property', 'og:title', meta.title);
