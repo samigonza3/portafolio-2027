@@ -958,8 +958,10 @@ function HomePage() {
         </div>
       </section>
 
+      <RolesMarquee />
+
       {/* ===== Hero: titular roto + bloques de "foto", estilo nik.co ===== */}
-      <section className="pt-14 pb-8 md:pt-20 md:pb-10 border-t border-star-light/15">
+      <section className="pt-14 pb-8 md:pt-20 md:pb-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-[1.1fr_0.9fr] gap-5 items-center">
             <h1 className="display-xl text-[13vw] sm:text-6xl md:text-7xl lg:text-8xl">
@@ -1000,8 +1002,6 @@ function HomePage() {
           </p>
         </div>
       </section>
-
-      <RolesMarquee />
 
       {/* ===== Servicios: grid dividido, sin cards flotantes ===== */}
       <section id="servicios" className="border-t border-star-light/15">
