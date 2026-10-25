@@ -238,17 +238,30 @@ function LogosMarquee() {
   );
 }
 
+// Campo de estrellas interactivo: al mover el cursor aparece una estrella
+// fugaz muy sutil; al hacer clic se propagan ondas gravitacionales que
+// desplazan levemente las estrellas a su paso. Los eventos se escuchan en
+// el contenedor padre para que funcionen aunque haya contenido encima.
 function Starfield() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    const host = canvas.parentElement;
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx || !host) return;
 
-    let stars: { x: number; y: number; r: number; a: number; da: number }[] = [];
+    type Star = { x: number; y: number; r: number; a: number; da: number };
+    type Shooter = { x: number; y: number; vx: number; vy: number; life: number; max: number; len: number };
+    type Wave = { x: number; y: number; t: number; max: number };
+
+    let stars: Star[] = [];
+    const shooters: Shooter[] = [];
+    const waves: Wave[] = [];
     let raf = 0;
+    let lastSpawn = 0;
+    let last: { x: number; y: number } | null = null;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const resize = () => {
@@ -264,17 +277,134 @@ function Starfield() {
       }));
     };
 
+    const local = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    };
+
+    const onMove = (e: MouseEvent) => {
+      const p = local(e);
+      const now = performance.now();
+      if (last && now - lastSpawn > 450) {
+        const dx = p.x - last.x;
+        const dy = p.y - last.y;
+        const d = Math.hypot(dx, dy);
+        if (d > 14) {
+          // Sigue la dirección del cursor, con una ligera inclinación.
+          const ang = Math.atan2(dy, dx) + (Math.random() - 0.5) * 0.4;
+          const speed = 5 + Math.random() * 2;
+          shooters.push({
+            x: p.x,
+            y: p.y,
+            vx: Math.cos(ang) * speed,
+            vy: Math.sin(ang) * speed,
+            life: 0,
+            max: 38 + Math.random() * 14,
+            len: 46 + Math.random() * 26,
+          });
+          if (shooters.length > 4) shooters.shift();
+          lastSpawn = now;
+        }
+      }
+      last = p;
+    };
+
+    const onLeave = () => {
+      last = null;
+    };
+
+    const onClick = (e: MouseEvent) => {
+      const p = local(e);
+      waves.push({ x: p.x, y: p.y, t: 0, max: 130 });
+      if (waves.length > 4) waves.shift();
+    };
+
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = '#7FA8FF';
       stars.forEach((s) => {
         s.a += s.da;
         if (s.a < 0 || s.a > 1) s.da *= -1;
+
+        // Desplazamiento radial de la estrella al paso de cada onda.
+        let ox = 0;
+        let oy = 0;
+        for (const w of waves) {
+          const radius = (w.t / w.max) * Math.max(canvas.width, canvas.height) * 0.45;
+          const dx = s.x - w.x;
+          const dy = s.y - w.y;
+          const dist = Math.hypot(dx, dy) || 1;
+          const band = 38;
+          const delta = dist - radius;
+          if (Math.abs(delta) < band) {
+            const fall = Math.cos((delta / band) * (Math.PI / 2));
+            const amp = 5 * fall * (1 - w.t / w.max);
+            ox += (dx / dist) * amp;
+            oy += (dy / dist) * amp;
+          }
+        }
+
         ctx.globalAlpha = Math.max(0, Math.min(1, s.a));
         ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.arc(s.x + ox, s.y + oy, s.r, 0, Math.PI * 2);
         ctx.fill();
       });
+
+      // Ondas gravitacionales: anillos concéntricos muy tenues.
+      for (let i = waves.length - 1; i >= 0; i--) {
+        const w = waves[i];
+        w.t += 1;
+        if (w.t >= w.max) {
+          waves.splice(i, 1);
+          continue;
+        }
+        const prog = w.t / w.max;
+        const radius = prog * Math.max(canvas.width, canvas.height) * 0.45;
+        const fade = (1 - prog) * (1 - prog);
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = '#7FA8FF';
+        for (let k = 0; k < 3; k++) {
+          const rr = radius - k * 16;
+          if (rr <= 0) continue;
+          ctx.globalAlpha = 0.22 * fade * (1 - k * 0.3);
+          ctx.beginPath();
+          ctx.arc(w.x, w.y, rr, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+
+      // Estrellas fugaces: cabeza brillante y cola que se desvanece.
+      for (let i = shooters.length - 1; i >= 0; i--) {
+        const sh = shooters[i];
+        sh.life += 1;
+        if (sh.life >= sh.max) {
+          shooters.splice(i, 1);
+          continue;
+        }
+        sh.x += sh.vx;
+        sh.y += sh.vy;
+        const k = 1 - sh.life / sh.max;
+        const sp = Math.hypot(sh.vx, sh.vy);
+        const tx = sh.x - (sh.vx / sp) * sh.len;
+        const ty = sh.y - (sh.vy / sp) * sh.len;
+        const grad = ctx.createLinearGradient(sh.x, sh.y, tx, ty);
+        grad.addColorStop(0, 'rgba(220,232,255,0.75)');
+        grad.addColorStop(1, 'rgba(127,168,255,0)');
+        ctx.globalAlpha = 0.55 * k;
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(sh.x, sh.y);
+        ctx.lineTo(tx, ty);
+        ctx.stroke();
+        ctx.globalAlpha = 0.9 * k;
+        ctx.fillStyle = '#DCE8FF';
+        ctx.beginPath();
+        ctx.arc(sh.x, sh.y, 1.3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#7FA8FF';
+      }
+
       ctx.globalAlpha = 1;
       if (!reduce) raf = requestAnimationFrame(draw);
     };
@@ -282,9 +412,17 @@ function Starfield() {
     window.addEventListener('resize', resize);
     resize();
     draw();
+    if (!reduce) {
+      host.addEventListener('mousemove', onMove);
+      host.addEventListener('mouseleave', onLeave);
+      host.addEventListener('click', onClick);
+    }
 
     return () => {
       window.removeEventListener('resize', resize);
+      host.removeEventListener('mousemove', onMove);
+      host.removeEventListener('mouseleave', onLeave);
+      host.removeEventListener('click', onClick);
       cancelAnimationFrame(raf);
     };
   }, []);
@@ -781,8 +919,47 @@ function HomePage() {
 
   return (
     <div className="min-h-screen bg-space-950 text-frost">
+      {/* ===== Tratamiento de nombre: ticker + nombre gigante ===== */}
+      <section className="relative py-20 md:py-28 text-center overflow-hidden">
+        <Starfield />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse 60% 60% at 50% 0%, #1B2E66, transparent 70%)',
+          }}
+        />
+        <div className="relative max-w-5xl mx-auto px-6">
+          <p className="label-mono mb-6">Paid Media · Data Science · Growth · Full Stack</p>
+          <div className="flex items-center justify-center gap-5 md:gap-8">
+            <div className="hidden sm:flex w-16 h-16 md:w-24 md:h-24 rounded-full items-center justify-center shrink-0 photo-block !rounded-full">
+              <Code2 className="w-6 h-6 md:w-8 md:h-8 text-star-light" />
+            </div>
+            <h1 className="display-xl text-5xl sm:text-7xl md:text-8xl lg:text-9xl">
+              Samuel
+              <br />
+              González
+            </h1>
+            <div className="hidden sm:flex w-16 h-16 md:w-24 md:h-24 rounded-full items-center justify-center shrink-0 photo-block !rounded-full">
+              <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-star-light" />
+            </div>
+          </div>
+          <p className="text-ice text-base md:text-lg max-w-xl mx-auto mt-8 leading-relaxed">
+            <strong className="text-frost">+15 años</strong> conectando adquisición pagada, analítica
+            de datos y desarrollo web para marcas nacionales e internacionales.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4 mt-10">
+            <a href="#servicios" className="btn-star">
+              Conoce cómo puedo ayudarte <ArrowRight className="w-4 h-4" />
+            </a>
+            <Link to="/blog" className="btn-ghost">
+              Leer el blog
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* ===== Hero: titular roto + bloques de "foto", estilo nik.co ===== */}
-      <section className="pt-14 pb-8 md:pt-20 md:pb-10">
+      <section className="pt-14 pb-8 md:pt-20 md:pb-10 border-t border-star-light/15">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-[1.1fr_0.9fr] gap-5 items-center">
             <h1 className="display-xl text-[13vw] sm:text-6xl md:text-7xl lg:text-8xl">
@@ -825,45 +1002,6 @@ function HomePage() {
       </section>
 
       <RolesMarquee />
-
-      {/* ===== Tratamiento de nombre: ticker + nombre gigante ===== */}
-      <section className="relative py-20 md:py-28 text-center border-t border-star-light/15 overflow-hidden">
-        <Starfield />
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'radial-gradient(ellipse 60% 60% at 50% 0%, #1B2E66, transparent 70%)',
-          }}
-        />
-        <div className="relative max-w-5xl mx-auto px-6">
-          <p className="label-mono mb-6">Paid Media · Data Science · Growth · Full Stack</p>
-          <div className="flex items-center justify-center gap-5 md:gap-8">
-            <div className="hidden sm:flex w-16 h-16 md:w-24 md:h-24 rounded-full items-center justify-center shrink-0 photo-block !rounded-full">
-              <Code2 className="w-6 h-6 md:w-8 md:h-8 text-star-light" />
-            </div>
-            <h1 className="display-xl text-5xl sm:text-7xl md:text-8xl lg:text-9xl">
-              Samuel
-              <br />
-              González
-            </h1>
-            <div className="hidden sm:flex w-16 h-16 md:w-24 md:h-24 rounded-full items-center justify-center shrink-0 photo-block !rounded-full">
-              <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-star-light" />
-            </div>
-          </div>
-          <p className="text-ice text-base md:text-lg max-w-xl mx-auto mt-8 leading-relaxed">
-            <strong className="text-frost">+15 años</strong> conectando adquisición pagada, analítica
-            de datos y desarrollo web para marcas nacionales e internacionales.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4 mt-10">
-            <a href="#servicios" className="btn-star">
-              Conoce cómo puedo ayudarte <ArrowRight className="w-4 h-4" />
-            </a>
-            <Link to="/blog" className="btn-ghost">
-              Leer el blog
-            </Link>
-          </div>
-        </div>
-      </section>
 
       {/* ===== Servicios: grid dividido, sin cards flotantes ===== */}
       <section id="servicios" className="border-t border-star-light/15">
