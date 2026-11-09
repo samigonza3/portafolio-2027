@@ -282,7 +282,10 @@ writeFileSync(
 // forzada (200!) sirve el archivo directo en la URL sin barra final, que es
 // la misma de los canonicals y el sitemap.
 const routes = [...PAGES.map((x) => x.path), ...posts.map((x) => `/blog/${x.slug}`)].filter((p) => p !== '/');
-const rules = routes.map((p) => `${p}  ${p}/index.html  200!`);
+// Redirecciones 301 de URLs antiguas (links ya compartidos) hacia la ruta vigente.
+const LEGACY_REDIRECTS = [['/comienza-aqui-tu-mentoria', '/empieza-aqui-tu-mentoria']];
+const legacy = LEGACY_REDIRECTS.map(([from, to]) => `${from}  ${to}  301!`);
+const rules = [...legacy, ...routes.map((p) => `${p}  ${p}/index.html  200!`)];
 writeFileSync(resolve(DIST, '_redirects'), `${rules.join('\n')}\n/*  /404.html  404\n`);
 
 // 4) Verificación rápida
