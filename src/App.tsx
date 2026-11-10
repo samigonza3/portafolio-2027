@@ -9,7 +9,6 @@ import {
   ArrowRight,
   Mail,
   GraduationCap,
-  Users,
   Sparkles,
   Menu,
   X,
@@ -59,18 +58,11 @@ const services = [
       'Desarrollo web end-to-end con las últimas tecnologías, integrando Web3 y blockchain para soluciones innovadoras y descentralizadas.',
   },
   {
-    title: 'Mentoría',
-    icon: <Users className="w-8 h-8 text-star-light" />,
-    tag: 'Mentoría',
-    description:
-      'Acompañamiento 1 a 1 para profesionales que quieren construir su ecommerce propio sin renunciar a su trabajo, con método, números reales y decisiones medidas.',
-  },
-  {
-    title: 'Docencia',
+    title: 'Mentoría y Docencia',
     icon: <GraduationCap className="w-8 h-8 text-star-light" />,
-    tag: 'Docencia',
+    tag: 'Enseñanza',
     description:
-      'Clases universitarias de visualización de datos y manejo de plataformas digitales, llevando la práctica real de campañas y analítica al aula.',
+      'Mentoría 1 a 1 para construir tu ecommerce propio sin renunciar a tu trabajo, y clases universitarias de visualización de datos y plataformas digitales con práctica real de campañas y analítica.',
   },
 ];
 
@@ -1024,13 +1016,13 @@ function HomePage() {
           <h2 className="display-xl text-4xl sm:text-5xl md:text-6xl mb-12 md:mb-16">
             Cómo puedo <span className="glow">aportar</span> a tu proyecto
           </h2>
-          <div className="grid md:grid-cols-3">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4">
             {services.map((service, index) => (
               <div
                 key={index}
-                className={`p-6 md:p-8 ${index > 0 ? 'border-t' : ''} ${index % 3 !== 0 ? 'md:border-l' : ''} ${
-                  index >= 3 ? 'md:border-t' : 'md:border-t-0'
-                } border-star-light/15 ${index > 0 ? 'mt-6 md:mt-0' : ''}`}
+                className={`p-6 md:p-8 border-star-light/15 ${index > 0 ? 'border-t mt-6 md:mt-0' : ''} ${
+                  index % 2 !== 0 ? 'md:border-l' : ''
+                } ${index % 4 !== 0 ? 'lg:border-l' : ''} ${index >= 2 ? 'md:border-t' : 'md:border-t-0'} lg:border-t-0`}
               >
                 <span className="label-mono !text-star-light mb-5 block">{service.tag}</span>
                 <div className="mb-5">{service.icon}</div>
