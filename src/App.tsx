@@ -104,15 +104,6 @@ const experiences = [
     logo: '/logo-UNICEF-500x281.webp',
   },
   {
-    company: 'Digital57',
-    fullName: 'Digital57 — Digital Agency',
-    position: 'Sr. Performance Strategist',
-    period: '2019 — 2020',
-    description:
-      'Escalé campañas de performance para grandes marcas, optimizando CAC y ROAS con automatización y segmentación avanzada.',
-    logo: '/digital57-logo.webp',
-  },
-  {
     company: 'Banco de Occidente',
     fullName: 'Banco de Occidente',
     position: 'CRO Growth Hacker',
@@ -1041,7 +1032,7 @@ function HomePage() {
       <section id="experiencia" className="border-t border-star-light/15">
         <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
           <h2 className="display-xl text-4xl sm:text-5xl md:text-6xl mb-4">
-            Experiencia <span className="glow">probada</span>
+            Mi <span className="glow">experiencia</span>
           </h2>
           <p className="text-muted mb-4">15+ años entre paid media, data y producto.</p>
         </div>
@@ -1141,7 +1132,7 @@ function HomePage() {
       <section className="border-t border-star-light/15">
         <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
           <h2 className="display-xl text-3xl sm:text-4xl md:text-5xl mb-10 text-center">
-            Marcas que <span className="glow">confiaron</span>
+            Marcas que han <span className="glow">confiado</span> en mi trabajo
           </h2>
           <LogosMarquee />
         </div>

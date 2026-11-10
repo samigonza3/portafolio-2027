@@ -59,7 +59,7 @@ export const PAGES: PageSeo[] = [
 <h3>Marketing Digital</h3><p>Estrategias SEM, Social Media Marketing, Growth CRO y análisis de métricas para maximizar tu presencia digital en Google Ads, Meta Ads, TikTok Ads y Microsoft Advertising.</p>
 <h3>Desarrollo Full Stack</h3><p>Desarrollo web de punta a punta con las últimas tecnologías.</p>
 <h2>Experiencia</h2>
-<p>Actualmente lidero la ejecución de TikTok Ads y apoyo campañas de Meta y Microsoft Advertising en IFMG (Interactive Financial Marketing Group). Antes trabajé como Paid Media Specialist en Telefónica Hispam y UNICEF Colombia, Sr. Performance Strategist en Digital57 y CRO Growth Hacker en Banco de Occidente.</p>
+<p>Actualmente lidero la ejecución de TikTok Ads y apoyo campañas de Meta y Microsoft Advertising en IFMG (Interactive Financial Marketing Group). Antes trabajé como Paid Media Specialist en Telefónica Hispam y UNICEF Colombia, y CRO Growth Hacker en Banco de Occidente.</p>
 <h2>Docencia</h2>
 <p>Enseño visualización de datos en la Universidad de San Buenaventura Cali y Manejo de Plataformas Digitales en la Universidad Icesi.</p>
 <h2>Empieza por aquí</h2>
