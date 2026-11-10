@@ -23,3 +23,15 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Variables de entorno (se permite solo el ejemplo)
+.env.*
+!.env.example
+
+# Material personal que no va a GitHub
+skills/
+_to_delete/
+.bolt/
+bandeja-chateapro/
+*.bak
+*.bak*
