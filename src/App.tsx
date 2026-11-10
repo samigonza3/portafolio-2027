@@ -519,12 +519,14 @@ function HeroPhoto({
   className = '',
   parallaxSpeed = 0.1,
   zoom = 1.15,
+  position = 'center',
 }: {
   src: string;
   alt: string;
   className?: string;
   parallaxSpeed?: number;
   zoom?: number;
+  position?: string;
 }) {
   const imgRef = useParallax(parallaxSpeed, zoom);
 
@@ -535,6 +537,7 @@ function HeroPhoto({
         src={src}
         alt={alt}
         className="absolute inset-0 w-full h-full object-cover will-change-transform"
+        style={{ objectPosition: position }}
         loading="eager"
       />
       <div
@@ -977,19 +980,21 @@ function HomePage() {
               &amp; Code
             </h1>
             <HeroPhoto
-              src="/hero-waterfall.webp"
-              alt="Pareja en una banca frente a una cascada iluminada, Cataratas del Niágara"
+              src="/hero-docencia.webp"
+              alt="Samuel con un grupo de sus estudiantes universitarios después de una clase"
               className="h-56 md:h-72"
               parallaxSpeed={0.08}
+              position="50% 38%"
             />
           </div>
           <div className="grid grid-cols-2 md:grid-cols-[0.75fr_1.25fr_1.25fr_0.75fr] gap-4 md:gap-5 mt-4 md:mt-5 items-center">
             <HeroPhoto
-              src="/hero-moon.webp"
-              alt="Luna en cuarto creciente fotografiada en Perú"
+              src="/hero-infancia.webp"
+              alt="Samuel de bebé, fotografía antigua en blanco y negro"
               className="h-24 md:h-32 order-2 md:order-none"
               parallaxSpeed={0.06}
               zoom={1.1}
+              position="50% 40%"
             />
             <h2 className="display-xl text-[9vw] sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl col-span-2 md:col-span-1 order-1 md:order-none">
               Al servicio de marcas
@@ -998,15 +1003,13 @@ function HomePage() {
               En crecimiento
             </h2>
             <HeroPhoto
-              src="/hero-sunset.webp"
-              alt="Atardecer sobre el lago Titicaca, entre Perú y Bolivia"
+              src="/hero-tesis.webp"
+              alt="Samuel presentando su trabajo de grado en la Universidad de San Buenaventura Cali"
               className="h-24 md:h-32 order-2 md:order-none"
               parallaxSpeed={0.11}
+              position="50% 15%"
             />
           </div>
-          <p className="label-mono !text-muted !tracking-[0.15em] mt-5 md:mt-6">
-            Fotografías propias, tomadas entre Perú y Bolivia en 2018.
-          </p>
         </div>
       </section>
 
