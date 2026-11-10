@@ -9,6 +9,7 @@ import {
   ArrowRight,
   Mail,
   GraduationCap,
+  Users,
   Sparkles,
   Menu,
   X,
@@ -56,6 +57,20 @@ const services = [
     tag: 'Code',
     description:
       'Desarrollo web end-to-end con las últimas tecnologías, integrando Web3 y blockchain para soluciones innovadoras y descentralizadas.',
+  },
+  {
+    title: 'Mentoría',
+    icon: <Users className="w-8 h-8 text-star-light" />,
+    tag: 'Mentoría',
+    description:
+      'Acompañamiento 1 a 1 para profesionales que quieren construir su ecommerce propio sin renunciar a su trabajo, con método, números reales y decisiones medidas.',
+  },
+  {
+    title: 'Docencia',
+    icon: <GraduationCap className="w-8 h-8 text-star-light" />,
+    tag: 'Docencia',
+    description:
+      'Clases universitarias de visualización de datos y manejo de plataformas digitales, llevando la práctica real de campañas y analítica al aula.',
   },
 ];
 
@@ -1013,9 +1028,9 @@ function HomePage() {
             {services.map((service, index) => (
               <div
                 key={index}
-                className={`p-6 md:p-8 ${index > 0 ? 'md:border-l border-star-light/15 border-t md:border-t-0' : ''} ${
-                  index > 0 ? 'mt-6 md:mt-0' : ''
-                }`}
+                className={`p-6 md:p-8 ${index > 0 ? 'border-t' : ''} ${index % 3 !== 0 ? 'md:border-l' : ''} ${
+                  index >= 3 ? 'md:border-t' : 'md:border-t-0'
+                } border-star-light/15 ${index > 0 ? 'mt-6 md:mt-0' : ''}`}
               >
                 <span className="label-mono !text-star-light mb-5 block">{service.tag}</span>
                 <div className="mb-5">{service.icon}</div>
