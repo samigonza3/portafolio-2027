@@ -989,12 +989,12 @@ function HomePage() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-[0.75fr_1.25fr_1.25fr_0.75fr] gap-4 md:gap-5 mt-4 md:mt-5 items-center">
             <HeroPhoto
-              src="/hero-infancia.webp"
-              alt="Samuel de bebé, fotografía antigua en blanco y negro"
+              src="/hero-graduacion.webp"
+              alt="Samuel en su grado como magíster en Tecnologías de la Información para la Analítica de Datos, Universidad de San Buenaventura Cali, mostrando su diploma junto a dos personas"
               className="h-24 md:h-32 order-2 md:order-none"
               parallaxSpeed={0.06}
-              zoom={1.1}
-              position="50% 40%"
+              zoom={1.04}
+              position="50% 50%"
             />
             <h2 className="display-xl text-[9vw] sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl col-span-2 md:col-span-1 order-1 md:order-none">
               Al servicio de marcas
