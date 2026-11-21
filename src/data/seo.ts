@@ -161,6 +161,7 @@ export const PAGES: PageSeo[] = [
 <li><a href="/diagnostico">Diagnóstico para Dropshippers</a>: diagnóstico de tu tienda de dropshipping.</li>
 <li><a href="https://webp-converter.samuelgonzalez.org/">WiPi Converter</a>: convierte tus imágenes a WebP gratis.</li>
 <li><a href="/herramientas/text-reader">Lector de Texto</a>: convierte cualquier texto a voz con controles de reproducción.</li>
+<li><a href="/test-12-ejes/">Test de los 12 ejes</a>: descubre tu ideología más allá de izquierda y derecha.</li>
 <li><a href="/google-ads-checklist">Google Ads ROAS+ Checklist</a>: 21 elementos críticos para campañas rentables.</li>
 </ul>`,
   },
