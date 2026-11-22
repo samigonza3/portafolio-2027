@@ -23,10 +23,4 @@ export const herramientas = [
     descripcion: 'Convierte cualquier texto a voz con controles de reproducción.',
     to: '/herramientas/text-reader',
   },
-  {
-    nombre: 'Test de los 12 ejes',
-    descripcion: 'Descubre tu ideología más allá de izquierda y derecha, compárate y genera tu perfil.',
-    to: '/test-12-ejes/',
-    externo: true,
-  },
 ];
