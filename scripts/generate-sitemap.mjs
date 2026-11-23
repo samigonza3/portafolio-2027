@@ -36,6 +36,9 @@ Samuel González es Paid Media & Data Analyst (Google Ads, Meta Ads, TikTok Ads,
 ## Páginas principales
 ${main.map((p) => line(p.title.split(" | ")[0], `${SITE_URL}${p.path}`, p.description)).join('\n')}
 
+## SG Academy
+${line('SG Academy', 'https://academy.samuelgonzalez.org', 'Plataforma de cursos de Samuel González: curso individual, plan anual Basic con todos los cursos y Premium con mentoría 1:1.')}
+
 ## Herramientas gratuitas
 ${tools.map((p) => line(p.title.split(" | ")[0], `${SITE_URL}${p.path}`, p.description)).join('\n')}
 ${line('WiPi Converter', 'https://webp-converter.samuelgonzalez.org/', 'Convierte tus imágenes a WebP gratis.')}

@@ -41,6 +41,14 @@
       fbq('track', 'PageView');
     </script>
     <meta charset="UTF-8" />
+    <!-- Tema: oscuro por defecto; aplica el claro guardado antes de pintar para evitar parpadeo (ver useTema en App.tsx). -->
+    <script>
+      try {
+        if (localStorage.getItem('theme') === 'light' && !/^/(mentoria-dropshipping|empieza-aqui-tu-mentoria|reservar-espacio|admin/calendario|herramientas/text-reader|google-ads-checklist|recursos/google-ads-checklist)/?$/.test(location.pathname)) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    </script>
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />

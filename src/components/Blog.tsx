@@ -68,7 +68,7 @@ export default function Blog() {
                 className="absolute inset-0 opacity-60 pointer-events-none"
                 style={{
                   background:
-                    'radial-gradient(ellipse 70% 60% at 80% -10%, rgba(27,46,102,.8), transparent 70%)',
+                    'radial-gradient(ellipse 70% 60% at 80% -10%, rgb(var(--c-nebula) / .8), transparent 70%)',
                 }}
               />
               <div className="relative">

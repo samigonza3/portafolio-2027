@@ -58,12 +58,13 @@ const NAV = [
   ['Inicio', '/'],
   ['Mentoría de dropshipping', '/mentoria-dropshipping'],
   ['Mentoría privada', '/empieza-aqui-tu-mentoria'],
+  ['SG Academy', 'https://academy.samuelgonzalez.org'],
   ['Diagnóstico', '/diagnostico'],
   ['Herramientas', '/herramientas'],
   ['Blog', '/blog'],
 ];
 
-const abs = (p) => `${SITE_URL}${p === '/' ? '/' : p}`;
+const abs = (p) => (p.startsWith('http') ? p : `${SITE_URL}${p === '/' ? '/' : p}`);
 const crumb = (items) => ({
   '@type': 'BreadcrumbList',
   itemListElement: items.map(([name, path], i) => ({ '@type': 'ListItem', position: i + 1, name, item: abs(path) })),

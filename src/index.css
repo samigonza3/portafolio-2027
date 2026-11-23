@@ -7,6 +7,63 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== Temas =====
+   Oscuro (azul galaxia) es el tema por defecto. El claro se activa con
+   <html data-theme="light"> desde el botón del menú (ThemeToggle en App).
+   Los valores son canales RGB para que Tailwind pueda aplicar opacidad
+   (ej. border-star-light/15). `.force-dark` fija el tema oscuro en un bloque
+   aunque el sitio esté en claro (banners con paleta propia). */
+:root,
+.force-dark {
+  --c-space-950: 4 8 23;
+  --c-space-900: 7 13 34;
+  --c-space-800: 11 21 51;
+  --c-space-700: 18 32 72;
+  --c-nebula: 27 46 102;
+  --c-star-light: 127 168 255;
+  --c-ice: 201 217 255;
+  --c-frost: 244 247 255;
+  --c-muted: 139 155 199;
+  --c-teal: 62 231 196;
+  --c-amber: 255 178 94;
+  --star-dot: 127, 168, 255;
+  --star-head: 220, 232, 255;
+  color-scheme: dark;
+}
+
+html[data-theme='light'] {
+  --c-space-950: 255 255 255;
+  --c-space-900: 245 248 255;
+  --c-space-800: 248 250 255;
+  --c-space-700: 226 233 248;
+  --c-nebula: 220 231 255;
+  --c-star-light: 46 95 224;
+  --c-ice: 51 68 111;
+  --c-frost: 11 21 51;
+  --c-muted: 95 110 150;
+  --c-teal: 14 150 122;
+  --c-amber: 196 112 18;
+  --star-dot: 62, 123, 255;
+  --star-head: 62, 123, 255;
+  color-scheme: light;
+}
+
+html[data-theme='light'] .force-dark {
+  --c-space-950: 4 8 23;
+  --c-space-900: 7 13 34;
+  --c-space-800: 11 21 51;
+  --c-space-700: 18 32 72;
+  --c-nebula: 27 46 102;
+  --c-star-light: 127 168 255;
+  --c-ice: 201 217 255;
+  --c-frost: 244 247 255;
+  --c-muted: 139 155 199;
+  --c-teal: 62 231 196;
+  --c-amber: 255 178 94;
+  color-scheme: dark;
+  color: rgb(var(--c-frost));
+}
+
 @layer base {
   html {
     font-family: 'Montserrat', sans-serif;
@@ -14,8 +71,9 @@
   }
 
   body {
-    background-color: #040817;
-    color: #f4f7ff;
+    background-color: rgb(var(--c-space-950));
+    color: rgb(var(--c-frost));
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -24,7 +82,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid #7fa8ff;
+    outline: 2px solid rgb(var(--c-star-light));
     outline-offset: 3px;
   }
 }
@@ -52,7 +110,7 @@
   }
 
   .btn-star {
-    @apply inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-bold text-frost shadow-star transition-all duration-300;
+    @apply inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-bold text-white shadow-star transition-all duration-300;
     background: linear-gradient(135deg, #3e7bff, #2e5fe0);
   }
 
@@ -100,7 +158,7 @@
   .card-amber {
     @apply relative overflow-hidden rounded-card border;
     border-color: rgba(255, 178, 94, 0.4);
-    background: linear-gradient(135deg, rgba(255, 178, 94, 0.14), rgba(11, 21, 51, 0.4));
+    background: linear-gradient(135deg, rgba(255, 178, 94, 0.14), rgb(var(--c-space-800) / 0.4));
     box-shadow: 0 0 60px -20px rgba(255, 178, 94, 0.35);
   }
 
@@ -138,32 +196,32 @@
       45deg,
       rgba(62, 123, 255, 0.08),
       rgba(62, 123, 255, 0.08) 12px,
-      rgba(11, 21, 51, 0.6) 12px,
-      rgba(11, 21, 51, 0.6) 24px
+      rgb(var(--c-space-800) / 0.6) 12px,
+      rgb(var(--c-space-800) / 0.6) 24px
     );
   }
 }
 
 /* Artículos del blog (contenido HTML legado) */
 .prose-galaxy {
-  color: #c9d9ff;
+  color: rgb(var(--c-ice));
   line-height: 1.75;
 }
 .prose-galaxy h2 {
-  color: #f4f7ff;
+  color: rgb(var(--c-frost));
   font-size: 1.45rem;
   margin: 0 0 0.5rem;
 }
 .prose-galaxy h3 {
-  color: #f4f7ff;
+  color: rgb(var(--c-frost));
   font-size: 1.15rem;
   margin: 0 0 0.5rem;
 }
 .prose-galaxy strong {
-  color: #f4f7ff;
+  color: rgb(var(--c-frost));
 }
 .prose-galaxy em {
-  color: #7fa8ff;
+  color: rgb(var(--c-star-light));
   font-style: italic;
 }
 .prose-galaxy a {
@@ -183,11 +241,11 @@
   margin: 1rem 0;
   background: rgba(62, 123, 255, 0.07);
   border-radius: 0 12px 12px 0;
-  color: #f4f7ff;
+  color: rgb(var(--c-frost));
 }
 .prose-galaxy .cta, .prose-galaxy .conclusion {
   border: 1px solid rgba(127, 168, 255, 0.45);
-  background: linear-gradient(135deg, rgba(62, 123, 255, 0.12), rgba(27, 46, 102, 0.3));
+  background: linear-gradient(135deg, rgba(62, 123, 255, 0.12), rgb(var(--c-nebula) / 0.3));
   border-radius: 18px;
   padding: 1.5rem 1.75rem;
   margin-top: 1.5rem;
@@ -195,7 +253,7 @@
 .prose-galaxy .cta button {
   margin-top: 1rem;
   background: linear-gradient(135deg, #3e7bff, #2e5fe0);
-  color: #f4f7ff;
+  color: #fff;
   font-weight: 700;
   font-size: 0.875rem;
   border: none;
@@ -258,8 +316,8 @@ html {
   /* Panel de vidrio: fondo translúcido con desenfoque, borde claro sutil
      y brillo interior arriba. */
   .glass-panel {
-    @apply rounded-card border border-white/10 backdrop-blur-xl;
-    background: linear-gradient(160deg, rgba(27, 46, 102, 0.35), rgba(7, 13, 34, 0.55));
+    @apply rounded-card border border-star-light/15 backdrop-blur-xl;
+    background: linear-gradient(160deg, rgb(var(--c-nebula) / 0.35), rgb(var(--c-space-900) / 0.55));
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.08),
       0 20px 50px -20px rgba(0, 0, 0, 0.6);

@@ -82,7 +82,7 @@ export default function BlogPost() {
           className="border-b border-star-light/15"
           style={{
             background:
-              'radial-gradient(ellipse 60% 80% at 50% -20%, rgba(27,46,102,.9), transparent 75%)',
+              'radial-gradient(ellipse 60% 80% at 50% -20%, rgb(var(--c-nebula) / .9), transparent 75%)',
           }}
         >
           <div className="max-w-3xl px-6 lg:px-10 pt-14 pb-10">

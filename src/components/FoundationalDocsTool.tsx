@@ -346,7 +346,7 @@ export default function FoundationalDocsTool() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse 60% 50% at 50% -10%, #1B2E66, transparent 70%)',
+          background: 'radial-gradient(ellipse 60% 50% at 50% -10%, rgb(var(--c-nebula)), transparent 70%)',
         }}
       />
 

@@ -12,25 +12,27 @@ export default {
         display: ['"Space Grotesk"', 'sans-serif'],
         mono: ['Montserrat', 'sans-serif'],
       },
+      // Los colores se leen de variables CSS (src/index.css) para soportar
+      // modo oscuro (por defecto) y modo claro sin duplicar clases.
       colors: {
         space: {
-          950: '#040817',
-          900: '#070D22',
-          800: '#0B1533',
-          700: '#122048',
+          950: 'rgb(var(--c-space-950) / <alpha-value>)',
+          900: 'rgb(var(--c-space-900) / <alpha-value>)',
+          800: 'rgb(var(--c-space-800) / <alpha-value>)',
+          700: 'rgb(var(--c-space-700) / <alpha-value>)',
         },
-        nebula: '#1B2E66',
+        nebula: 'rgb(var(--c-nebula) / <alpha-value>)',
         star: {
           DEFAULT: '#3E7BFF',
           dark: '#2E5FE0',
-          light: '#7FA8FF',
+          light: 'rgb(var(--c-star-light) / <alpha-value>)',
         },
-        ice: '#C9D9FF',
-        frost: '#F4F7FF',
-        muted: '#8B9BC7',
+        ice: 'rgb(var(--c-ice) / <alpha-value>)',
+        frost: 'rgb(var(--c-frost) / <alpha-value>)',
+        muted: 'rgb(var(--c-muted) / <alpha-value>)',
         signal: {
-          teal: '#3EE7C4',
-          amber: '#FFB25E',
+          teal: 'rgb(var(--c-teal) / <alpha-value>)',
+          amber: 'rgb(var(--c-amber) / <alpha-value>)',
         },
       },
       borderRadius: {

@@ -49,7 +49,7 @@ export const PAGES: PageSeo[] = [
     description:
       'Samuel González, Paid Media & Data Analyst en Cali, Colombia. +15 años en Google Ads, Meta Ads y TikTok Ads, analítica de datos, desarrollo web y mentoría de dropshipping.',
     h1: 'Samuel González: Data, Marketing y Código',
-    lastmod: LASTMOD,
+    lastmod: '2026-11-22',
     priority: '1.0',
     changefreq: 'weekly',
     body: `
@@ -66,6 +66,7 @@ export const PAGES: PageSeo[] = [
 <ul>
 <li><a href="/mentoria-dropshipping">Mentoría de dropshipping: sistema paso a paso para vender por internet</a></li>
 <li><a href="/empieza-aqui-tu-mentoria">Mentoría privada 1 a 1 de dropshipping</a></li>
+<li><a href="https://academy.samuelgonzalez.org">SG Academy: cursos de paid media, datos y ecommerce</a></li>
 <li><a href="/diagnostico">Diagnóstico gratuito para tiendas de dropshipping</a></li>
 <li><a href="/herramientas">Herramientas gratuitas de marketing e IA</a></li>
 <li><a href="/blog">Blog sobre paid media, datos, ecommerce y dropshipping</a></li>

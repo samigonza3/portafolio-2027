@@ -14,6 +14,8 @@ import {
   X,
   ChevronDown,
   MapPin,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import BlogPost from './components/BlogPost';
 import Blog from './components/Blog';
@@ -33,7 +35,7 @@ import AdminCalendario from './components/AdminCalendario';
 import ReservarEspacio from './components/ReservarEspacio';
 import TextReaderTool from './components/TextReaderTool';
 import Herramientas from './components/Herramientas';
-import { herramientas } from './data/herramientas';
+import { herramientas, herramientasPrincipales, herramientasOtras, ACADEMY_URL, type Herramienta } from './data/herramientas';
 
 const services = [
   {
@@ -319,7 +321,11 @@ function Starfield() {
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#7FA8FF';
+      // Colores según el tema activo (variables --star-dot / --star-head en index.css).
+      const css = getComputedStyle(document.documentElement);
+      const dot = `rgb(${css.getPropertyValue('--star-dot').trim() || '127, 168, 255'})`;
+      const head = css.getPropertyValue('--star-head').trim() || '220, 232, 255';
+      ctx.fillStyle = dot;
       stars.forEach((s) => {
         s.a += s.da;
         if (s.a < 0 || s.a > 1) s.da *= -1;
@@ -360,7 +366,7 @@ function Starfield() {
         const radius = prog * Math.max(canvas.width, canvas.height) * 0.45;
         const fade = (1 - prog) * (1 - prog);
         ctx.lineWidth = 1;
-        ctx.strokeStyle = '#7FA8FF';
+        ctx.strokeStyle = dot;
         for (let k = 0; k < 3; k++) {
           const rr = radius - k * 16;
           if (rr <= 0) continue;
@@ -386,7 +392,7 @@ function Starfield() {
         const tx = sh.x - (sh.vx / sp) * sh.len;
         const ty = sh.y - (sh.vy / sp) * sh.len;
         const grad = ctx.createLinearGradient(sh.x, sh.y, tx, ty);
-        grad.addColorStop(0, 'rgba(220,232,255,0.75)');
+        grad.addColorStop(0, `rgba(${head},0.75)`);
         grad.addColorStop(1, 'rgba(127,168,255,0)');
         ctx.globalAlpha = 0.55 * k;
         ctx.strokeStyle = grad;
@@ -396,11 +402,11 @@ function Starfield() {
         ctx.lineTo(tx, ty);
         ctx.stroke();
         ctx.globalAlpha = 0.9 * k;
-        ctx.fillStyle = '#DCE8FF';
+        ctx.fillStyle = `rgb(${head})`;
         ctx.beginPath();
         ctx.arc(sh.x, sh.y, 1.3, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = '#7FA8FF';
+        ctx.fillStyle = dot;
       }
 
       ctx.globalAlpha = 1;
@@ -553,12 +559,12 @@ function HerramientaLink({
   onClick,
   children,
 }: {
-  h: (typeof herramientas)[number];
+  h: Herramienta;
   className: string;
   onClick?: () => void;
   children: React.ReactNode;
 }) {
-  if ('externo' in h && h.externo) {
+  if (h.externo) {
     return (
       <a href={h.to} target="_blank" rel="noopener noreferrer" onClick={onClick} className={className}>
         {children}
@@ -572,29 +578,94 @@ function HerramientaLink({
   );
 }
 
+// ===== Tema claro / oscuro =====
+// Oscuro por defecto. La preferencia se guarda en localStorage ('theme') y
+// se aplica en <html data-theme> (index.html la aplica antes de pintar para
+// evitar parpadeo). Algunas rutas con paleta propia se fuerzan a oscuro.
+const FORZAR_OSCURO = /^\/(mentoria-dropshipping|empieza-aqui-tu-mentoria|reservar-espacio|admin\/calendario|herramientas\/text-reader|google-ads-checklist|recursos\/google-ads-checklist)\/?$/;
+
+type Tema = 'dark' | 'light';
+
+function leerTema(): Tema {
+  try {
+    return localStorage.getItem('theme') === 'light' ? 'light' : 'dark';
+  } catch {
+    return 'dark';
+  }
+}
+
+function useTema() {
+  const [tema, setTema] = useState<Tema>(leerTema);
+  const { pathname } = useLocation();
+  const forzado = FORZAR_OSCURO.test(pathname);
+
+  useEffect(() => {
+    const efectivo = forzado ? 'dark' : tema;
+    document.documentElement.dataset.theme = efectivo;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', efectivo === 'light' ? '#FFFFFF' : '#040817');
+  }, [tema, forzado]);
+
+  const alternar = () => {
+    const next: Tema = tema === 'dark' ? 'light' : 'dark';
+    setTema(next);
+    try {
+      localStorage.setItem('theme', next);
+    } catch {
+      /* sin almacenamiento: el tema dura solo esta visita */
+    }
+  };
+
+  return { tema, alternar, forzado };
+}
+
+function ThemeToggle({ tema, alternar }: { tema: Tema; alternar: () => void }) {
+  const oscuro = tema === 'dark';
+  return (
+    <button
+      type="button"
+      onClick={alternar}
+      aria-label={oscuro ? 'Activar modo claro' : 'Activar modo oscuro'}
+      title={oscuro ? 'Modo claro' : 'Modo oscuro'}
+      className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-star-light/15 text-frost transition-colors hover:border-star-light/45"
+    >
+      {oscuro ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+    </button>
+  );
+}
+
 // Desplegable "Herramientas" del nav de escritorio. Se abre con hover o
-// clic, y se cierra al salir, al elegir una opción o con Escape.
+// clic, y se cierra al salir, al elegir una opción o con Escape. Las
+// herramientas con grupo 'otras' van en el submenú "Otras".
 function HerramientasMenu() {
   const [open, setOpen] = useState(false);
+  const [otrasOpen, setOtrasOpen] = useState(false);
   const { pathname } = useLocation();
   const activo = herramientas.some((h) => pathname === h.to);
 
   useEffect(() => {
     setOpen(false);
+    setOtrasOpen(false);
   }, [pathname]);
+
+  const cerrar = () => {
+    setOpen(false);
+    setOtrasOpen(false);
+  };
 
   return (
     <div
       className="relative"
       onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      onMouseLeave={cerrar}
       onKeyDown={(e) => {
-        if (e.key === 'Escape') setOpen(false);
+        if (e.key === 'Escape') cerrar();
       }}
     >
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        // Con mouse el hover ya lo abre: el clic solo lo abre (no lo cierra) para
+        // que no se cierre justo al hacer clic. Se cierra al salir o con Escape.
+        onClick={() => setOpen(true)}
         aria-haspopup="true"
         aria-expanded={open}
         className={`label-mono inline-flex items-center gap-1.5 transition-colors hover:!text-frost ${
@@ -607,17 +678,42 @@ function HerramientasMenu() {
       {open && (
         <div className="absolute right-0 top-full pt-3 w-72">
           <div className="rounded-card border border-star-light/15 bg-space-900/95 backdrop-blur-md p-2 shadow-star">
-            {herramientas.map((h) => (
+            {herramientasPrincipales.map((h) => (
               <HerramientaLink
                 key={h.to}
                 h={h}
-                onClick={() => setOpen(false)}
+                onClick={cerrar}
                 className="block rounded-xl px-4 py-3 transition-colors hover:bg-star/10"
               >
                 <span className="block text-sm font-bold text-frost">{h.nombre}</span>
                 <span className="block text-xs text-muted mt-0.5">{h.descripcion}</span>
               </HerramientaLink>
             ))}
+            {herramientasOtras.length > 0 && (
+              <div className="mt-1 border-t border-star-light/15 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setOtrasOpen((v) => !v)}
+                  aria-expanded={otrasOpen}
+                  className="w-full flex items-center justify-between rounded-xl px-4 py-3 text-left transition-colors hover:bg-star/10"
+                >
+                  <span className="block text-sm font-bold text-frost">Otras</span>
+                  <ChevronDown className={`w-4 h-4 text-muted transition-transform ${otrasOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {otrasOpen &&
+                  herramientasOtras.map((h) => (
+                    <HerramientaLink
+                      key={h.to}
+                      h={h}
+                      onClick={cerrar}
+                      className="block rounded-xl ml-3 pl-4 pr-4 py-2.5 border-l border-star-light/15 transition-colors hover:bg-star/10"
+                    >
+                      <span className="block text-sm font-semibold text-frost">{h.nombre}</span>
+                      <span className="block text-xs text-muted mt-0.5">{h.descripcion}</span>
+                    </HerramientaLink>
+                  ))}
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -625,9 +721,16 @@ function HerramientasMenu() {
   );
 }
 
-function NavBar() {
+function NavBar({ tema, alternar, forzado }: { tema: Tema; alternar: () => void; forzado: boolean }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const closeMobile = () => setMobileOpen(false);
+  const [herramientasOpen, setHerramientasOpen] = useState(false);
+  const [otrasOpen, setOtrasOpen] = useState(false);
+  const closeMobile = () => {
+    setMobileOpen(false);
+    setHerramientasOpen(false);
+    setOtrasOpen(false);
+  };
+  const linkMobile = 'label-mono !text-muted hover:!text-frost transition-colors';
 
   return (
     <header className="sticky top-0 z-30 backdrop-blur-md bg-space-950/80 border-b border-star-light/15">
@@ -635,13 +738,13 @@ function NavBar() {
         <Link
           to="/"
           onClick={closeMobile}
-          className="font-sans font-extrabold text-lg tracking-tight text-frost"
+          className="font-sans font-extrabold text-lg tracking-tight text-frost whitespace-nowrap"
         >
           Samuel González
         </Link>
 
         {/* Nav de escritorio */}
-        <nav className="hidden md:flex items-center gap-7">
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-7">
           <a href="/#servicios" className="label-mono !text-muted hover:!text-frost transition-colors">
             Servicios
           </a>
@@ -657,67 +760,97 @@ function NavBar() {
           >
             Mentoría
           </Link>
+          <a href={ACADEMY_URL} className="label-mono !text-muted hover:!text-frost transition-colors">
+            Academy
+          </a>
           <HerramientasMenu />
+          {!forzado && <ThemeToggle tema={tema} alternar={alternar} />}
           <a href="/#contacto" className="btn-pill-light">
             Hablemos <ArrowRight className="w-3.5 h-3.5" />
           </a>
         </nav>
 
-        {/* Botón hamburguesa (solo mobile) */}
-        <button
-          type="button"
-          onClick={() => setMobileOpen((v) => !v)}
-          aria-label={mobileOpen ? 'Cerrar menú' : 'Abrir menú'}
-          aria-expanded={mobileOpen}
-          className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-full border border-star-light/15 text-frost transition-colors hover:border-star-light/45"
-        >
-          {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        {/* Tema + hamburguesa (solo mobile) */}
+        <div className="lg:hidden flex items-center gap-2">
+          {!forzado && <ThemeToggle tema={tema} alternar={alternar} />}
+          <button
+            type="button"
+            onClick={() => (mobileOpen ? closeMobile() : setMobileOpen(true))}
+            aria-label={mobileOpen ? 'Cerrar menú' : 'Abrir menú'}
+            aria-expanded={mobileOpen}
+            className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-star-light/15 text-frost transition-colors hover:border-star-light/45"
+          >
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
       {/* Panel de nav mobile */}
       {mobileOpen && (
-        <nav className="md:hidden border-t border-star-light/15 bg-space-950/95 backdrop-blur-md px-6 py-6 flex flex-col gap-5">
-          <a
-            href="/#servicios"
-            onClick={closeMobile}
-            className="label-mono !text-muted hover:!text-frost transition-colors"
-          >
+        <nav className="lg:hidden border-t border-star-light/15 bg-space-950/95 backdrop-blur-md px-6 py-6 flex flex-col gap-5 max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <a href="/#servicios" onClick={closeMobile} className={linkMobile}>
             Servicios
           </a>
-          <a
-            href="/#experiencia"
-            onClick={closeMobile}
-            className="label-mono !text-muted hover:!text-frost transition-colors"
-          >
+          <a href="/#experiencia" onClick={closeMobile} className={linkMobile}>
             Experiencia
           </a>
-          <Link
-            to="/blog"
-            onClick={closeMobile}
-            className="label-mono !text-muted hover:!text-frost transition-colors"
-          >
+          <Link to="/blog" onClick={closeMobile} className={linkMobile}>
             Blog
           </Link>
-          <Link
-            to="/mentoria-dropshipping"
-            onClick={closeMobile}
-            className="label-mono !text-muted hover:!text-frost transition-colors"
-          >
+          <Link to="/mentoria-dropshipping" onClick={closeMobile} className={linkMobile}>
             Mentoría
           </Link>
+          <a href={ACADEMY_URL} onClick={closeMobile} className={linkMobile}>
+            Academy
+          </a>
           <div className="flex flex-col gap-3">
-            <span className="label-mono !text-muted">Herramientas</span>
-            {herramientas.map((h) => (
-              <HerramientaLink
-                key={h.to}
-                h={h}
-                onClick={closeMobile}
-                className="pl-4 border-l border-star-light/15 text-sm font-semibold text-ice hover:text-frost transition-colors"
-              >
-                {h.nombre}
-              </HerramientaLink>
-            ))}
+            <button
+              type="button"
+              onClick={() => setHerramientasOpen((v) => !v)}
+              aria-expanded={herramientasOpen}
+              className={`${linkMobile} inline-flex items-center gap-1.5 w-fit`}
+            >
+              Herramientas
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${herramientasOpen ? 'rotate-180' : ''}`} />
+            </button>
+            {herramientasOpen && (
+              <div className="flex flex-col gap-3">
+                {herramientasPrincipales.map((h) => (
+                  <HerramientaLink
+                    key={h.to}
+                    h={h}
+                    onClick={closeMobile}
+                    className="pl-4 border-l border-star-light/15 text-sm font-semibold text-ice hover:text-frost transition-colors"
+                  >
+                    {h.nombre}
+                  </HerramientaLink>
+                ))}
+                {herramientasOtras.length > 0 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setOtrasOpen((v) => !v)}
+                      aria-expanded={otrasOpen}
+                      className="pl-4 border-l border-star-light/15 text-sm font-semibold text-ice hover:text-frost transition-colors inline-flex items-center gap-1.5 text-left"
+                    >
+                      Otras
+                      <ChevronDown className={`w-3.5 h-3.5 transition-transform ${otrasOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    {otrasOpen &&
+                      herramientasOtras.map((h) => (
+                        <HerramientaLink
+                          key={h.to}
+                          h={h}
+                          onClick={closeMobile}
+                          className="ml-4 pl-4 border-l border-star-light/15 text-sm font-semibold text-muted hover:text-frost transition-colors"
+                        >
+                          {h.nombre}
+                        </HerramientaLink>
+                      ))}
+                  </>
+                )}
+              </div>
+            )}
           </div>
           <a href="/#contacto" onClick={closeMobile} className="btn-pill-light w-fit">
             Hablemos <ArrowRight className="w-3.5 h-3.5" />
@@ -763,6 +896,9 @@ function Footer() {
               >
                 Mentoría Dropshipping
               </Link>
+              <a href={ACADEMY_URL} className="text-ice hover:text-star-light transition-colors">
+                SG Academy
+              </a>
             </div>
           </div>
           <div>
@@ -926,7 +1062,7 @@ function HomePage() {
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'radial-gradient(ellipse 60% 60% at 50% 0%, #1B2E66, transparent 70%)',
+            background: 'radial-gradient(ellipse 60% 60% at 50% 0%, rgb(var(--c-nebula)), transparent 70%)',
           }}
         />
         <div className="relative max-w-5xl mx-auto px-6">
@@ -1317,7 +1453,7 @@ function HomePage() {
             landing /mentoria-dropshipping (negro a nebula, acento cian y
             botón rojo) para que el salto entre páginas se sienta continuo. */}
         <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-24">
-          <div className="relative overflow-hidden rounded-2xl border border-cyan-400/30 bg-gradient-to-br from-black via-space-950 to-nebula p-8 md:p-12">
+          <div className="force-dark relative overflow-hidden rounded-2xl border border-cyan-400/30 bg-gradient-to-br from-black via-space-950 to-nebula p-8 md:p-12">
             <div
               className="absolute -top-24 -right-24 w-72 h-72 rounded-full pointer-events-none"
               style={{ background: 'radial-gradient(circle, rgba(34,211,238,0.28), transparent 70%)' }}
@@ -1396,6 +1532,7 @@ function ScrollToTop() {
 
 export default function App() {
   const location = useLocation();
+  const { tema, alternar, forzado } = useTema();
   // La página de Mentoría es un landing page de venta directa: el menú y el
   // footer son "fugas" que sacan al visitante antes de que convierta, así
   // que no se muestran en esa ruta (misma lógica que funnels de referencia
@@ -1406,7 +1543,7 @@ export default function App() {
     <>
       <ScrollToTop />
       <RouteMeta />
-      {!isLandingPage && <NavBar />}
+      {!isLandingPage && <NavBar tema={tema} alternar={alternar} forzado={forzado} />}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/blog" element={<Blog />} />
